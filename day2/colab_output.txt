@@ -1,0 +1,28 @@
+All libraries loaded successfully
+Numpy: 2.4.6 | Pandas: 3.0.3
+
+CLASSIFICATION DATASET: Breast Cancer
+Train: (455, 30) | Test: (114, 30)
+Class balance - Malignant: 212 | Benign: 357
+
+REGRESSION DATASET: Diabetes
+Train: (353, 10) | Test: (89, 10)
+Target range: [25, 346]
+
+First 5 feature names:
+['mean radius' 'mean texture' 'mean perimeter' 'mean area'
+ 'mean smoothness']
+
+Imbalance Ratio: 0.59
+Logistic Regression: Accuracy = 0.9825
+Random Forest: Accuracy = 0.9561
+Gradient Boosting: Accuracy = 0.9561
+
+Logistic Regression Confusion Matrix:
+[[41  1]
+ [ 1 71]]
+
+TP: 71, TN: 41, FP: 1, FN: 1
+
+Manual Accuracy: 0.9825
+Sklearn Accuracy: 0.9825
