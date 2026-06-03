@@ -6,8 +6,6 @@ The idea is to build a simple LinkedIn-style website where users can create a pr
 
 For this type of website, we need a place to store files uploaded by users. These files can include profile pictures, resume PDFs, certificates, post images, company logos, and banner images.
 
-Instead of storing these files directly in a database, it is better to use cloud storage. The database can store only the file name or file URL, and the actual file can be stored in cloud storage.
-
 ## Features We Can Implement
 
 ### Profile Features
@@ -91,23 +89,12 @@ Azure Blob Storage is a storage service from Microsoft Azure. It can also store 
 
 - Better choice when the full project is already built on Azure
 
-## Amazon S3 vs Azure Blob Storage
-
-| Point | Amazon S3 | Azure Blob Storage |
-|---|---|---|
-| Beginner friendly | More beginner-friendly | Good, but slightly less common in examples |
-| documentaion and guidance available | Very many | Good number |
-| Public file access | Supported | Supported |
-| Private file access | Supported | Supported |
-| Temporary secure links | Pre-signed URLs | SAS tokens |
-| Best when using | AWS | Azure |
-| Good for this project | Yes | Yes, but second choice |
-
 ## Final Choice
 
 For this project, I would choose **Amazon S3**.
 
 The main reason is that Amazon S3 is widely used, and very suitable for storing user-uploaded files like profile photos, resumes, certificates, and post images.
+Also it has better CDN network which will be faster compare to Azure blob storage.
 
 Azure Blob Storage is also a good service, but I would choose it mainly if the whole project was already using Microsoft Azure. Since this is a learning project and we want something easy to explain and implement, Amazon S3 is the better choice.
 
@@ -123,9 +110,3 @@ Some files can be public because everyone should see them. Some files should be 
 | Company logo | Public |
 | Resume | Private |
 | Certificate | Private or restricted |
-
-## Conclusion
-
-Amazon S3 is the best choice for this LinkedIn-style website because it is simple, popular, and useful for storing uploaded files. With S3, we can implement important features like profile photo upload, resume upload, certificate upload, post image upload, and company logo upload.
-
-This makes the website more realistic and closer to how real professional networking platforms manage user files.
