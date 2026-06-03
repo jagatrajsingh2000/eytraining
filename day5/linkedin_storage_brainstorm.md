@@ -96,7 +96,7 @@ Azure Blob Storage is a storage service from Microsoft Azure. It can also store 
 | Point | Amazon S3 | Azure Blob Storage |
 |---|---|---|
 | Beginner friendly | More beginner-friendly | Good, but slightly less common in examples |
-| Tutorials available | Very many | Good number |
+| documentaion and guidance available | Very many | Good number |
 | Public file access | Supported | Supported |
 | Private file access | Supported | Supported |
 | Temporary secure links | Pre-signed URLs | SAS tokens |
