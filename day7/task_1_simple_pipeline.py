@@ -18,7 +18,8 @@ Included notebook features:
 11. Delta Lake storage extension
 12. Pytest and Hypothesis test-suite writer
 13. Prometheus metrics extension
-14. Airflow DAG writer
+14. Grafana dashboard and Prometheus alert-rule writers
+15. Airflow DAG writer
 
 Run once:
 python task_1_simple_pipeline.py
@@ -27,13 +28,14 @@ Run with metrics server:
 python task_1_simple_pipeline.py --metrics
 
 Write notebook extension files:
-python task_1_simple_pipeline.py --write-tests --write-airflow-dag
+python task_1_simple_pipeline.py --write-tests --write-grafana --write-alerts --write-airflow-dag
 """
 
 from __future__ import annotations
 
 import argparse
 import atexit
+import json
 import logging
 import sys
 import time
@@ -104,7 +106,7 @@ class PipelineConfig:
     output_path: Path = Path("data/processed")
     schedule_cron: str = "0 6 * * *"
     max_retries: int = 3
-    batch_size: int = 1_000
+    batch_size: int = 10_000
     alert_email: str = "ops@example.com"
     pass_rate_threshold: float = 0.95
     null_rate_limit: float = 0.05
@@ -242,12 +244,64 @@ def validate_batch(
 # GREAT EXPECTATIONS QUALITY SUITE
 # ==================================================
 
+def run_pandas_expectation_suite(df: pd.DataFrame) -> dict:
+    """Run the same dataset-level checks without depending on a GE API version."""
+    checks = [
+        ("expect_column_to_exist.amount", "amount" in df.columns),
+        ("expect_column_to_exist.id", "id" in df.columns),
+        (
+            "expect_column_values_to_be_between.amount",
+            "amount" in df.columns and df["amount"].between(0, 300).all(),
+        ),
+        (
+            "expect_column_values_to_not_be_null.id",
+            "id" in df.columns and df["id"].notna().all(),
+        ),
+        (
+            "expect_column_values_to_not_be_null.ts",
+            "ts" in df.columns and df["ts"].notna().all(),
+        ),
+        (
+            "expect_column_values_to_be_in_set.category",
+            (
+                "category" in df.columns
+                and df["category"].isin(["A", "B", "C"]).mean() >= 0.90
+            ),
+        ),
+        (
+            "expect_column_values_to_be_unique.id",
+            "id" in df.columns and df["id"].is_unique,
+        ),
+    ]
+
+    failed = [name for name, passed in checks if not passed]
+    passed_count = len(checks) - len(failed)
+
+    logger.info("Pandas expectation suite: {}/{} checks passed", passed_count, len(checks))
+    if failed:
+        logger.warning("Failed expectation checks: {}", failed)
+
+    return {
+        "success": not failed,
+        "passed": passed_count,
+        "evaluated": len(checks),
+    }
+
+
 def build_ge_suite(df: pd.DataFrame) -> dict:
     """Run a Great Expectations expectation suite against a DataFrame."""
     if gx is None:
-        raise ImportError("Install great-expectations to run the GE quality suite.")
+        logger.warning("Great Expectations is not installed; using pandas expectation checks.")
+        return run_pandas_expectation_suite(df)
 
     context = gx.get_context(mode="ephemeral")
+    if not hasattr(context, "run_validation_definition"):
+        logger.warning(
+            "Great Expectations context does not support run_validation_definition; "
+            "using pandas expectation checks."
+        )
+        return run_pandas_expectation_suite(df)
+
     data_source = context.data_sources.add_pandas("pandas_source")
     data_asset = data_source.add_dataframe_asset("transactions")
     batch_definition = data_asset.add_batch_definition_whole_dataframe("full_batch")
@@ -719,6 +773,116 @@ def print_current_metrics() -> None:
 
 
 # ==================================================
+# GRAFANA DASHBOARD AND ALERT RULES
+# ==================================================
+
+GRAFANA_DASHBOARD = {
+    "title": "Python Validation Pipeline",
+    "timezone": "browser",
+    "schemaVersion": 39,
+    "version": 1,
+    "refresh": "10s",
+    "tags": ["day7", "pipeline", "prometheus"],
+    "panels": [
+        {
+            "type": "stat",
+            "title": "Rows Ingested",
+            "gridPos": {"h": 6, "w": 6, "x": 0, "y": 0},
+            "targets": [{"expr": "pipeline_rows_ingested_total"}],
+        },
+        {
+            "type": "stat",
+            "title": "Rows Valid",
+            "gridPos": {"h": 6, "w": 6, "x": 6, "y": 0},
+            "targets": [{"expr": "pipeline_rows_valid_total"}],
+        },
+        {
+            "type": "gauge",
+            "title": "Validation Pass Rate",
+            "gridPos": {"h": 6, "w": 6, "x": 12, "y": 0},
+            "targets": [{"expr": "pipeline_quality_pass_rate"}],
+            "fieldConfig": {
+                "defaults": {
+                    "min": 0,
+                    "max": 1,
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {"color": "red", "value": None},
+                            {"color": "yellow", "value": 0.95},
+                            {"color": "green", "value": 0.99},
+                        ],
+                    },
+                }
+            },
+        },
+        {
+            "type": "timeseries",
+            "title": "Stage Duration",
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 6},
+            "targets": [
+                {
+                    "expr": (
+                        "rate(pipeline_stage_duration_seconds_sum[5m]) "
+                        "/ rate(pipeline_stage_duration_seconds_count[5m])"
+                    ),
+                    "legendFormat": "{{stage}}",
+                }
+            ],
+        },
+        {
+            "type": "timeseries",
+            "title": "Validation Errors",
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 6},
+            "targets": [
+                {
+                    "expr": "increase(pipeline_validation_errors_total[5m])",
+                    "legendFormat": "errors",
+                }
+            ],
+        },
+    ],
+}
+
+PROMETHEUS_ALERT_RULES = """groups:
+  - name: python_validation_pipeline
+    rules:
+      - alert: PipelineValidationPassRateLow
+        expr: pipeline_quality_pass_rate < 0.95
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Pipeline validation pass rate below 95 percent
+          description: The latest validation pass rate is below the required threshold.
+      - alert: PipelineRunFailure
+        expr: increase(pipeline_runs_total{status="failure"}[5m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: Python validation pipeline failed
+          description: At least one pipeline run failed in the last 5 minutes.
+"""
+
+
+def write_grafana_dashboard(path: str | Path = "grafana_dashboard.json") -> Path:
+    """Write a Grafana dashboard JSON for the Prometheus pipeline metrics."""
+    output_path = Path(path)
+    output_path.write_text(json.dumps(GRAFANA_DASHBOARD, indent=2), encoding="utf-8")
+    logger.info("{} written", output_path)
+    return output_path
+
+
+def write_prometheus_alert_rules(path: str | Path = "prometheus_alert_rules.yml") -> Path:
+    """Write Prometheus alert rules for pass rate and run failures."""
+    output_path = Path(path)
+    output_path.write_text(PROMETHEUS_ALERT_RULES, encoding="utf-8")
+    logger.info("{} written", output_path)
+    return output_path
+
+
+# ==================================================
 # EXTENSION B TEST-SUITE WRITER
 # ==================================================
 
@@ -1012,6 +1176,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--no-ge", action="store_true", help="Skip Great Expectations validation.")
     parser.add_argument("--schedule", action="store_true", help="Start APScheduler instead of one run.")
     parser.add_argument("--write-tests", action="store_true", help="Write test_pipeline.py.")
+    parser.add_argument("--write-grafana", action="store_true", help="Write grafana_dashboard.json.")
+    parser.add_argument("--write-alerts", action="store_true", help="Write prometheus_alert_rules.yml.")
     parser.add_argument("--write-airflow-dag", action="store_true", help="Write pipeline_dag.py.")
     parser.add_argument("--run-delta", action="store_true", help="Write output to Delta Lake too.")
     return parser.parse_args()
@@ -1026,6 +1192,12 @@ def main() -> None:
 
     if args.write_tests:
         write_test_suite()
+
+    if args.write_grafana:
+        write_grafana_dashboard()
+
+    if args.write_alerts:
+        write_prometheus_alert_rules()
 
     if args.write_airflow_dag:
         write_airflow_dag()
