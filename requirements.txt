@@ -7,6 +7,7 @@ click==8.4.1
 contourpy==1.3.3
 cycler==0.12.1
 deltalake
+fastapi
 fastparquet
 filelock==3.29.0
 fonttools==4.63.0
@@ -67,4 +68,5 @@ tqdm==4.67.3
 transformers==5.9.0
 typer==0.25.1
 typing_extensions==4.15.0
+uvicorn
 watchdog
