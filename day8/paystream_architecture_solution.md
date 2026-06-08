@@ -1,0 +1,190 @@
+# PayStream Architecture Solution
+
+## Problem Statement
+
+PayStream is a payment platform that receives payment requests from merchants, processes settlements, checks fraud risk, sends notifications, updates analytics, and runs end-of-day reconciliation jobs.
+
+The main design question is:
+
+> When should the system use a **Queue**, and when should it use an **Event Bus**?
+
+This is important because payment systems need reliability, retries, load balancing, and independent service communication. Some tasks must be handled by only one worker, while some events must be broadcast to many services.
+
+## Complete Architecture Diagram
+
+```text
+                        ┌──────────────────┐
+                        │   Merchant API   │
+                        └─────────┬────────┘
+                                  │
+                                  ▼
+                        ┌──────────────────┐
+                        │  Payment Core    │
+                        └─────────┬────────┘
+                                  │
+              ┌───────────────────┼───────────────────┐
+              │                   │                   │
+              │ A                 │ D                 │
+              ▼                   ▼                   │
+        ┌──────────┐        ┌──────────┐             │
+        │ Queue    │        │ Queue    │             │
+        │Settlement│        │Fraud Req │             │
+        └────┬─────┘        └────┬─────┘             │
+             │                   │                   │
+             ▼                   ▼                   │
+      ┌──────────────┐    ┌──────────────┐           │
+      │Ledger Service│    │ Fraud Engine │           │
+      └──────┬───────┘    └──────────────┘           │
+             │
+             │ Payment Settled Event
+             ▼
+      ┌─────────────────────┐
+      │      Event Bus      │
+      └──────┬─────┬────┬───┘
+             │     │    │
+             │ B   │ B  │ B
+             ▼     ▼    ▼
+
+ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+ │Notification  │ │ Analytics    │ │ Fraud Profile│
+ │Hub           │ │ Pipeline     │ │ Update       │
+ └──────┬───────┘ └──────────────┘ └──────────────┘
+        │
+        │ C
+        ▼
+   ┌──────────┐
+   │ Queue    │
+   │Notify    │
+   └────┬─────┘
+        │
+  ┌─────┼─────┐
+  ▼     ▼     ▼
+Worker1 Worker2 Worker3
+
+────────────────────────────────────────────
+
+Account Updates
+
+ KYC Updated / Account Suspended
+                │
+                ▼
+         ┌────────────┐
+         │ Event Bus  │
+         └─────┬──────┘
+               │
+      ┌────────┼─────────┐
+      ▼        ▼         ▼
+ Payment   Merchant   Compliance
+  Core      Portal     Service
+
+────────────────────────────────────────────
+
+Midnight Reconciliation
+
+ 600 Files
+      │
+      ▼
+   Queue
+      │
+ ┌────┼────┐
+ ▼    ▼    ▼
+W1   W2   W3
+```
+
+## Question to Answer Mapping
+
+| ID | Scenario | Answer | Why |
+|---|---|---|---|
+| A | Settlement Command | **Queue** | Exactly-once processing, single consumer, retries |
+| B | Payment Received Broadcast | **Event Bus** | Multiple services react independently |
+| C | SMS/Push Notifications | **Queue** | One worker per message, load balancing |
+| D | Fraud Score Request | **Queue** | Request-reply, one consumer |
+| E | Account State Change Events | **Event Bus** | Publish state changes to many services |
+| F | End-of-Day Reconciliation | **Queue** | Distribute files across worker pool |
+
+## Solution Explanation
+
+### A. Settlement Command
+
+Settlement is a task that must be processed carefully by one service. The same settlement should not be processed by multiple consumers at the same time. A **Queue** is the best choice because it supports retries, controlled processing, and one worker handling each message.
+
+### B. Payment Received Broadcast
+
+When a payment is received or settled, many services may need to know about it. Notification, analytics, and fraud profile services can all react independently. An **Event Bus** is the best choice because it supports publish-subscribe and fan-out.
+
+### C. SMS and Push Notifications
+
+Sending notifications is work that needs to be distributed across workers. Each notification should be sent once by one worker. A **Queue** is suitable because it provides load balancing and retry support.
+
+### D. Fraud Score Request
+
+Fraud scoring is a request that should be handled by the fraud engine. The payment system asks for a score and expects one result. A **Queue** works well because it sends the request to one consumer.
+
+### E. Account State Change Events
+
+When KYC is updated or an account is suspended, many services should be informed. Payment Core, Merchant Portal, and Compliance Service may all need the same event. An **Event Bus** is the correct choice because it broadcasts state changes to multiple subscribers.
+
+### F. End-of-Day Reconciliation
+
+At midnight, hundreds of files need processing. This is a workload that can be split across multiple workers. A **Queue** is the best choice because it distributes jobs among workers and supports retry if a file fails.
+
+## Decision Rule
+
+### Use Queue When
+
+```text
+"Do this work"
+```
+
+Examples:
+
+- Settlement command
+- Fraud request
+- SMS sending
+- Reconciliation jobs
+
+Characteristics:
+
+- One consumer handles each message
+- Retry support
+- Load balancing
+- Exactly-once or at-least-once processing
+- Good for commands and background jobs
+
+## Use Event Bus When
+
+```text
+"This happened"
+```
+
+Examples:
+
+- Payment received
+- Account updated
+- User registered
+- Order shipped
+
+Characteristics:
+
+- Multiple consumers can react
+- Publish/subscribe pattern
+- Fan-out support
+- Future subscribers can be added easily
+- Good for events and state changes
+
+## Final Answers
+
+```text
+A → Queue
+B → Event Bus
+C → Queue
+D → Queue
+E → Event Bus
+F → Queue
+```
+
+## Interview Explanation
+
+If the sender wants someone to perform a task, use a **Queue**.
+
+If the sender wants to announce that something happened and multiple services may react, use an **Event Bus**.
