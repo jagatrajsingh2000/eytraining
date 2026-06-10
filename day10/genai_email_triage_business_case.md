@@ -60,28 +60,45 @@ Synthetic data can be used for testing and edge cases. For example, we can creat
 
 Possible tools:
 
-- GPT-4o
 - CTGAN
+- Gretel
+- Mostly AI
 
 Synthetic data should support real data, not completely replace it.
 
 ## 3. Model Selection
 
-### Recommended Model
+Based on the Generative AI landscape, this task mainly belongs to **Text Generation**, because the input is customer email text and the output is classification, priority, summary, and routing.
 
-**Claude 3.5 Sonnet**
+It can also use **Synthetic Data** tools for testing multilingual and edge-case emails.
+
+### Selection Table
+
+| Need in this project | GenAI category | Suitable tools/models | Why it fits |
+|---|---|---|---|
+| Read and understand customer emails | **Text Generation** | GPT-4o, Claude, Gemini | These models can understand language, classify intent, and create structured output. |
+| Classify category and priority | **Text Generation** | Claude 3.5 Sonnet, GPT-4o | Good for JSON output such as category, priority, team, and confidence score. |
+| Handle different languages | **Text Generation** | GPT-4o, Claude, Gemini | These models have strong multilingual understanding. |
+| Generate test emails | **Synthetic Data** | CTGAN, Gretel, Mostly AI | Useful for creating sample emails and edge cases without exposing real customer data. |
+| Future support for email attachments or screenshots | **Multimodal** | GPT-4o Vision, Gemini Ultra | Useful if the system later needs to read images, scanned documents, or screenshots. |
+
+### Recommended Model for This Task
+
+**Claude 3.5 Sonnet** is selected as the primary model.
+
+It is a good fit because it can understand long customer emails, handle multiple languages, and return clean structured output. For this use case, the model should return simple JSON fields such as category, priority, routing team, language, and confidence score.
 
 ### Alternative Model
 
-**GPT-4o**
+**GPT-4o** can be used as the alternate model.
 
-### Why Claude 3.5 Sonnet?
+GPT-4o is useful when fast response time is important. It is also a good choice if the company wants one model that can support text now and multimodal inputs later.
 
-Claude 3.5 Sonnet is a good choice because it understands multiple languages well and can produce structured outputs such as JSON. This is useful when the system needs to return fields like category, priority, language, confidence score, and routing team.
+### Synthetic Data Choice
 
-### Why GPT-4o?
+For synthetic data, we can use **CTGAN, Gretel, or Mostly AI**.
 
-GPT-4o is also a strong option. It is fast and suitable for real-time use cases where emails need to be processed quickly.
+These tools can help create safe test data, especially for multilingual emails and rare cases. This reduces the need to use sensitive customer emails during early testing.
 
 ### Cost Optimization
 
