@@ -1,87 +1,79 @@
-# Day 11 Task 3: LangChain Prompt Studio Core Tasks
+# Day 11 Task 2: Gemini With OpenAI SDK And FAISS Retrieval Bot
 
-This task implements core tasks `1`, `3`, and `4`.
+This folder contains two examples:
 
-## Core Tasks Covered
+- `main.py`: Gemini chat call using the OpenAI SDK and a prompt layer.
+- `retrival_bot_fss.py`: Retrieval QA over a policy PDF using LangChain, FAISS, and Gemini through OpenAI-compatible clients.
 
-1. Build a zero-shot + few-shot summarisation chain using LangChain `PromptTemplate` for 3 earnings call snippets.
-3. Build a 5-class ticket classifier: `Billing`, `Tech`, `Refund`, `General`, `Escalate`.
-4. Log all prompts to a PromptLayer-style log file and capture ROUGE-L scores for summarisation.
+## Install
+
+Install the packages needed for the retrieval bot:
+
+```bash
+.venv/bin/pip install langchain langchain-community langchain-openai faiss-cpu pypdf
+```
+
+These packages are also listed in `Ey_training_genai/requirements.txt`.
 
 ## Why Gemini Works With The GPT/OpenAI SDK
 
-The code uses the OpenAI Python SDK, but points it to Gemini:
+Gemini provides an OpenAI-compatible endpoint:
 
-```python
-OpenAI(
-    api_key=GEMINI_API_KEY,
-    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
-)
+```text
+https://generativelanguage.googleapis.com/v1beta/openai/
 ```
 
-This works because Gemini provides an OpenAI-compatible endpoint. The SDK sends the normal `chat.completions` request format, while the `base_url` routes the request to Gemini and the Gemini API key authenticates it.
+That means OpenAI-compatible clients can keep the usual request format, while `base_url` routes requests to Gemini and `api_key` uses a Gemini API key.
 
-## Run With Gemini
+## Run Prompt Layer Example
 
 From the repository root:
 
 ```bash
-.venv/bin/python Ey_training_genai/day11/task3/main.py
+.venv/bin/python Ey_training_genai/day11/task2/main.py
 ```
 
-## Run Offline For Testing
+## Run Retrieval Bot
 
-Use mock mode when you want to generate the output files without making an API call:
+Place a PDF policy document at:
+
+```text
+Ey_training_genai/day11/task2/policy_document.pdf
+```
+
+Then run:
 
 ```bash
-.venv/bin/python Ey_training_genai/day11/task3/main.py --mock
+.venv/bin/python Ey_training_genai/day11/task2/retrival_bot_fss.py \
+  --pdf Ey_training_genai/day11/task2/policy_document.pdf \
+  --question "What is the policy regarding remote work reimbursement?"
 ```
 
-## Handling 503 High Demand Errors
+For local testing without using Gemini quota:
 
-If Gemini returns:
-
-```text
-503 UNAVAILABLE: This model is currently experiencing high demand
+```bash
+.venv/bin/python Ey_training_genai/day11/task2/retrival_bot_fss.py --mock
 ```
 
-the script retries temporary API failures for:
+`--mock` still loads the PDF, splits it, builds a FAISS index, and retrieves relevant chunks. It skips Gemini embeddings and chat completion.
 
-```text
-gemini-3.5-flash
-```
+## Retrieval Bot Flow
 
-Use `--mock` if you only need to verify the assignment files while the live model is overloaded.
+`retrival_bot_fss.py` does the following:
 
-## Outputs
+1. Loads the PDF using `PyPDFLoader`.
+2. Splits pages into chunks using `RecursiveCharacterTextSplitter`.
+3. Creates embeddings with `OpenAIEmbeddings` pointed at Gemini.
+4. Stores chunks in a FAISS vectorstore.
+5. Retrieves the top 3 relevant chunks.
+6. Answers the question using `ChatOpenAI` pointed at Gemini.
 
-All outputs are written to:
+## API Key
 
-```text
-Ey_training_genai/day11/task3/output/
-```
-
-Generated files:
-
-- `summarisation_results.csv`: zero-shot and few-shot summaries with ROUGE-L scores.
-- `ticket_classifier_results.csv`: ticket predictions vs ground-truth labels.
-- `promptlayer_log.jsonl`: every prompt and response logged in PromptLayer-style JSONL format.
-- `task3_report.json`: summary of completed tasks, average ROUGE-L, and classifier accuracy.
-
-## Prompt Templates
-
-The script uses LangChain:
+Before running, replace this value in the Python files:
 
 ```python
-from langchain_core.prompts import PromptTemplate
+GEMINI_API_KEY = "PASTE_YOUR_GEMINI_API_KEY_HERE"
 ```
 
-Prompt templates included:
-
-- `create_zero_shot_summary_prompt`
-- `create_few_shot_summary_prompt`
-- `create_ticket_classifier_prompt`
-
-## ROUGE-L
-
-ROUGE-L is calculated locally using longest common subsequence between the model summary and the reference summary. This avoids adding another dependency.
+Avoid committing a real API key to GitHub.
