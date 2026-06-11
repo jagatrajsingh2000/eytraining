@@ -58,7 +58,7 @@ def ask_gemini(messages: list[dict[str, str]]) -> str:
 
 
 def main() -> None:
-    if GEMINI_API_KEY == "PASTE_YOUR_GEMINI_API_KEY_HERE":
+    if GEMINI_API_KEY == "":
         raise ValueError("Replace GEMINI_API_KEY in main.py with your Gemini API key.")
 
     prompt_layer = create_prompt_layer()
