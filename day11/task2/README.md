@@ -1,79 +1,87 @@
-# Day 11 Task 2: Gemini With OpenAI SDK And Prompt Layer
+# Day 11 Task 3: LangChain Prompt Studio Core Tasks
 
-This task shows how to create a reusable prompt layer and send the generated messages to Gemini using the OpenAI Python SDK through Gemini's OpenAI-compatible endpoint.
+This task implements core tasks `1`, `3`, and `4`.
 
-## Files
+## Core Tasks Covered
 
-```text
-Ey_training_genai/day11/task2/main.py
-```
+1. Build a zero-shot + few-shot summarisation chain using LangChain `PromptTemplate` for 3 earnings call snippets.
+3. Build a 5-class ticket classifier: `Billing`, `Tech`, `Refund`, `General`, `Escalate`.
+4. Log all prompts to a PromptLayer-style log file and capture ROUGE-L scores for summarisation.
 
-## Setup
+## Why Gemini Works With The GPT/OpenAI SDK
 
-Install the OpenAI SDK if it is not already installed:
-
-```bash
-.venv/bin/pip install openai
-```
-
-Then open `main.py` and replace:
+The code uses the OpenAI Python SDK, but points it to Gemini:
 
 ```python
-GEMINI_API_KEY = "PASTE_YOUR_GEMINI_API_KEY_HERE"
+OpenAI(
+    api_key=GEMINI_API_KEY,
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+)
 ```
 
-with your Gemini API key.
+This works because Gemini provides an OpenAI-compatible endpoint. The SDK sends the normal `chat.completions` request format, while the `base_url` routes the request to Gemini and the Gemini API key authenticates it.
 
-## Run
+## Run With Gemini
 
 From the repository root:
 
 ```bash
-.venv/bin/python Ey_training_genai/day11/task2/main.py
+.venv/bin/python Ey_training_genai/day11/task3/main.py
 ```
 
-## What The Code Does
+## Run Offline For Testing
 
-1. Imports the OpenAI SDK.
-2. Defines a `PromptLayer` class.
-3. Stores the system prompt and user prompt template in the prompt layer.
-4. Creates final chat messages by filling template variables.
-5. Creates an `OpenAI` client.
-6. Points the client to Gemini's OpenAI-compatible base URL:
+Use mock mode when you want to generate the output files without making an API call:
+
+```bash
+.venv/bin/python Ey_training_genai/day11/task3/main.py --mock
+```
+
+## Handling 503 High Demand Errors
+
+If Gemini returns:
 
 ```text
-https://generativelanguage.googleapis.com/v1beta/openai/
+503 UNAVAILABLE: This model is currently experiencing high demand
 ```
 
-7. Sends the prompt-layer messages to:
+the script retries temporary API failures for:
 
 ```text
 gemini-3.5-flash
 ```
 
-8. Prints the prompt-layer messages and Gemini response.
+Use `--mock` if you only need to verify the assignment files while the live model is overloaded.
 
-## Prompt Layer
+## Outputs
 
-The prompt layer is responsible for prompt creation only:
+All outputs are written to:
 
-```python
-prompt_layer = create_prompt_layer()
-messages = prompt_layer.create_messages(
-    topic="time-series dataset",
-    audience="Python beginner",
-    points="5",
-)
+```text
+Ey_training_genai/day11/task3/output/
 ```
 
-The Gemini API function receives already-created messages:
+Generated files:
+
+- `summarisation_results.csv`: zero-shot and few-shot summaries with ROUGE-L scores.
+- `ticket_classifier_results.csv`: ticket predictions vs ground-truth labels.
+- `promptlayer_log.jsonl`: every prompt and response logged in PromptLayer-style JSONL format.
+- `task3_report.json`: summary of completed tasks, average ROUGE-L, and classifier accuracy.
+
+## Prompt Templates
+
+The script uses LangChain:
 
 ```python
-answer = ask_gemini(messages)
+from langchain_core.prompts import PromptTemplate
 ```
 
-This keeps prompt design separate from API calling logic.
+Prompt templates included:
 
-## Note
+- `create_zero_shot_summary_prompt`
+- `create_few_shot_summary_prompt`
+- `create_ticket_classifier_prompt`
 
-The API key is shown as a placeholder in the file. Avoid committing a real API key to GitHub or sharing it in screenshots.
+## ROUGE-L
+
+ROUGE-L is calculated locally using longest common subsequence between the model summary and the reference summary. This avoids adding another dependency.
