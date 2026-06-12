@@ -1,5 +1,6 @@
 annotated-doc==0.0.4
 anyio==4.13.0
+anthropic
 apscheduler
 azure-search-documents
 beautifulsoup4
