@@ -57,6 +57,9 @@ AZURE_SEARCH_API_KEY = os.getenv("AZURE_SEARCH_API_KEY", "")
 AZURE_SEARCH_INDEX_NAME = os.getenv("AZURE_SEARCH_INDEX_NAME", "rag-showdown")
 
 COHERE_API_KEY = os.getenv("COHERE_API_KEY", "")
+COHERE_RERANK_MODEL = os.getenv("COHERE_RERANK_MODEL", "rerank-english-v3.0")
+COHERE_RATE_LIMIT_SLEEP_SECONDS = int(os.getenv("COHERE_RATE_LIMIT_SLEEP_SECONDS", "65"))
+COHERE_MAX_RETRIES = int(os.getenv("COHERE_MAX_RETRIES", "2"))
 
 TOP_K = 5
 
@@ -516,7 +519,46 @@ def run_azure_search(
     return benchmark_search("Azure AI Search", "Hybrid BM25 plus vector search", search)
 
 
-def run_cohere_rerank(documents: list[Document], faiss_result: BenchmarkResult) -> None:
+def reciprocal_rank(ranked_hits: list[SearchHit], expected_title: str) -> float:
+    for rank, hit in enumerate(ranked_hits, start=1):
+        if expected_title.lower() in hit.title.lower():
+            return 1.0 / rank
+    return 0.0
+
+
+def is_rate_limit_error(exc: Exception) -> bool:
+    text = str(exc).lower()
+    return "status_code: 429" in text or "429" in text or "rate limit" in text
+
+
+def cohere_rerank_with_retry(client, query: str, documents: list[str]):
+    last_error: Exception | None = None
+    for attempt in range(COHERE_MAX_RETRIES + 1):
+        try:
+            return client.rerank(
+                model=COHERE_RERANK_MODEL,
+                query=query,
+                documents=documents,
+                top_n=len(documents),
+            )
+        except Exception as exc:
+            last_error = exc
+            if not is_rate_limit_error(exc) or attempt == COHERE_MAX_RETRIES:
+                raise
+            print(
+                f"Cohere rate limit reached. Waiting {COHERE_RATE_LIMIT_SLEEP_SECONDS}s "
+                f"before retry {attempt + 1}/{COHERE_MAX_RETRIES}."
+            )
+            time.sleep(COHERE_RATE_LIMIT_SLEEP_SECONDS)
+
+    raise RuntimeError("Cohere rerank failed after retries.") from last_error
+
+
+def run_cohere_rerank(
+    embedder: LocalHashingEmbedder,
+    documents: list[Document],
+    vectors: list[list[float]],
+) -> None:
     if not COHERE_API_KEY:
         print("Skipping Cohere rerank: COHERE_API_KEY is empty.")
         return
@@ -524,11 +566,83 @@ def run_cohere_rerank(documents: list[Document], faiss_result: BenchmarkResult) 
     import cohere
     import faiss
 
-    print("Cohere rerank requires FAISS result context; rebuild using saved embeddings in a real run.")
-    print(f"Current FAISS Hit@{TOP_K}: {faiss_result.hit_at_k:.2f}")
-    print(f"Loaded Cohere client for {len(documents)} candidate documents.")
-    _ = cohere.Client(COHERE_API_KEY)
-    _ = faiss.IndexFlatL2(1)
+    rerank_top_k = 10
+    embedding_dim = len(vectors[0])
+    matrix = np.array(vectors, dtype=np.float32)
+    index = faiss.IndexFlatL2(embedding_dim)
+    index.add(matrix)
+    client = cohere.Client(COHERE_API_KEY)
+
+    before_scores: list[float] = []
+    after_scores: list[float] = []
+    rows = []
+
+    for query, expected_title in tqdm(BENCHMARK_QUERIES, desc="Cohere rerank"):
+        query_vector = np.array([embedder.embed_query(query)], dtype=np.float32)
+        distances, indexes = index.search(query_vector, min(rerank_top_k, len(documents)))
+
+        original_hits: list[SearchHit] = []
+        for distance, document_index in zip(distances[0], indexes[0]):
+            document = documents[int(document_index)]
+            original_hits.append(
+                SearchHit(
+                    title=document.metadata.get("title", ""),
+                    text=document.page_content,
+                    score=float(distance),
+                    metadata=document.metadata,
+                )
+        )
+
+        try:
+            rerank_response = cohere_rerank_with_retry(
+                client=client,
+                query=query,
+                documents=[hit.text for hit in original_hits],
+            )
+        except Exception as exc:
+            print(f"Stopping Cohere rerank after API error: {exc}")
+            break
+
+        reranked_hits: list[SearchHit] = []
+        for result in rerank_response.results:
+            hit = original_hits[result.index]
+            reranked_hits.append(
+                SearchHit(
+                    title=hit.title,
+                    text=hit.text,
+                    score=float(result.relevance_score),
+                    metadata=hit.metadata,
+                )
+            )
+
+        before = reciprocal_rank(original_hits, expected_title)
+        after = reciprocal_rank(reranked_hits, expected_title)
+        before_scores.append(before)
+        after_scores.append(after)
+        rows.append(
+            {
+                "Query": query,
+                "Expected": expected_title,
+                "Before RR": round(before, 3),
+                "After RR": round(after, 3),
+                "Before Top": original_hits[0].title if original_hits else "",
+                "After Top": reranked_hits[0].title if reranked_hits else "",
+            }
+        )
+
+    if not rows:
+        print("Cohere rerank did not complete any queries.")
+        return
+
+    before_mrr = statistics.mean(before_scores)
+    after_mrr = statistics.mean(after_scores)
+    delta = after_mrr - before_mrr
+
+    print(f"\nCohere rerank MRR@10 comparison ({len(rows)}/{len(BENCHMARK_QUERIES)} queries)")
+    print(pd.DataFrame(rows).to_string(index=False))
+    print(f"\nMRR@10 before rerank: {before_mrr:.3f}")
+    print(f"MRR@10 after rerank:  {after_mrr:.3f}")
+    print(f"MRR@10 delta:         {delta:+.3f}")
 
 
 def print_summary(results: list[BenchmarkResult]) -> None:
@@ -586,6 +700,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-chunks", type=int, default=500, help="Maximum hardcoded corpus chunks to index.")
     parser.add_argument("--skip-pinecone", action="store_true", help="Skip Pinecone even if keys are set.")
     parser.add_argument("--skip-azure", action="store_true", help="Skip Azure AI Search even if keys are set.")
+    parser.add_argument("--skip-rerank", action="store_true", help="Skip Cohere rerank even if COHERE_API_KEY is set.")
     parser.add_argument("--skip-plot", action="store_true", help="Skip matplotlib chart generation.")
     return parser.parse_args()
 
@@ -610,7 +725,8 @@ def main() -> None:
             results.append(azure_result)
 
     print_summary(results)
-    run_cohere_rerank(documents, results[0])
+    if not args.skip_rerank:
+        run_cohere_rerank(embedder, documents, vectors)
 
     if not args.skip_plot:
         save_latency_plot(results)
