@@ -1,0 +1,59 @@
+_wandb:
+    value:
+        cli_version: 0.27.2
+        e:
+            k2q7jrz9ywibnn8fk0ft51m1225yg1kr:
+                apple:
+                    ecpuCores: 4
+                    gpuCores: 10
+                    macModel: Mac14,7
+                    memoryGb: 16
+                    name: Apple M2
+                    pcpuCores: 4
+                    ramTotalBytes: "17179869184"
+                    swapTotalBytes: "2147483648"
+                codePath: day13/colab2/colab2.py
+                codePathLocal: colab2.py
+                cpu_count: 8
+                cpu_count_logical: 8
+                disk:
+                    /:
+                        total: "494384795648"
+                        used: "426528190464"
+                email: jagatrajsingh2000@gmail.com
+                executable: /Users/jagat/Documents/python_training/.venv/bin/python
+                git:
+                    commit: d809c9896761470a72fb45762911ae7c5e4d7f3d
+                    remote: https://github.com/jagatrajsingh2000/Ey_training_genai.git
+                host: Jagats-MacBook-Pro.local
+                memory:
+                    total: "17179869184"
+                os: macOS-15.6.1-arm64-arm-64bit
+                program: /Users/jagat/Documents/python_training/Ey_training_genai/day13/colab2/colab2.py
+                python: CPython 3.12.3
+                root: /Users/jagat/Documents/python_training/Ey_training_genai/day13/colab2
+                startedAt: "2026-06-15T10:42:22.812775Z"
+                writerId: k2q7jrz9ywibnn8fk0ft51m1225yg1kr
+        m: []
+        python_version: 3.12.3
+        t:
+            "1":
+                - 95
+                - 105
+            "2":
+                - 95
+                - 105
+            "3":
+                - 2
+                - 13
+                - 16
+            "4": 3.12.3
+            "5": 0.27.2
+            "12": 0.27.2
+            "13": darwin-arm64
+dataset_size:
+    value: 10
+model:
+    value: llama-3.3-70b-versatile
+prompt_version:
+    value: v2.0

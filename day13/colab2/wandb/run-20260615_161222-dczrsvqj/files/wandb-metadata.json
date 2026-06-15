@@ -1,0 +1,38 @@
+{
+  "os": "macOS-15.6.1-arm64-arm-64bit",
+  "python": "CPython 3.12.3",
+  "startedAt": "2026-06-15T10:42:22.812775Z",
+  "program": "/Users/jagat/Documents/python_training/Ey_training_genai/day13/colab2/colab2.py",
+  "codePath": "day13/colab2/colab2.py",
+  "codePathLocal": "colab2.py",
+  "git": {
+    "remote": "https://github.com/jagatrajsingh2000/Ey_training_genai.git",
+    "commit": "d809c9896761470a72fb45762911ae7c5e4d7f3d"
+  },
+  "email": "jagatrajsingh2000@gmail.com",
+  "root": "/Users/jagat/Documents/python_training/Ey_training_genai/day13/colab2",
+  "host": "Jagats-MacBook-Pro.local",
+  "executable": "/Users/jagat/Documents/python_training/.venv/bin/python",
+  "cpu_count": 8,
+  "cpu_count_logical": 8,
+  "disk": {
+    "/": {
+      "total": "494384795648",
+      "used": "426528190464"
+    }
+  },
+  "memory": {
+    "total": "17179869184"
+  },
+  "apple": {
+    "name": "Apple M2",
+    "ecpuCores": 4,
+    "pcpuCores": 4,
+    "gpuCores": 10,
+    "memoryGb": 16,
+    "swapTotalBytes": "2147483648",
+    "ramTotalBytes": "17179869184",
+    "macModel": "Mac14,7"
+  },
+  "writerId": "k2q7jrz9ywibnn8fk0ft51m1225yg1kr"
+}

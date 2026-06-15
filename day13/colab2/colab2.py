@@ -6,6 +6,7 @@ import re
 import hashlib
 import random
 import uuid
+import argparse
 from datetime import datetime, timedelta
 import pandas as pd
 import numpy as np
@@ -28,6 +29,101 @@ except ImportError:
 # Determine base directory for resolving database and plot file paths
 BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = str(BASE_DIR / 'finsight_logs.db')
+
+# ── LangSmith and W&B Integration ──────────────────────────────────────
+# Set environment variables for LangSmith tracing
+LANGCHAIN_API_KEY = os.getenv('LANGCHAIN_API_KEY')
+if LANGCHAIN_API_KEY and not LANGCHAIN_API_KEY.startswith('your_'):
+    os.environ['LANGCHAIN_TRACING_V2'] = os.getenv('LANGCHAIN_TRACING_V2', 'true')
+    os.environ['LANGCHAIN_PROJECT'] = os.getenv('LANGCHAIN_PROJECT', 'finsight-feedback-loop')
+    os.environ['LANGCHAIN_API_KEY'] = LANGCHAIN_API_KEY
+    try:
+        from langsmith import traceable
+    except ImportError:
+        def traceable(*args, **kwargs):
+            return lambda func: func
+else:
+    # Fallback decorator if langsmith is disabled
+    def traceable(*args, **kwargs):
+        return lambda func: func
+
+# Setup W&B credentials and login
+WANDB_API_KEY = os.getenv('WANDB_API_KEY')
+wandb_enabled = False
+if WANDB_API_KEY and not WANDB_API_KEY.startswith('your_'):
+    try:
+        import wandb
+        wandb.login(key=WANDB_API_KEY)
+        wandb_enabled = True
+        print("🚀 Weights & Biases login successful.")
+    except Exception as e:
+        print(f"⚠️ Weights & Biases login failed: {e}")
+
+def log_wandb_run(prompt_version: str, df_logs: pd.DataFrame, comparison_row: pd.Series):
+    if not wandb_enabled:
+        return
+    try:
+        import wandb
+        run = wandb.init(
+            project='finsight-prompt-eval',
+            name=f"prompt-{prompt_version}-{datetime.now().strftime('%m%d-%H%M')}",
+            config={
+                'prompt_version': prompt_version,
+                'model': active_model or 'mock-model',
+                'dataset_size': len(df_logs),
+            }
+        )
+        # Log aggregated metrics
+        wandb.log({
+            'hallucination_rate': float(comparison_row['hallucin_rate']),
+            'missing_sections_rate': float(comparison_row['missing_sec_rate']),
+            'user_correction_rate': float(comparison_row['user_correction']),
+            'failure_rate': float(comparison_row['failure_rate']),
+            'avg_latency_ms': float(comparison_row['avg_latency_ms']),
+            'avg_cost': float(comparison_row['avg_cost']),
+            'avg_word_count': float(comparison_row['avg_word_count']),
+        })
+        
+        # Log Table comparing model outputs
+        table = wandb.Table(columns=[
+            'borrower_id', 
+            'prompt_version', 
+            'output_text', 
+            'word_count', 
+            'hallucination_flag', 
+            'missing_sections', 
+            'failure_category'
+        ])
+        for _, row in df_logs.iterrows():
+            table.add_data(
+                row['borrower_id'],
+                row['prompt_version'],
+                row['output_text'],
+                int(row['output_word_count']),
+                bool(row['hallucination_flag']),
+                row['missing_sections'],
+                row['failure_category']
+            )
+        wandb.log({'eval_results': table})
+        
+        # Log charts as artifacts
+        if prompt_version == 'v1.0':
+            chart_path = BASE_DIR / 'failure_analysis.png'
+            if chart_path.exists():
+                artifact = wandb.Artifact(name='failure-analysis-chart', type='plot')
+                artifact.add_file(str(chart_path))
+                run.log_artifact(artifact)
+        else:
+            chart_path = BASE_DIR / 'before_after_comparison.png'
+            if chart_path.exists():
+                artifact = wandb.Artifact(name='before-after-comparison-chart', type='plot')
+                artifact.add_file(str(chart_path))
+                run.log_artifact(artifact)
+                
+        run.finish()
+        print(f"📊 Successfully logged prompt-{prompt_version} run to Weights & Biases.")
+    except Exception as e:
+        print(f"⚠️ Failed to log run to Weights & Biases: {e}")
 
 # ── API Keys & Client Configuration ────────────────────────────────────
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
@@ -231,7 +327,7 @@ BORROWER_PROFILES = BORROWER_PROFILES[:50]
 
 
 # ── Mock LLM Generator to run without API Key ──────────────────────────
-def generate_mock_llm_response(prompt_version: str, borrower_data: str) -> str:
+def generate_mock_llm_response(prompt_version: str, borrower_data: str, temperature: float = 0.7) -> str:
     # Get company name
     match = re.match(r'^([^.]+)\.', borrower_data)
     company_name = match.group(1) if match else "The Borrower"
@@ -242,31 +338,48 @@ def generate_mock_llm_response(prompt_version: str, borrower_data: str) -> str:
     
     if prompt_version == 'v1.0':
         # Baseline prompt: prone to failure
-        fail_type = hash(borrower_data) % 4
+        # Introduce temperature-dependent hallucination rates
+        seed = int(hashlib.md5(borrower_data.encode()).hexdigest(), 16) % 1000
+        random.seed(seed)
         
-        if fail_type == 0:
-            # Hallucination: inject numbers not in source
-            hallucinated_val = "$2.8M" if "$2.8M" not in borrower_data else "$9.5M"
-            return (
-                f"Credit Memo: {company_name}. They request a credit line. The financials show {num_str}. "
-                f"Moreover, they have cash reserves of {hallucinated_val} in Chase Bank. "
-                f"We recommend approval based on their LTV ratio of 45%."
-            )
-        elif fail_type == 1:
-            # Missing sections: avoid writing required terms ("financial", "risk", "recommend", "borrower")
-            return (
-                f"Analyzing details for {company_name}. Stated: {num_str}. "
-                f"Everything looks extremely positive and we should transfer the requested funds as soon as possible."
-            )
-        elif fail_type == 2:
-            # Length violation: too short
-            return f"Credit Memo for {company_name}. Financials details are: {num_str}."
+        fail_prob = min(0.9, max(0.1, temperature))
+        if random.random() < fail_prob:
+            # Choose failure type based on temperature
+            fail_choices = [0, 1, 2, 3] if temperature > 0.4 else [1, 2]
+            fail_type = random.choice(fail_choices)
+            
+            # Reset random seed state
+            random.seed()
+            
+            if fail_type == 0:
+                # Hallucination: inject numbers not in source
+                hallucinated_val = "$2.8M" if "$2.8M" not in borrower_data else "$9.5M"
+                return (
+                    f"Credit Memo: {company_name}. They request a credit line. The financials show {num_str}. "
+                    f"Moreover, they have cash reserves of {hallucinated_val} in Chase Bank. "
+                    f"We recommend approval based on their LTV ratio of 45%."
+                )
+            elif fail_type == 1:
+                # Missing sections: avoid writing required terms ("financial", "risk", "recommend", "borrower")
+                return (
+                    f"Analyzing details for {company_name}. Stated: {num_str}. "
+                    f"Everything looks extremely positive and we should transfer the requested funds as soon as possible."
+                )
+            elif fail_type == 2:
+                # Length violation: too short
+                return f"Credit Memo for {company_name}. Financials details are: {num_str}."
+            else:
+                # Combined failure: hallucination + missing sections + length violation
+                hallucinated_val = "$1.6M" if "$1.6M" not in borrower_data else "$7.2M"
+                return (
+                    f"Report: {company_name}. Values are {num_str}. "
+                    f"We noticed their debt service was {hallucinated_val} which is high."
+                )
         else:
-            # Combined failure: hallucination + missing sections + length violation
-            hallucinated_val = "$1.6M" if "$1.6M" not in borrower_data else "$7.2M"
+            random.seed()
             return (
-                f"Report: {company_name}. Values are {num_str}. "
-                f"We noticed their debt service was {hallucinated_val} which is high."
+                f"Borrower: {company_name}. Stated data is: {num_str}. "
+                f"Financial profiles show stability. Recommendation is to approve."
             )
             
     elif prompt_version == 'v1.1':
@@ -319,7 +432,8 @@ def generate_mock_llm_response(prompt_version: str, borrower_data: str) -> str:
         return full_text
 
 
-def call_model_with_prompt(prompt_cfg: dict, borrower_data: str) -> dict:
+@traceable(name="credit_memo_generation")
+def call_model_with_prompt(prompt_cfg: dict, borrower_data: str, temperature: float = 0.7) -> dict:
     user_msg = prompt_cfg['user_template'].format(data=borrower_data)
     start = time.time()
     
@@ -329,6 +443,7 @@ def call_model_with_prompt(prompt_cfg: dict, borrower_data: str) -> dict:
             resp = active_client.chat.completions.create(
                 model=active_model,
                 max_tokens=500,
+                temperature=temperature,
                 messages=[
                     {'role': 'system', 'content': prompt_cfg['system']},
                     {'role': 'user', 'content': user_msg}
@@ -350,7 +465,7 @@ def call_model_with_prompt(prompt_cfg: dict, borrower_data: str) -> dict:
             print(f"⚠️ Live API call failed, falling back to mock: {e}")
     
     # Mock fallback
-    output = generate_mock_llm_response(prompt_cfg['version'], borrower_data)
+    output = generate_mock_llm_response(prompt_cfg['version'], borrower_data, temperature=temperature)
     # Simulate a small delay for realism
     time.sleep(0.05)
     latency = (time.time() - start) * 1000
@@ -435,9 +550,105 @@ def categorise_failure(row) -> Optional[str]:
         return None
 
 
+def parse_args():
+    parser = argparse.ArgumentParser(description="FinSight AI Prompt Feedback Loop Evaluation")
+    parser.add_argument('--temperature', type=float, default=0.7, help="Temperature for LLM generation")
+    parser.add_argument('--sweep', action='store_true', help="Run in W&B Sweep mode (tuning temperature for v2.0)")
+    return parser.parse_args()
+
+
 def main():
+    import argparse
+    args = parse_args()
+    temperature = args.temperature
+    
     conn = init_db()
     print('✅ SQLite database initialised: finsight_logs.db')
+    
+    if args.sweep:
+        print(f"🧹 Running in W&B Sweep Mode (Temperature: {temperature})")
+        SIMULATE_N = 10
+        PROMPT_CFG_V2 = PROMPT_V2_0
+        
+        # Clean previous sweep entries
+        conn.execute('DELETE FROM llm_logs WHERE prompt_version = "v2.0"')
+        conn.commit()
+
+        for i in tqdm(range(SIMULATE_N), desc=f'Sweep v2.0 (Temp: {temperature})'):
+            borrower_data = BORROWER_PROFILES[i]
+            result = call_model_with_prompt(PROMPT_CFG_V2, borrower_data, temperature=temperature)
+            
+            entry = LLMLogEntry(
+                request_id      = str(uuid.uuid4()),
+                timestamp       = datetime.now().isoformat(),
+                prompt_version  = PROMPT_CFG_V2['version'],
+                prompt_hash     = hash_prompt(PROMPT_CFG_V2['system'], PROMPT_CFG_V2['user_template']),
+                model           = active_model or 'grok-2-latest',
+                task_type       = 'credit_memo',
+                borrower_id     = f'BRW-{i+1:04d}',
+                input_tokens    = result['input_tokens'],
+                output_tokens   = result['output_tokens'],
+                latency_ms      = result['latency_ms'],
+                cost_usd        = result['cost'],
+                output_text     = result['output'],
+                output_word_count = len(result['output'].split()),
+                environment     = 'sweep',
+            )
+            
+            # Apply probes
+            hall_flag, hall_count = probe_hallucination(borrower_data, result['output'])
+            missing = probe_missing_sections(result['output'])
+            correction = simulate_user_correction(result['output'], borrower_data)
+            
+            cat = categorise_failure({
+                'hallucination_flag': int(hall_flag),
+                'missing_sections': json.dumps(missing),
+                'output_word_count': len(result['output'].split()),
+                'user_correction': int(correction)
+            })
+            
+            entry.hallucination_flag  = hall_flag
+            entry.hallucination_count = hall_count
+            entry.missing_sections    = json.dumps(missing)
+            entry.user_correction     = correction
+            entry.failure_category    = cat
+            
+            log_entry(conn, entry)
+            
+        df_sweep = pd.read_sql('SELECT * FROM llm_logs WHERE prompt_version = "v2.0"', conn)
+        sweep_metrics = pd.Series({
+            'hallucin_rate': df_sweep['hallucination_flag'].mean(),
+            'missing_sec_rate': (df_sweep['missing_sections'] != '[]').mean(),
+            'user_correction': df_sweep['user_correction'].mean(),
+            'avg_latency_ms': df_sweep['latency_ms'].mean(),
+            'avg_cost': df_sweep['cost_usd'].mean(),
+            'avg_word_count': df_sweep['output_word_count'].mean(),
+            'failure_rate': df_sweep['failure_category'].notna().mean()
+        })
+        
+        # Log sweep run to W&B
+        if wandb_enabled:
+            import wandb
+            # W&B agent initializes the config when running a sweep
+            run = wandb.init(config={'temperature': temperature})
+            wandb.log({
+                'hallucination_rate': float(sweep_metrics['hallucin_rate']),
+                'missing_sections_rate': float(sweep_metrics['missing_sec_rate']),
+                'user_correction_rate': float(sweep_metrics['user_correction']),
+                'failure_rate': float(sweep_metrics['failure_rate']),
+                'avg_latency_ms': float(sweep_metrics['avg_latency_ms']),
+                'avg_cost': float(sweep_metrics['avg_cost']),
+            })
+            run.finish()
+            print(f"✅ Sweep run logged: hallucination_rate={sweep_metrics['hallucin_rate']:.4f}")
+        else:
+            print(f"✅ Local Sweep run: hallucination_rate={sweep_metrics['hallucin_rate']:.4f}")
+            
+        conn.close()
+        return
+
+    # Regular Simulation Mode (v1.0 Baseline vs v2.0 Improved)
+    print(f"\n🏃 Running Full A/B Prompt Comparison (Temperature: {temperature})")
     
     # 1. Run simulation: v1.0 prompt on 50 requests
     print('\nSimulating production requests with prompt v1.0...')
@@ -452,7 +663,7 @@ def main():
     
     for i in tqdm(range(SIMULATE_N), desc='v1.0 Baseline'):
         borrower_data = BORROWER_PROFILES[i]
-        result = call_model_with_prompt(PROMPT_CFG, borrower_data)
+        result = call_model_with_prompt(PROMPT_CFG, borrower_data, temperature=temperature)
         
         entry = LLMLogEntry(
             request_id      = str(uuid.uuid4()),
@@ -549,17 +760,29 @@ def main():
     plt.close()
     print(f'✅ Failure analysis chart saved to {chart1_path}')
     
+    # Log baseline results to W&B
+    if wandb_enabled:
+        v1_metrics = pd.Series({
+            'hallucin_rate': df_logs['hallucination_flag'].mean(),
+            'missing_sec_rate': (df_logs['missing_sections'] != '[]').mean(),
+            'user_correction': df_logs['user_correction'].mean(),
+            'avg_latency_ms': df_logs['latency_ms'].mean(),
+            'avg_cost': df_logs['cost_usd'].mean(),
+            'avg_word_count': df_logs['output_word_count'].mean(),
+            'failure_rate': df_logs['failure_category'].notna().mean()
+        })
+        log_wandb_run('v1.0', df_logs, v1_metrics)
+
     # 4. Propose and run v2.0
     print('\nRunning v2.0 prompt on same inputs...')
     PROMPT_CFG_V2 = PROMPT_V2_0
     
-    # Clean up previous runs if table exists to start fresh
     conn.execute('DELETE FROM llm_logs WHERE prompt_version = "v2.0"')
     conn.commit()
 
     for i in tqdm(range(SIMULATE_N), desc='v2.0 Improved'):
         borrower_data = BORROWER_PROFILES[i]
-        result = call_model_with_prompt(PROMPT_CFG_V2, borrower_data)
+        result = call_model_with_prompt(PROMPT_CFG_V2, borrower_data, temperature=temperature)
         
         entry = LLMLogEntry(
             request_id      = str(uuid.uuid4()),
@@ -655,6 +878,12 @@ def main():
         plt.savefig(str(chart2_path), dpi=150, bbox_inches='tight')
         plt.close()
         print(f'✅ Comparison chart saved to {chart2_path}')
+        
+        # Log improved results to W&B
+        df_logs_v2 = df_all[df_all['prompt_version'] == 'v2.0']
+        v2_row = comparison[comparison['prompt_version'] == 'v2.0']
+        if not v2_row.empty:
+            log_wandb_run('v2.0', df_logs_v2, v2_row.iloc[0])
         
     conn.close()
 
