@@ -1,6 +1,7 @@
 """
 FinSight AI — pytest test suite for the eval pipeline.
 Tests run in CI before the full eval to catch code regressions quickly.
+Trigger comment for CI PR testing.
 """
 
 import pytest
