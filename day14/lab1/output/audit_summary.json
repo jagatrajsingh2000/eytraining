@@ -1,0 +1,185 @@
+{
+  "dataset_rows": 3000,
+  "overall_rejection_rate": 0.541,
+  "demographic_parity_gender": {
+    "rejection_rate": {
+      "Female": 0.615,
+      "Male": 0.481
+    },
+    "disparity_vs_best": {
+      "Female": 0.134,
+      "Male": 0.0
+    }
+  },
+  "demographic_parity_region": {
+    "rejection_rate": {
+      "Tier1": 0.51,
+      "Tier2": 0.532,
+      "Tier3": 0.604
+    },
+    "disparity_vs_best": {
+      "Tier1": 0.0,
+      "Tier2": 0.023,
+      "Tier3": 0.094
+    }
+  },
+  "equalised_odds_gender": {
+    "FPR_wrong_rejection": {
+      "Female": 0.547,
+      "Male": 0.401
+    },
+    "TPR_correct_rejection": {
+      "Female": 0.684,
+      "Male": 0.557
+    }
+  },
+  "equalised_odds_region": {
+    "FPR_wrong_rejection": {
+      "Tier1": 0.453,
+      "Tier2": 0.447,
+      "Tier3": 0.525
+    },
+    "TPR_correct_rejection": {
+      "Tier1": 0.567,
+      "Tier2": 0.616,
+      "Tier3": 0.68
+    }
+  },
+  "eighty_percent_rule_gender": {
+    "best": 0.481,
+    "worst": 0.615,
+    "ratio": 0.7821138211382114,
+    "pass": false
+  },
+  "eighty_percent_rule_region": {
+    "best": 0.51,
+    "worst": 0.604,
+    "ratio": 0.8443708609271524,
+    "pass": true
+  },
+  "moderation_events": 27,
+  "moderation_action_counts": {
+    "allow": 15,
+    "block": 12
+  },
+  "keyword_category_counts": {
+    "discriminatory": 3,
+    "pii_request": 3,
+    "jailbreak": 3,
+    "financial_misinfo": 3
+  },
+  "openai_moderation_smoke_test": {
+    "categories": {
+      "harassment": false,
+      "harassment_threatening": false,
+      "hate": false,
+      "hate_threatening": false,
+      "illicit": false,
+      "illicit_violent": false,
+      "self_harm": false,
+      "self_harm_instructions": false,
+      "self_harm_intent": false,
+      "sexual": false,
+      "sexual_minors": false,
+      "violence": false,
+      "violence_graphic": false,
+      "harassment/threatening": false,
+      "hate/threatening": false,
+      "illicit/violent": false,
+      "self-harm/intent": false,
+      "self-harm/instructions": false,
+      "self-harm": false,
+      "sexual/minors": false,
+      "violence/graphic": false
+    },
+    "category_applied_input_types": {
+      "harassment": [
+        "text"
+      ],
+      "harassment_threatening": [
+        "text"
+      ],
+      "hate": [
+        "text"
+      ],
+      "hate_threatening": [
+        "text"
+      ],
+      "illicit": [
+        "text"
+      ],
+      "illicit_violent": [
+        "text"
+      ],
+      "self_harm": [
+        "text"
+      ],
+      "self_harm_instructions": [
+        "text"
+      ],
+      "self_harm_intent": [
+        "text"
+      ],
+      "sexual": [
+        "text"
+      ],
+      "sexual_minors": [
+        "text"
+      ],
+      "violence": [
+        "text"
+      ],
+      "violence_graphic": [
+        "text"
+      ],
+      "harassment/threatening": [
+        "text"
+      ],
+      "hate/threatening": [
+        "text"
+      ],
+      "illicit/violent": [
+        "text"
+      ],
+      "self-harm/intent": [
+        "text"
+      ],
+      "self-harm/instructions": [
+        "text"
+      ],
+      "self-harm": [
+        "text"
+      ],
+      "sexual/minors": [
+        "text"
+      ],
+      "violence/graphic": [
+        "text"
+      ]
+    },
+    "category_scores": {
+      "harassment": 0.0005587767325421966,
+      "harassment_threatening": 9.170196905195049e-06,
+      "hate": 5.112579049909173e-05,
+      "hate_threatening": 8.139692624947503e-07,
+      "illicit": 0.007525865126141991,
+      "illicit_violent": 1.609308249869283e-05,
+      "self_harm": 2.710880136557205e-06,
+      "self_harm_instructions": 7.411279871974134e-07,
+      "self_harm_intent": 1.6187581436151335e-06,
+      "sexual": 7.484622751061123e-06,
+      "sexual_minors": 1.0783312222985275e-06,
+      "violence": 4.53978687024344e-06,
+      "violence_graphic": 5.77192003016332e-07,
+      "harassment/threatening": 9.170196905195049e-06,
+      "hate/threatening": 8.139692624947503e-07,
+      "illicit/violent": 1.609308249869283e-05,
+      "self-harm/intent": 1.6187581436151335e-06,
+      "self-harm/instructions": 7.411279871974134e-07,
+      "self-harm": 2.710880136557205e-06,
+      "sexual/minors": 1.0783312222985275e-06,
+      "violence/graphic": 5.77192003016332e-07
+    },
+    "flagged": false
+  }
+}
