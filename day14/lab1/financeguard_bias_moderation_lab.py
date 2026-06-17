@@ -24,6 +24,8 @@ from sklearn.preprocessing import normalize
 BASE_DIR = Path(__file__).resolve().parent
 OUTPUT_DIR = BASE_DIR / "output"
 OUTPUT_DIR.mkdir(exist_ok=True)
+load_dotenv(BASE_DIR.parent.parent / ".env", override=True)
+load_dotenv(BASE_DIR.parent / ".env", override=True)
 load_dotenv(BASE_DIR / ".env", override=True)
 
 

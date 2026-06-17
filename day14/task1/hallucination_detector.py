@@ -24,6 +24,7 @@ What this detects:
 
 import json
 import os
+from pathlib import Path
 from typing import List, Literal, Optional
 
 from dotenv import load_dotenv
@@ -31,11 +32,14 @@ from openai import OpenAI
 from pydantic import BaseModel, Field
 
 
-SCRIPT_DIR = os.path.dirname(__file__)
-load_dotenv(os.path.join(SCRIPT_DIR, ".env"), override=True)
+SCRIPT_DIR = Path(__file__).resolve().parent
+# Load environment variables, searching up to the root directory
+load_dotenv(SCRIPT_DIR.parent.parent / ".env", override=True)
+load_dotenv(SCRIPT_DIR.parent / ".env", override=True)
+load_dotenv(SCRIPT_DIR / ".env", override=True)
 
 if not os.getenv("OPENAI_API_KEY"):
-    raise RuntimeError("Set OPENAI_API_KEY in day14/task1/.env before running.")
+    raise RuntimeError("Set OPENAI_API_KEY in Ey_training_genai/.env before running.")
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
@@ -170,12 +174,21 @@ if __name__ == "__main__":
     Large chunks are always better because they give more context and never reduce accuracy.
     Azure AI Search also automatically trains your LLM model.
     """
-    samples = generate_selfcheck_samples(question=question, source_context=source_context, n=3)
-    report = detect_hallucination(
-        question=question,
-        answer=answer,
-        source_context=source_context,
-        allowed_scope="Only answer about Azure AI Search hybrid search and chunking from the provided context.",
-        selfcheck_samples=samples,
-    )
-    print(json.dumps(report.model_dump(), indent=2))
+    try:
+        samples = generate_selfcheck_samples(question=question, source_context=source_context, n=3)
+        report = detect_hallucination(
+            question=question,
+            answer=answer,
+            source_context=source_context,
+            allowed_scope="Only answer about Azure AI Search hybrid search and chunking from the provided context.",
+            selfcheck_samples=samples,
+        )
+        print(json.dumps(report.model_dump(), indent=2))
+    except Exception as e:
+        import openai
+        if isinstance(e, openai.AuthenticationError):
+            print("\n❌ Authentication Error: The OPENAI_API_KEY in Ey_training_genai/.env is invalid or expired.")
+            print("Please configure a valid key from https://platform.openai.com/account/api-keys in:")
+            print("  /Users/jagat/Documents/python_training/Ey_training_genai/.env\n")
+        else:
+            print(f"\n❌ Error during execution: {e}\n")

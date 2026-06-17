@@ -89,6 +89,8 @@ if HAS_SPACY:
 
 # API Key Configuration
 from dotenv import load_dotenv
+load_dotenv(BASE_DIR.parent.parent / ".env", override=True)
+load_dotenv(BASE_DIR.parent / ".env", override=True)
 load_dotenv(BASE_DIR / ".env", override=True)
 
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
