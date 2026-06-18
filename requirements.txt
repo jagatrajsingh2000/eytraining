@@ -88,3 +88,7 @@ ragas
 datasets
 tiktoken
 rank_bm25
+langchain-chroma
+langchain-experimental
+chromadb
+tavily-python
