@@ -83,3 +83,8 @@ uvicorn
 watchdog
 spacy
 llama-index
+sentence-transformers
+ragas
+datasets
+tiktoken
+rank_bm25
