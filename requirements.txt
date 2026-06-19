@@ -31,6 +31,7 @@ langchain
 langchain-community
 langchain-core
 langchain-groq
+langgraph
 langchain-openai
 langchain-text-splitters
 kiwisolver==1.5.0
@@ -49,6 +50,7 @@ pillow==12.2.0
 pinecone
 prometheus-client
 pydantic
+ipython
 Pygments==2.20.0
 pypdf
 pymupdf
@@ -81,6 +83,7 @@ typer==0.25.1
 typing_extensions==4.15.0
 uvicorn
 watchdog
+websockets>=13
 spacy
 llama-index
 sentence-transformers
@@ -92,3 +95,5 @@ langchain-chroma
 langchain-experimental
 chromadb
 tavily-python
+yt-dlp
+hume

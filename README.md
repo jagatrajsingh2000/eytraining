@@ -40,7 +40,7 @@ source .venv/bin/activate
 ```powershell
 .venv\Scripts\Activate.ps1
 ```
-
+(Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned) ; (& c:\Users\Administrator\Documents\python\.venv\Scripts\Activate.ps1)
 ---
 
 ### 3. Install Dependencies
