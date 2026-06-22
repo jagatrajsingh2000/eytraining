@@ -238,12 +238,3 @@ flowchart TD
 
 ---
 
-# Final Summary
-
-| Scenario | Best Choice | Main Reason |
-|---|---|---|
-| Healthcare radiology report + care pathway | Multi-agent | Different clinical domains, tools, and safety gates |
-| Personalised product recommendation email | Single-agent | Same user context, fixed flow, strict speed requirement |
-| M&A due diligence on 800 contracts | Multi-agent | Parallel document processing and cross-document synthesis |
-| Incident triage and auto-remediation | Multi-agent | Concurrent investigations, different tools, and human approval gate |
-
