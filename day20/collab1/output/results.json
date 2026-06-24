@@ -1,0 +1,37 @@
+[
+  {
+    "lead_id": "L-001",
+    "status": "ok",
+    "trace_id": "5452c74de91b",
+    "outreach": "Mock summary: mid-market logistics firm exploring automation; clear pain around manual data entry; worth a tailored outreach.",
+    "grounded": true,
+    "groundedness_score": 2,
+    "usefulness_score": 4,
+    "score": {
+      "groundedness": 2,
+      "usefulness": 4,
+      "notes": "Mock judgement using overlap + specificity rubric."
+    }
+  },
+  {
+    "lead_id": "L-002",
+    "status": "ok",
+    "trace_id": "c296723c25f3",
+    "outreach": "Mock summary: mid-market logistics firm exploring automation; clear pain around manual data entry; worth a tailored outreach.",
+    "grounded": false,
+    "groundedness_score": 1,
+    "usefulness_score": 3,
+    "score": {
+      "groundedness": 1,
+      "usefulness": 3,
+      "notes": "Mock judgement using overlap + specificity rubric."
+    }
+  },
+  {
+    "lead_id": "L-003",
+    "status": "blocked",
+    "flags": [
+      "prompt_injection"
+    ]
+  }
+]

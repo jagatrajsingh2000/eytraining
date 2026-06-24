@@ -1,0 +1,31 @@
+{"ts": "2026-06-24T09:01:18.833838+00:00", "level": "INFO", "event": "pipeline.start", "lead_id": "L-001"}
+{"ts": "2026-06-24T09:01:18.833838+00:00", "level": "WARN", "event": "guardrail.block", "lead_id": "L-003", "rule": "prompt_injection"}
+{"ts": "2026-06-24T09:01:18.845012+00:00", "level": "INFO", "event": "llm.call", "model": "claude-sonnet-4-6", "cost_usd": 0.000291, "output_tokens": 18, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.845012+00:00", "level": "WARN", "event": "guardrail.block", "lead_id": "L-003", "rule": "prompt_injection", "reason": "matched /ignore (all |previous |prior )?instructions/", "severity": "high"}
+{"ts": "2026-06-24T09:01:18.846013+00:00", "level": "INFO", "event": "llm.call", "model": "claude-sonnet-4-6", "cost_usd": 0.000684, "output_tokens": 24, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.846013+00:00", "level": "INFO", "event": "llm.call", "model": "claude-sonnet-4-6", "cost_usd": 0.000684, "output_tokens": 24, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.846013+00:00", "level": "INFO", "event": "llm.call", "model": "claude-sonnet-4-6", "cost_usd": 0.000684, "output_tokens": 24, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.846013+00:00", "level": "INFO", "event": "llm.call", "model": "claude-haiku-4-5-20251001", "cost_usd": 8.6e-05, "output_tokens": 7, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.847015+00:00", "level": "INFO", "event": "llm.call", "model": "claude-sonnet-4-6", "cost_usd": 0.000645, "output_tokens": 31, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.847015+00:00", "level": "INFO", "event": "llm.call", "model": "claude-haiku-4-5-20251001", "cost_usd": 0.000192, "output_tokens": 31, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.847015+00:00", "level": "INFO", "event": "llm.call", "model": "claude-sonnet-4-6", "cost_usd": 0.000765, "output_tokens": 24, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.847015+00:00", "level": "INFO", "event": "llm.call", "model": "claude-haiku-4-5-20251001", "cost_usd": 7.1e-05, "output_tokens": 7, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.847015+00:00", "level": "INFO", "event": "llm.call", "model": "claude-sonnet-4-6", "cost_usd": 0.0006, "output_tokens": 31, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.847015+00:00", "level": "INFO", "event": "llm.call", "model": "claude-haiku-4-5-20251001", "cost_usd": 0.000192, "output_tokens": 31, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.847015+00:00", "level": "INFO", "event": "llm.call", "model": "claude-sonnet-4-6", "cost_usd": 0.000729, "output_tokens": 24, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.848013+00:00", "level": "WARN", "event": "guardrail.block", "lead_id": "L-003", "rule": "prompt_injection", "reason": "matched /ignore (all |previous |prior )?instructions/", "severity": "high"}
+{"ts": "2026-06-24T09:01:18.848013+00:00", "level": "INFO", "event": "llm.call", "model": "claude-sonnet-4-6", "cost_usd": 0.000741, "output_tokens": 24, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.848013+00:00", "level": "INFO", "event": "llm.call", "model": "claude-sonnet-4-6", "cost_usd": 0.000723, "output_tokens": 24, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.848013+00:00", "level": "INFO", "event": "llm.call", "model": "claude-sonnet-4-6", "cost_usd": 0.000756, "output_tokens": 24, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.848013+00:00", "level": "INFO", "event": "llm.call", "model": "claude-sonnet-4-6", "cost_usd": 0.00072, "output_tokens": 24, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.848013+00:00", "level": "INFO", "event": "llm.call", "model": "claude-sonnet-4-6", "cost_usd": 0.000732, "output_tokens": 24, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.848013+00:00", "level": "INFO", "event": "llm.call", "model": "claude-sonnet-4-6", "cost_usd": 0.000708, "output_tokens": 24, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.849012+00:00", "level": "INFO", "event": "llm.call", "model": "claude-sonnet-4-6", "cost_usd": 0.000717, "output_tokens": 24, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.849012+00:00", "level": "INFO", "event": "llm.call", "model": "claude-sonnet-4-6", "cost_usd": 0.00072, "output_tokens": 24, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.849012+00:00", "level": "INFO", "event": "llm.call", "model": "claude-sonnet-4-6", "cost_usd": 0.000732, "output_tokens": 24, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.849012+00:00", "level": "INFO", "event": "llm.call", "model": "claude-sonnet-4-6", "cost_usd": 0.000702, "output_tokens": 24, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.849012+00:00", "level": "INFO", "event": "llm.call", "model": "claude-sonnet-4-6", "cost_usd": 0.000723, "output_tokens": 24, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.849012+00:00", "level": "INFO", "event": "llm.call", "model": "claude-sonnet-4-6", "cost_usd": 0.000717, "output_tokens": 24, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.849012+00:00", "level": "INFO", "event": "llm.call", "model": "claude-sonnet-4-6", "cost_usd": 0.000729, "output_tokens": 24, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.849012+00:00", "level": "INFO", "event": "llm.call", "model": "claude-sonnet-4-6", "cost_usd": 0.000726, "output_tokens": 24, "stop_reason": "end_turn"}
+{"ts": "2026-06-24T09:01:18.849012+00:00", "level": "INFO", "event": "llm.call", "model": "claude-sonnet-4-6", "cost_usd": 0.000672, "output_tokens": 24, "stop_reason": "end_turn"}
