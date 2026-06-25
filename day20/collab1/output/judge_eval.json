@@ -1,0 +1,131 @@
+{
+  "metrics": {
+    "sample_count": 15,
+    "groundedness_accuracy": 0.0,
+    "usefulness_accuracy": 0.2,
+    "groundedness_correlation": -0.56,
+    "usefulness_correlation": 0.624
+  },
+  "rows": [
+    {
+      "sample_id": "S-001",
+      "human_groundedness": 5,
+      "judge_groundedness": 4,
+      "human_usefulness": 5,
+      "judge_usefulness": 5,
+      "judge_notes": "Mock judgement using overlap + specificity rubric."
+    },
+    {
+      "sample_id": "S-002",
+      "human_groundedness": 5,
+      "judge_groundedness": 3,
+      "human_usefulness": 4,
+      "judge_usefulness": 4,
+      "judge_notes": "Mock judgement using overlap + specificity rubric."
+    },
+    {
+      "sample_id": "S-003",
+      "human_groundedness": 5,
+      "judge_groundedness": 3,
+      "human_usefulness": 5,
+      "judge_usefulness": 3,
+      "judge_notes": "Mock judgement using overlap + specificity rubric."
+    },
+    {
+      "sample_id": "S-004",
+      "human_groundedness": 5,
+      "judge_groundedness": 3,
+      "human_usefulness": 4,
+      "judge_usefulness": 3,
+      "judge_notes": "Mock judgement using overlap + specificity rubric."
+    },
+    {
+      "sample_id": "S-005",
+      "human_groundedness": 5,
+      "judge_groundedness": 3,
+      "human_usefulness": 5,
+      "judge_usefulness": 4,
+      "judge_notes": "Mock judgement using overlap + specificity rubric."
+    },
+    {
+      "sample_id": "S-006",
+      "human_groundedness": 5,
+      "judge_groundedness": 3,
+      "human_usefulness": 4,
+      "judge_usefulness": 3,
+      "judge_notes": "Mock judgement using overlap + specificity rubric."
+    },
+    {
+      "sample_id": "S-007",
+      "human_groundedness": 5,
+      "judge_groundedness": 3,
+      "human_usefulness": 5,
+      "judge_usefulness": 3,
+      "judge_notes": "Mock judgement using overlap + specificity rubric."
+    },
+    {
+      "sample_id": "S-008",
+      "human_groundedness": 5,
+      "judge_groundedness": 2,
+      "human_usefulness": 4,
+      "judge_usefulness": 3,
+      "judge_notes": "Mock judgement using overlap + specificity rubric."
+    },
+    {
+      "sample_id": "S-009",
+      "human_groundedness": 5,
+      "judge_groundedness": 3,
+      "human_usefulness": 5,
+      "judge_usefulness": 4,
+      "judge_notes": "Mock judgement using overlap + specificity rubric."
+    },
+    {
+      "sample_id": "S-010",
+      "human_groundedness": 5,
+      "judge_groundedness": 3,
+      "human_usefulness": 4,
+      "judge_usefulness": 3,
+      "judge_notes": "Mock judgement using overlap + specificity rubric."
+    },
+    {
+      "sample_id": "S-011",
+      "human_groundedness": 5,
+      "judge_groundedness": 4,
+      "human_usefulness": 5,
+      "judge_usefulness": 3,
+      "judge_notes": "Mock judgement using overlap + specificity rubric."
+    },
+    {
+      "sample_id": "S-012",
+      "human_groundedness": 5,
+      "judge_groundedness": 4,
+      "human_usefulness": 5,
+      "judge_usefulness": 4,
+      "judge_notes": "Mock judgement using overlap + specificity rubric."
+    },
+    {
+      "sample_id": "S-013",
+      "human_groundedness": 1,
+      "judge_groundedness": 4,
+      "human_usefulness": 1,
+      "judge_usefulness": 3,
+      "judge_notes": "Mock judgement using overlap + specificity rubric."
+    },
+    {
+      "sample_id": "S-014",
+      "human_groundedness": 5,
+      "judge_groundedness": 4,
+      "human_usefulness": 5,
+      "judge_usefulness": 3,
+      "judge_notes": "Mock judgement using overlap + specificity rubric."
+    },
+    {
+      "sample_id": "S-015",
+      "human_groundedness": 2,
+      "judge_groundedness": 5,
+      "human_usefulness": 1,
+      "judge_usefulness": 1,
+      "judge_notes": "Mock judgement using overlap + specificity rubric."
+    }
+  ]
+}
