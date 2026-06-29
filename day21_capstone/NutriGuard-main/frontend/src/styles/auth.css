@@ -1,0 +1,127 @@
+.auth-layout {
+  align-items: center;
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr 440px;
+  min-height: calc(100vh - 5.1rem);
+  padding: 2rem clamp(1rem, 5vw, 5rem);
+}
+
+.auth-hero h1 {
+  color: var(--accent);
+  font-size: clamp(2.8rem, 6vw, 5.8rem);
+  line-height: 1;
+  margin: 0 0 1rem;
+  text-shadow: 0 20px 45px var(--glow);
+}
+
+.auth-hero p {
+  color: var(--muted);
+  font-size: 1.2rem;
+  max-width: 620px;
+}
+
+.eyebrow {
+  color: var(--accent);
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 900;
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+}
+
+.auth-hero {
+  position: relative;
+}
+
+.auth-hero::before,
+.auth-hero::after {
+  border: 2px solid color-mix(in srgb, var(--accent) 28%, transparent);
+  border-radius: 999px 8px 999px 8px;
+  content: "";
+  height: 2.2rem;
+  opacity: 0.65;
+  position: absolute;
+  width: 2.2rem;
+}
+
+.auth-hero::before {
+  right: 18%;
+  top: -0.5rem;
+  transform: rotate(24deg);
+}
+
+.auth-hero::after {
+  bottom: 16%;
+  left: -1rem;
+  transform: rotate(-18deg);
+}
+
+.hero-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.6rem;
+}
+
+.hero-pills span {
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: var(--shine), 0 12px 30px rgba(31, 111, 74, 0.1);
+  color: var(--accent);
+  font-weight: 900;
+  padding: 0.55rem 0.85rem;
+}
+
+:root[data-theme="dark"] .hero-pills span {
+  background: rgba(24, 34, 27, 0.72);
+}
+
+.auth-card,
+.panel {
+  background: linear-gradient(180deg, #ffffff, color-mix(in srgb, var(--panel) 94%, var(--panel-soft) 6%));
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow), var(--shine);
+  display: grid;
+  gap: 1.05rem;
+  overflow: hidden;
+  padding: clamp(1rem, 2vw, 1.35rem);
+  position: relative;
+}
+
+.auth-card::before,
+.panel::before {
+  background: linear-gradient(90deg, transparent, var(--glow), transparent);
+  content: "";
+  height: 1px;
+  left: 1rem;
+  position: absolute;
+  right: 1rem;
+  top: 0;
+}
+
+.auth-switch {
+  background: var(--panel-soft);
+  border-radius: 999px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 0.25rem;
+}
+
+.auth-switch button,
+.ghost-button,
+.side-nav button,
+.side-actions .theme-toggle,
+.profile-popover button {
+  background: transparent;
+  color: var(--text);
+}
+
+.auth-switch button.active,
+.side-nav button.active {
+  background: var(--accent);
+  color: #ffffff;
+}
+

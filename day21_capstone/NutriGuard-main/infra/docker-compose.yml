@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: nutriguard-postgres
+    environment:
+      POSTGRES_USER: nutriguard_user
+      POSTGRES_PASSWORD: nutriguard_pass
+      POSTGRES_DB: nutriguard_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend-api:
+    build: ../services/backend-api
+    container_name: nutriguard-backend-api
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://nutriguard_user:nutriguard_pass@postgres:5432/nutriguard_db
+      AI_ORCHESTRATOR_URL: http://ai-orchestrator:8001
+      CORS_ORIGINS: http://localhost:5173,http://127.0.0.1:5173
+      ENABLE_OUTBOX_PUBLISHER: "true"
+      OUTBOX_PUBLISH_INTERVAL_SECONDS: "5"
+    depends_on:
+      - postgres
+
+  ai-orchestrator:
+    build: ../services/ai-orchestrator
+    container_name: nutriguard-ai-orchestrator
+    ports:
+      - "8001:8001"
+    environment:
+      GEMINI_API_KEY: your_gemini_key_here
+      GEMINI_MODEL: gemini-3-flash-preview
+      DATABASE_URL: postgresql://nutriguard_user:nutriguard_pass@postgres:5432/nutriguard_db
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:

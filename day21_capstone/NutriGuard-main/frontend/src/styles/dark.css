@@ -1,0 +1,207 @@
+:root[data-theme="dark"] body {
+  background: var(--page-gradient), var(--bg);
+}
+
+:root[data-theme="dark"] .healthy-backdrop::before {
+  opacity: 0.16;
+}
+
+:root[data-theme="dark"] .food-orbit {
+  border-color: rgba(255, 255, 255, 0.12);
+  opacity: 0.45;
+}
+
+:root[data-theme="dark"] .side-nav {
+  background: #0f0f0f;
+  border-color: var(--border);
+  box-shadow: 16px 0 46px rgba(0, 0, 0, 0.42);
+}
+
+:root[data-theme="dark"] .side-nav h1,
+:root[data-theme="dark"] .side-nav button {
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .auth-hero h1,
+:root[data-theme="dark"] .navbar-brand strong,
+:root[data-theme="dark"] .topbar h2,
+:root[data-theme="dark"] .page-panel > h2,
+:root[data-theme="dark"] .report-head h2,
+:root[data-theme="dark"] .form-hero h2,
+:root[data-theme="dark"] .sidebar-well strong {
+  color: #65d68e;
+}
+
+:root[data-theme="dark"] .eyebrow,
+:root[data-theme="dark"] .mini-label,
+:root[data-theme="dark"] .theme-symbol,
+:root[data-theme="dark"] .meal-icons span,
+:root[data-theme="dark"] .field-icon,
+:root[data-theme="dark"] summary {
+  color: #65d68e;
+}
+
+:root[data-theme="dark"] .brand-mark,
+:root[data-theme="dark"] .profile-button,
+:root[data-theme="dark"] .menu-launcher,
+:root[data-theme="dark"] .side-nav button.active {
+  background: linear-gradient(145deg, #65d68e, #b8f0c9);
+  box-shadow: 0 14px 30px rgba(101, 214, 142, 0.18);
+  color: #0b0b0b;
+}
+
+:root[data-theme="dark"] .side-nav button:hover {
+  background: #1d1d1d;
+  border-color: #3d3d3d;
+  box-shadow: none;
+}
+
+:root[data-theme="dark"] .plate-rings span,
+:root[data-theme="dark"] .food-icon > span::before,
+:root[data-theme="dark"] .food-icon > span::after,
+:root[data-theme="dark"] .drink-icon > span::before,
+:root[data-theme="dark"] .dose-icon > span::before,
+:root[data-theme="dark"] .note-icon > span::before,
+:root[data-theme="dark"] .note-icon > span::after {
+  background: #f4f4f4;
+}
+
+:root[data-theme="dark"] .field-icon > span {
+  border-color: #f4f4f4;
+}
+
+:root[data-theme="dark"] .brand-card p {
+  color: var(--muted);
+}
+
+:root[data-theme="dark"] .topbar,
+:root[data-theme="dark"] .panel,
+:root[data-theme="dark"] .auth-card,
+:root[data-theme="dark"] .profile-popover,
+:root[data-theme="dark"] .timeline-item,
+:root[data-theme="dark"] .history article {
+  background: #121212;
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .topbar::after,
+:root[data-theme="dark"] .auth-hero::before,
+:root[data-theme="dark"] .auth-hero::after {
+  display: none;
+}
+
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] textarea {
+  background: #080808;
+  border-color: #3a3a3a;
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .parsed-box,
+:root[data-theme="dark"] .meal-detail-grid,
+:root[data-theme="dark"] .report pre,
+:root[data-theme="dark"] .check-card,
+:root[data-theme="dark"] .profile-action,
+:root[data-theme="dark"] .auth-switch,
+:root[data-theme="dark"] .theme-toggle,
+:root[data-theme="dark"] .form-hero,
+:root[data-theme="dark"] .meal-field-card,
+:root[data-theme="dark"] .sidebar-well,
+:root[data-theme="dark"] .sidebar-tips span,
+:root[data-theme="dark"] .meal-icons span {
+  background: #1d1d1d !important;
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .field-icon {
+  background: #242424;
+}
+
+:root[data-theme="dark"] .food-card .field-icon {
+  background: linear-gradient(180deg, #183326, #121f18);
+  color: #8af0ad;
+}
+
+:root[data-theme="dark"] .drink-card .field-icon {
+  background: linear-gradient(180deg, #172a3a, #101b25);
+  color: #8ccfff;
+}
+
+:root[data-theme="dark"] .supplement-card .field-icon {
+  background: linear-gradient(180deg, #332719, #211911);
+  color: #ffd27c;
+}
+
+:root[data-theme="dark"] .note-card .field-icon {
+  background: linear-gradient(180deg, #28233a, #1b1828);
+  color: #c6b7ff;
+}
+
+:root[data-theme="dark"] .food-card .field-icon > span {
+  border-color: #8af0ad;
+}
+
+:root[data-theme="dark"] .drink-card .field-icon > span {
+  border-color: #8ccfff;
+}
+
+:root[data-theme="dark"] .supplement-card .field-icon > span {
+  border-color: #ffd27c;
+}
+
+:root[data-theme="dark"] .note-card .field-icon > span {
+  border-color: #c6b7ff;
+}
+
+:root[data-theme="dark"] .food-card .field-icon > span::before,
+:root[data-theme="dark"] .food-card .field-icon > span::after {
+  background: #8af0ad;
+}
+
+:root[data-theme="dark"] .drink-card .field-icon > span::before {
+  background: #8ccfff;
+}
+
+:root[data-theme="dark"] .dose-icon > span::before {
+  background: #ffd27c;
+}
+
+:root[data-theme="dark"] .note-card .field-icon > span::before,
+:root[data-theme="dark"] .note-card .field-icon > span::after {
+  background: #c6b7ff;
+}
+
+:root[data-theme="dark"] .status.completed {
+  background: var(--accent-soft);
+  color: #ffffff;
+}
+
+:root[data-theme="dark"] .theme-track {
+  background: #2b2b2b;
+  border-color: #404040;
+}
+
+:root[data-theme="dark"] .theme-knob {
+  background: #ffffff;
+}
+
+:root[data-theme="dark"] .profile-button,
+:root[data-theme="dark"] .brand-mark {
+  color: #0b0b0b;
+}
+
+:root[data-theme="dark"] .plate-rings span:nth-child(1),
+:root[data-theme="dark"] .plate-rings span:nth-child(2) {
+  background: #65d68e;
+}
+
+:root[data-theme="dark"] .plate-rings span:nth-child(3) {
+  background: #ffd27c;
+}
+
+:root[data-theme="dark"] .safety {
+  background: #1b2b38;
+  color: #b7d8f1;
+}
+
