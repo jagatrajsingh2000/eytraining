@@ -2,7 +2,7 @@ from typing import Dict, Any
 from datetime import datetime
 import logging
 
-from app.llm.gemini_client import gemini_client
+from app.llm.provider_chain import LLMProviderChainError, generate_json_with_provider_fallback
 from app.observability.langsmith import traceable
 from app.rag.retriever import retrieve_nutrition_context
 
@@ -163,9 +163,7 @@ def health_risk_agent(state: Dict[str, Any]) -> Dict[str, Any]:
             "day_meals": day_meals,
         }
     )
-    try:
-        result = gemini_client.generate_json(
-            f"""
+    prompt = f"""
 You are the Health Risk Agent for NutriGuard.
 
 Check the meal against the user profile and retrieved nutrition context.
@@ -208,10 +206,18 @@ Health report text: {health_report_text}
 Meal analysis: {meal_analysis}
 Retrieved context: {context}
 """
-        )
+    try:
+        result, metric_events = generate_json_with_provider_fallback(prompt, "health_risk")
         risk_flags = result.get("risk_flags") or []
-    except Exception:
-        logger.exception("Health risk Gemini call failed; using fallback flags")
+        state = {
+            **state,
+            "metric_events": [
+                *(state.get("metric_events") or []),
+                *metric_events,
+            ],
+        }
+    except LLMProviderChainError as exc:
+        logger.exception("Health risk LLM chain failed; using fallback flags")
         risk_flags = _fallback_risk_flags(
             meal_analysis,
             health_conditions,
@@ -224,7 +230,7 @@ Retrieved context: {context}
             **state,
             "metric_events": [
                 *(state.get("metric_events") or []),
-                {"name": "gemini_fallback", "source": "health_risk"},
+                *exc.metric_events,
             ],
         }
 

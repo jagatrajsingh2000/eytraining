@@ -111,6 +111,31 @@ def api_latency_metrics(metric_events):
     }
 
 
+def llm_fallback_metrics(metric_events):
+    event_names = {
+        "gemini_fallback",
+        "openai_answer",
+        "openai_fallback",
+        "rule_fallback",
+        "llm_parse_fallback",
+    }
+    llm_events = [event for event in metric_events if event.name in event_names]
+    by_name = Counter(event.name for event in llm_events)
+    by_agent = defaultdict(lambda: defaultdict(int))
+
+    for event in llm_events:
+        by_agent[event.source or "unknown"][event.name] += 1
+
+    return {
+        "gemini_fallback_total": by_name["gemini_fallback"],
+        "openai_answer_total": by_name["openai_answer"],
+        "openai_fallback_total": by_name["openai_fallback"],
+        "rule_fallback_total": by_name["rule_fallback"],
+        "parse_fallback_total": by_name["llm_parse_fallback"],
+        "by_agent": {agent: dict(counts) for agent, counts in by_agent.items()},
+    }
+
+
 def serialize_rag_eval(run: RagEvalRun | None) -> dict:
     if not run:
         return {
@@ -202,6 +227,7 @@ def get_admin_metrics(
     unread_notifications = [item for item in notifications if item.status == "unread"]
     failed_meals = [meal for meal in meals if (meal.status or "").upper() in {"ERROR", "FAILED"}]
     fallback_events = [event for event in metric_events if event.name == "gemini_fallback"]
+    llm_fallbacks = llm_fallback_metrics(metric_events)
     latest_rag_eval = db.query(RagEvalRun).order_by(RagEvalRun.created_at.desc()).first()
 
     return {
@@ -239,6 +265,7 @@ def get_admin_metrics(
             "fallback_total": len(fallback_events),
             "fallback_by_source": dict(Counter(event.source or "unknown" for event in fallback_events)),
         },
+        "llm_fallbacks": llm_fallbacks,
         "api_latency": api_latency_metrics(metric_events),
         "rag_eval": serialize_rag_eval(latest_rag_eval),
     }

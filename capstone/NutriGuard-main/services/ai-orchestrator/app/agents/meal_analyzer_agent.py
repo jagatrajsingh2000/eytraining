@@ -1,7 +1,7 @@
 from typing import Dict, Any
 import logging
 
-from app.llm.gemini_client import gemini_client
+from app.llm.provider_chain import LLMProviderChainError, generate_json_with_provider_fallback
 from app.observability.langsmith import traceable
 
 logger = logging.getLogger("nutriguard.orchestrator.meal_analyzer")
@@ -33,9 +33,7 @@ def _fallback_meal_analysis(meal_text: str) -> Dict[str, Any]:
 def meal_analyzer_agent(state: Dict[str, Any]) -> Dict[str, Any]:
     meal_text = state.get("meal_text", "")
 
-    try:
-        meal_analysis = gemini_client.generate_json(
-            f"""
+    prompt = f"""
 You are the Meal Analyzer Agent for NutriGuard.
 
 Convert the user's meal text into structured food data.
@@ -51,15 +49,23 @@ Return only valid JSON with this shape:
 
 Meal text: {meal_text}
 """
-        )
-    except Exception:
-        logger.exception("Meal analyzer Gemini call failed; using fallback analysis")
+    try:
+        meal_analysis, metric_events = generate_json_with_provider_fallback(prompt, "meal_analyzer")
+        state = {
+            **state,
+            "metric_events": [
+                *(state.get("metric_events") or []),
+                *metric_events,
+            ],
+        }
+    except LLMProviderChainError as exc:
+        logger.exception("Meal analyzer LLM chain failed; using fallback analysis")
         meal_analysis = _fallback_meal_analysis(meal_text)
         state = {
             **state,
             "metric_events": [
                 *(state.get("metric_events") or []),
-                {"name": "gemini_fallback", "source": "meal_analyzer"},
+                *exc.metric_events,
             ],
         }
 

@@ -55,6 +55,7 @@ export default function AdminPage({
   const reports = metrics?.reports || {}
   const notifications = metrics?.notifications || {}
   const gemini = metrics?.gemini || {}
+  const llmFallbacks = metrics?.llm_fallbacks || {}
   const apiLatency = metrics?.api_latency || {}
   const ragEval = metrics?.rag_eval?.latest
   const retrievalMetrics = ragEval?.metrics?.retrieval_metrics || {}
@@ -90,7 +91,10 @@ export default function AdminPage({
         <MetricCard label="Feedback disliked" value={feedback.disliked ?? 0} />
         <MetricCard label="Missed meal nudges" value={notifications.missed_meal_total ?? 0} />
         <MetricCard label="Unread notifications" value={notifications.unread_total ?? 0} />
-        <MetricCard label="Gemini fallbacks" value={gemini.fallback_total ?? 0} />
+        <MetricCard label="Gemini fallbacks" value={llmFallbacks.gemini_fallback_total ?? gemini.fallback_total ?? 0} />
+        <MetricCard label="OpenAI answers" value={llmFallbacks.openai_answer_total ?? 0} />
+        <MetricCard label="OpenAI fallbacks" value={llmFallbacks.openai_fallback_total ?? 0} />
+        <MetricCard label="Rule fallbacks" value={llmFallbacks.rule_fallback_total ?? 0} />
         <MetricCard label="API requests" value={apiLatency.total_requests ?? 0} />
         <MetricCard label="Avg API latency" value={`${apiLatency.average_ms ?? 0}ms`} />
         <MetricCard label="P95 API latency" value={`${apiLatency.p95_ms ?? 0}ms`} />
@@ -119,15 +123,18 @@ export default function AdminPage({
           </div>
         </section>
         <section className="metric-panel">
-          <h3>Gemini fallback sources</h3>
+          <h3>LLM fallback by agent</h3>
           <div className="feedback-metrics">
-            {Object.entries(gemini.fallback_by_source || {}).map(([source, count]) => (
-              <p key={source}>
-                <b>{source}</b>
-                <span>{count}</span>
+            {Object.entries(llmFallbacks.by_agent || {}).map(([agent, counts]) => (
+              <p key={agent}>
+                <b>{agent.replace('_', ' ')}</b>
+                <span>Gemini fallback {counts.gemini_fallback || 0}</span>
+                <span>OpenAI answer {counts.openai_answer || 0}</span>
+                <span>OpenAI fallback {counts.openai_fallback || 0}</span>
+                <span>Rule fallback {counts.rule_fallback || 0}</span>
               </p>
             ))}
-            {!Object.keys(gemini.fallback_by_source || {}).length && <p className="muted">No fallbacks recorded.</p>}
+            {!Object.keys(llmFallbacks.by_agent || {}).length && <p className="muted">No LLM fallbacks recorded.</p>}
           </div>
         </section>
         <section className="metric-panel wide-metric-panel">

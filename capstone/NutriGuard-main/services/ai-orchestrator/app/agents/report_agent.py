@@ -1,7 +1,7 @@
 from typing import Dict, Any
 import logging
 
-from app.llm.gemini_client import gemini_client
+from app.llm.provider_chain import LLMProviderChainError, generate_text_with_provider_fallback
 from app.observability.langsmith import traceable
 
 logger = logging.getLogger("nutriguard.orchestrator.report")
@@ -71,9 +71,7 @@ def report_agent(state: Dict[str, Any]) -> Dict[str, Any]:
     health_report_text = (state.get("health_report_text") or "")[:6000]
     context = state.get("context") or []
 
-    try:
-        report = gemini_client.generate_text(
-            f"""
+    prompt = f"""
 You are the Report Agent for NutriGuard.
 
 Create a short, simple user-facing nutrition report.
@@ -123,15 +121,23 @@ Meal analysis: {meal_analysis}
 Risk flags: {risk_flags}
 Retrieved context: {context}
 """
-        )
-    except Exception:
-        logger.exception("Report Gemini call failed; using fallback report")
+    try:
+        report, metric_events = generate_text_with_provider_fallback(prompt, "report")
+        state = {
+            **state,
+            "metric_events": [
+                *(state.get("metric_events") or []),
+                *metric_events,
+            ],
+        }
+    except LLMProviderChainError as exc:
+        logger.exception("Report LLM chain failed; using fallback report")
         report = _fallback_report(meal_analysis, risk_flags, context)
         state = {
             **state,
             "metric_events": [
                 *(state.get("metric_events") or []),
-                {"name": "gemini_fallback", "source": "report"},
+                *exc.metric_events,
             ],
         }
 

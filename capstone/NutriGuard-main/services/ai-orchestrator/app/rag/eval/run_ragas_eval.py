@@ -49,22 +49,19 @@ def retrieval_summary(cases: list[dict[str, Any]], limit: int) -> list[dict[str,
 
 def build_judge_llm(provider: str, model: str | None):
     if provider == "openai":
-        return None
-
-    if provider == "claude":
-        if not os.getenv("ANTHROPIC_API_KEY"):
-            raise RuntimeError("Claude RAGAS evaluation requires ANTHROPIC_API_KEY.")
+        if not os.getenv("OPENAI_API_KEY"):
+            raise RuntimeError("OpenAI RAGAS evaluation requires OPENAI_API_KEY.")
         try:
-            from langchain_anthropic import ChatAnthropic
+            from langchain_openai import ChatOpenAI
             from ragas.llms import LangchainLLMWrapper
         except ImportError as exc:
             raise RuntimeError(
-                "Claude RAGAS evaluation requires langchain-anthropic. "
-                "Run: pip install langchain-anthropic"
+                "OpenAI RAGAS evaluation requires langchain-openai. "
+                "Run: pip install -r services/ai-orchestrator/requirements-ragas.txt"
             ) from exc
         return LangchainLLMWrapper(
-            ChatAnthropic(
-                model=model or "claude-3-5-sonnet-latest",
+            ChatOpenAI(
+                model=model or "gpt-4o-mini",
                 temperature=0,
             )
         )
@@ -197,7 +194,7 @@ def main():
     parser.add_argument("--dataset", default=str(DATASET_PATH), help="Path to JSONL eval cases.")
     parser.add_argument("--limit", type=int, default=6, help="Number of contexts to retrieve per case.")
     parser.add_argument("--ragas", action="store_true", help="Run RAGAS metrics in addition to retrieval hit-rate.")
-    parser.add_argument("--judge-provider", choices=["openai", "claude"], default=os.getenv("RAGAS_JUDGE_PROVIDER", "openai"))
+    parser.add_argument("--judge-provider", choices=["openai"], default=os.getenv("RAGAS_JUDGE_PROVIDER", "openai"))
     parser.add_argument("--judge-model", default=os.getenv("RAGAS_JUDGE_MODEL"))
     parser.add_argument("--publish", action="store_true", help="Publish latest result to backend admin dashboard.")
     parser.add_argument("--backend-url", default=os.getenv("BACKEND_API_URL", "http://localhost:8000"))
@@ -208,11 +205,12 @@ def main():
     rows = retrieval_summary(cases, args.limit)
     average_hit_rate = sum(row["hit_rate"] for row in rows) / len(rows) if rows else 0
     ragas_result = None
+    judge_model = args.judge_model or "gpt-4o-mini"
 
     if args.ragas:
-        ragas_result = run_ragas(rows, cases, args.judge_provider, args.judge_model)
+        ragas_result = run_ragas(rows, cases, args.judge_provider, judge_model)
 
-    payload = build_result_payload(rows, average_hit_rate, ragas_result, args.judge_provider, args.judge_model)
+    payload = build_result_payload(rows, average_hit_rate, ragas_result, args.judge_provider, judge_model)
     print(json.dumps(payload, indent=2))
 
     if args.publish:
