@@ -42,6 +42,10 @@ function formatDateTime(value) {
   return new Date(value).toLocaleString()
 }
 
+function formatUsd(value) {
+  return `$${Number(value || 0).toFixed(6)}`
+}
+
 export default function AdminPage({
   metrics,
   loadAdminMetrics,
@@ -57,6 +61,8 @@ export default function AdminPage({
   const gemini = metrics?.gemini || {}
   const llmFallbacks = metrics?.llm_fallbacks || {}
   const apiLatency = metrics?.api_latency || {}
+  const agentLatency = metrics?.agent_latency || {}
+  const tokenCost = metrics?.token_cost || {}
   const ragEval = metrics?.rag_eval?.latest
   const retrievalMetrics = ragEval?.metrics?.retrieval_metrics || {}
   const ragasMetrics = ragEval?.metrics?.ragas_metrics || {}
@@ -99,6 +105,13 @@ export default function AdminPage({
         <MetricCard label="Avg API latency" value={`${apiLatency.average_ms ?? 0}ms`} />
         <MetricCard label="P95 API latency" value={`${apiLatency.p95_ms ?? 0}ms`} />
         <MetricCard label="Slowest API" value={`${apiLatency.max_ms ?? 0}ms`} />
+        <MetricCard label="Agent runs" value={agentLatency.total_runs ?? 0} />
+        <MetricCard label="Avg agent latency" value={`${agentLatency.average_ms ?? 0}ms`} />
+        <MetricCard label="P95 agent latency" value={`${agentLatency.p95_ms ?? 0}ms`} />
+        <MetricCard label="Slowest agent" value={`${agentLatency.max_ms ?? 0}ms`} />
+        <MetricCard label="LLM calls" value={tokenCost.calls ?? 0} />
+        <MetricCard label="LLM tokens" value={tokenCost.total_tokens ?? 0} detail={`${tokenCost.input_tokens ?? 0} in / ${tokenCost.output_tokens ?? 0} out`} />
+        <MetricCard label="Estimated LLM cost" value={formatUsd(tokenCost.estimated_cost_usd)} />
         <MetricCard
           label="RAG hit rate"
           value={formatPercent(ragEval?.average_hit_rate)}
@@ -203,6 +216,60 @@ export default function AdminPage({
               No RAG eval result yet. Run the local RAGAS script with publish enabled, then refresh this page.
             </p>
           )}
+        </section>
+        <section className="metric-panel wide-metric-panel">
+          <h3>Agent latency by stage</h3>
+          <div className="latency-table">
+            {(agentLatency.by_agent || []).map((item) => (
+              <div className="latency-row" key={item.agent}>
+                <b>{item.agent.replace('_', ' ')}</b>
+                <span>{item.count} runs</span>
+                <span>avg {item.average_ms}ms</span>
+                <span>p95 {item.p95_ms}ms</span>
+                <span>max {item.max_ms}ms</span>
+                <span>{item.fallback_count} fallback</span>
+              </div>
+            ))}
+            {!agentLatency.by_agent?.length && (
+              <p className="muted">No agent latency data yet. Submit a meal and wait for the orchestrator result.</p>
+            )}
+          </div>
+        </section>
+        <section className="metric-panel wide-metric-panel">
+          <h3>Token cost by provider</h3>
+          <div className="latency-table">
+            {Object.entries(tokenCost.by_provider || {}).map(([provider, item]) => (
+              <div className="latency-row" key={provider}>
+                <b>{provider}</b>
+                <span>{item.calls || 0} calls</span>
+                <span>{item.input_tokens || 0} in</span>
+                <span>{item.output_tokens || 0} out</span>
+                <span>{item.total_tokens || 0} total</span>
+                <span>{formatUsd(item.estimated_cost_usd)}</span>
+              </div>
+            ))}
+            {!Object.keys(tokenCost.by_provider || {}).length && (
+              <p className="muted">No token usage data yet. Submit a meal after deploying token-cost tracking.</p>
+            )}
+          </div>
+        </section>
+        <section className="metric-panel wide-metric-panel">
+          <h3>Token cost by agent</h3>
+          <div className="latency-table">
+            {Object.entries(tokenCost.by_agent || {}).map(([agent, item]) => (
+              <div className="latency-row" key={agent}>
+                <b>{agent.replace('_', ' ')}</b>
+                <span>{item.calls || 0} calls</span>
+                <span>{item.input_tokens || 0} in</span>
+                <span>{item.output_tokens || 0} out</span>
+                <span>{item.total_tokens || 0} total</span>
+                <span>{formatUsd(item.estimated_cost_usd)}</span>
+              </div>
+            ))}
+            {!Object.keys(tokenCost.by_agent || {}).length && (
+              <p className="muted">No agent token usage data yet.</p>
+            )}
+          </div>
         </section>
         <section className="metric-panel wide-metric-panel">
           <h3>API latency by endpoint</h3>

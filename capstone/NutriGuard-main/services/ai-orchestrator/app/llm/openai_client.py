@@ -52,6 +52,45 @@ class OpenAIClient:
             raise RuntimeError("OpenAI returned an empty response")
         return text
 
+    def generate_text_with_usage(self, prompt: str) -> dict[str, Any]:
+        if not self.enabled:
+            raise RuntimeError("OPENAI_API_KEY is not set")
+
+        response = requests.post(
+            "https://api.openai.com/v1/chat/completions",
+            headers={
+                "authorization": f"Bearer {self.api_key}",
+                "content-type": "application/json",
+            },
+            data=json.dumps(
+                {
+                    "model": self.model_name,
+                    "temperature": 0.2,
+                    "messages": [{"role": "user", "content": prompt}],
+                }
+            ),
+            timeout=45,
+        )
+        response.raise_for_status()
+        payload = response.json()
+        choices = payload.get("choices") or []
+        text = ""
+        if choices:
+            text = ((choices[0].get("message") or {}).get("content") or "").strip()
+        if not text:
+            raise RuntimeError("OpenAI returned an empty response")
+        usage = payload.get("usage") or {}
+        return {
+            "text": text,
+            "provider": "openai",
+            "model": self.model_name,
+            "usage": {
+                "input_tokens": usage.get("prompt_tokens") or 0,
+                "output_tokens": usage.get("completion_tokens") or 0,
+                "total_tokens": usage.get("total_tokens") or 0,
+            },
+        }
+
     def generate_json(self, prompt: str) -> Dict[str, Any]:
         text = self.generate_text(prompt)
         return _extract_json_object(text)

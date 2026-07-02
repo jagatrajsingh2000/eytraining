@@ -69,5 +69,5 @@ def health():
     return {
         "status": "ok",
         "service": "ai-orchestrator",
-        "build_marker": "orchestrator-ci-check-2026-07-01",
+        "build_marker": "orchestrator-deploy-probe-2026-07-02",
     }

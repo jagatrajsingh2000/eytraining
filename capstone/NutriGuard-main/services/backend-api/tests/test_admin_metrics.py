@@ -5,11 +5,13 @@ import pytest
 from fastapi import HTTPException
 
 from app.routes.admin import (
+    agent_latency_metrics,
     api_latency_metrics,
     llm_fallback_metrics,
     percentile,
     require_admin,
     serialize_rag_eval,
+    token_cost_metrics,
 )
 
 
@@ -47,6 +49,26 @@ def test_api_latency_metrics_groups_by_endpoint():
     assert result["by_endpoint"][0]["latest_status"] == 401
 
 
+def test_agent_latency_metrics_groups_by_agent():
+    events = [
+        metric_event("agent_latency", source="meal_analyzer", payload={"duration_ms": 120, "status": "llm"}),
+        metric_event("agent_latency", source="meal_analyzer", payload={"duration_ms": 180, "status": "fallback"}),
+        metric_event("agent_latency", source="health_risk", payload={"duration_ms": 60, "status": "llm"}),
+        metric_event("api_request", payload={"duration_ms": 20}),
+    ]
+
+    result = agent_latency_metrics(events)
+
+    assert result["total_runs"] == 3
+    assert result["average_ms"] == 120
+    assert result["p95_ms"] == 180
+    assert result["max_ms"] == 180
+    assert result["by_agent"][0]["agent"] == "meal_analyzer"
+    assert result["by_agent"][0]["count"] == 2
+    assert result["by_agent"][0]["average_ms"] == 150
+    assert result["by_agent"][0]["fallback_count"] == 1
+
+
 def test_llm_fallback_metrics_returns_totals_and_agent_breakdown():
     events = [
         metric_event("gemini_fallback", source="meal_analyzer"),
@@ -67,6 +89,44 @@ def test_llm_fallback_metrics_returns_totals_and_agent_breakdown():
     assert result["parse_fallback_total"] == 1
     assert result["by_agent"]["meal_analyzer"]["gemini_fallback"] == 1
     assert result["by_agent"]["report_agent"]["rule_fallback"] == 1
+
+
+def test_token_cost_metrics_groups_by_provider_and_agent():
+    events = [
+        metric_event(
+            "llm_token_usage",
+            source="meal_analyzer",
+            payload={
+                "provider": "gemini",
+                "input_tokens": 100,
+                "output_tokens": 50,
+                "total_tokens": 150,
+                "estimated_cost_usd": 0,
+            },
+        ),
+        metric_event(
+            "llm_token_usage",
+            source="report",
+            payload={
+                "provider": "openai",
+                "input_tokens": 200,
+                "output_tokens": 100,
+                "total_tokens": 300,
+                "estimated_cost_usd": 0.00009,
+            },
+        ),
+        metric_event("api_request", payload={"duration_ms": 20}),
+    ]
+
+    result = token_cost_metrics(events)
+
+    assert result["calls"] == 2
+    assert result["input_tokens"] == 300
+    assert result["output_tokens"] == 150
+    assert result["total_tokens"] == 450
+    assert result["estimated_cost_usd"] == 0.00009
+    assert result["by_provider"]["openai"]["calls"] == 1
+    assert result["by_agent"]["report"]["estimated_cost_usd"] == 0.00009
 
 
 def test_serialize_rag_eval_handles_empty_and_latest_run():

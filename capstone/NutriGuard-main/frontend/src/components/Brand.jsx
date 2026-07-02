@@ -4,7 +4,7 @@ export default function Brand({ compact = false }) {
       <span className={`brand-mark ${compact ? 'compact' : ''}`}>N</span>
       <div>
         {compact ? <strong>NutriGuard</strong> : <h1>NutriGuard</h1>}
-        <span>AI meal timeline · Azure CI check</span>
+        <span>AI meal timeline · Azure CI check-updated</span>
       </div>
     </div>
   )

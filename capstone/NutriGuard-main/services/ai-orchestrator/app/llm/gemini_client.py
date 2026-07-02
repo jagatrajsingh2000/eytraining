@@ -67,7 +67,20 @@ class GeminiClient:
 
         return self._models[api_key]
 
-    def generate_text(self, prompt: str) -> str:
+    def _usage_from_response(self, response: Any) -> dict[str, int]:
+        usage = getattr(response, "usage_metadata", None)
+        if not usage:
+            return {}
+        input_tokens = getattr(usage, "prompt_token_count", None)
+        output_tokens = getattr(usage, "candidates_token_count", None)
+        total_tokens = getattr(usage, "total_token_count", None)
+        return {
+            "input_tokens": input_tokens or 0,
+            "output_tokens": output_tokens or 0,
+            "total_tokens": total_tokens or ((input_tokens or 0) + (output_tokens or 0)),
+        }
+
+    def generate_text_with_usage(self, prompt: str) -> dict[str, Any]:
         if not self.enabled:
             raise RuntimeError("GEMINI_API_KEY or GEMINI_API_KEYS is not set")
 
@@ -82,7 +95,12 @@ class GeminiClient:
                 if not text:
                     raise RuntimeError("Gemini returned an empty response")
                 self._key_index = key_index
-                return text.strip()
+                return {
+                    "text": text.strip(),
+                    "provider": "gemini",
+                    "model": self.model_name,
+                    "usage": self._usage_from_response(response),
+                }
             except Exception as exc:
                 last_error = exc
                 if not _is_quota_error(exc) or key_count == 1:
@@ -96,6 +114,9 @@ class GeminiClient:
         if last_error:
             raise last_error
         raise RuntimeError("Gemini did not return a response")
+
+    def generate_text(self, prompt: str) -> str:
+        return self.generate_text_with_usage(prompt)["text"]
 
     def generate_json(self, prompt: str) -> Dict[str, Any]:
         text = self.generate_text(prompt)

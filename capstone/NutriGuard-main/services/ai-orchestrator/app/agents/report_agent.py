@@ -3,6 +3,7 @@ import logging
 
 from app.llm.provider_chain import LLMProviderChainError, generate_text_with_provider_fallback
 from app.observability.langsmith import traceable
+from app.observability.metrics import agent_latency_event, start_timer
 
 logger = logging.getLogger("nutriguard.orchestrator.report")
 
@@ -52,7 +53,9 @@ def _fallback_report(meal_analysis: Dict[str, Any], risk_flags: list, context: l
 
 
 @traceable(name="Report Agent", run_type="chain")
-def report_agent(state: Dict[str, Any]) -> Dict[str, Any]:
+def report_agent(state: Dict[str, Any], config: Any = None) -> Dict[str, Any]:
+    started_at = start_timer()
+    latency_status = "llm"
     meal_analysis = state.get("meal_analysis") or {}
     risk_flags = state.get("risk_flags") or []
     goal = state.get("goal", "")
@@ -132,6 +135,7 @@ Retrieved context: {context}
         }
     except LLMProviderChainError as exc:
         logger.exception("Report LLM chain failed; using fallback report")
+        latency_status = "fallback"
         report = _fallback_report(meal_analysis, risk_flags, context)
         state = {
             **state,
@@ -141,7 +145,19 @@ Retrieved context: {context}
             ],
         }
 
+    metric_events = [
+        *(state.get("metric_events") or []),
+        agent_latency_event(
+            "report",
+            started_at,
+            status=latency_status,
+            trace_id=state.get("trace_id"),
+            meal_log_id=state.get("meal_log_id"),
+        ),
+    ]
+
     return {
         **state,
+        "metric_events": metric_events,
         "report": report,
     }

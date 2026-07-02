@@ -231,5 +231,5 @@ def health():
     return {
         "status": "ok",
         "service": "backend-api",
-        "build_marker": "backend-ci-check-2026-07-01",
+        "build_marker": "backend-deploy-probe-2026-07-02",
     }

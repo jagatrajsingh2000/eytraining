@@ -4,7 +4,8 @@ import os
 import time
 
 import requests
-from azure.servicebus import ServiceBusClient
+from azure.servicebus import AutoLockRenewer, ServiceBusClient
+from azure.servicebus.exceptions import MessageLockLostError
 from dotenv import load_dotenv
 
 from app.main import ProcessMealInput, process_meal
@@ -14,9 +15,10 @@ load_dotenv()
 
 SERVICE_BUS_CONNECTION_STRING = os.getenv("SERVICE_BUS_CONNECTION_STRING")
 SERVICE_BUS_QUEUE_NAME = os.getenv("SERVICE_BUS_QUEUE_NAME", "meal-events")
+SERVICE_BUS_LOCK_RENEWAL_SECONDS = int(os.getenv("SERVICE_BUS_LOCK_RENEWAL_SECONDS", "300"))
 BACKEND_API_URL = os.getenv("BACKEND_API_URL")
 INTERNAL_API_KEY = os.getenv("INTERNAL_API_KEY")
-BUILD_MARKER = "orchestrator-ci-check-2026-07-01"
+BUILD_MARKER = "orchestrator-deploy-probe-2026-07-02"
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
 logger = logging.getLogger("nutriguard.orchestrator.worker")
 
@@ -51,7 +53,7 @@ def run_worker() -> None:
     logger.info("NutriGuard orchestrator worker started: %s", BUILD_MARKER)
     with ServiceBusClient.from_connection_string(SERVICE_BUS_CONNECTION_STRING) as client:
         receiver = client.get_queue_receiver(queue_name=SERVICE_BUS_QUEUE_NAME, max_wait_time=10)
-        with receiver:
+        with receiver, AutoLockRenewer(max_lock_renewal_duration=SERVICE_BUS_LOCK_RENEWAL_SECONDS) as renewer:
             while True:
                 messages = receiver.receive_messages(max_message_count=1, max_wait_time=10)
                 if not messages:
@@ -61,6 +63,11 @@ def run_worker() -> None:
                 for message in messages:
                     try:
                         payload = json.loads(str(message))
+                        renewer.register(
+                            receiver,
+                            message,
+                            max_lock_renewal_duration=SERVICE_BUS_LOCK_RENEWAL_SECONDS,
+                        )
                         logger.info(
                             "Received Service Bus message trace_id=%s message_id=%s",
                             payload.get("trace_id"),
@@ -69,15 +76,29 @@ def run_worker() -> None:
                         handle_message(payload)
                     except Exception:
                         logger.exception("Failed to process Service Bus message message_id=%s", message.message_id)
-                        receiver.abandon_message(message)
+                        try:
+                            receiver.abandon_message(message)
+                        except MessageLockLostError:
+                            logger.warning(
+                                "Could not abandon message because lock was lost message_id=%s",
+                                message.message_id,
+                            )
                         raise
                     else:
-                        receiver.complete_message(message)
-                        logger.info(
-                            "Completed Service Bus message trace_id=%s message_id=%s",
-                            payload.get("trace_id"),
-                            message.message_id,
-                        )
+                        try:
+                            receiver.complete_message(message)
+                        except MessageLockLostError:
+                            logger.warning(
+                                "Processed message but lock expired before completion trace_id=%s message_id=%s",
+                                payload.get("trace_id"),
+                                message.message_id,
+                            )
+                        else:
+                            logger.info(
+                                "Completed Service Bus message trace_id=%s message_id=%s",
+                                payload.get("trace_id"),
+                                message.message_id,
+                            )
 
 
 if __name__ == "__main__":

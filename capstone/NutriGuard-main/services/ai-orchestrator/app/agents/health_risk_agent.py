@@ -4,10 +4,11 @@ import logging
 
 from app.llm.provider_chain import LLMProviderChainError, generate_json_with_provider_fallback
 from app.observability.langsmith import traceable
+from app.observability.metrics import agent_latency_event, start_timer
 from app.rag.retriever import retrieve_nutrition_context
 
 logger = logging.getLogger("nutriguard.orchestrator.health_risk")
-
+#simple retriger
 def _fallback_risk_flags(
     meal_analysis: Dict[str, Any],
     health_conditions: list,
@@ -132,7 +133,9 @@ def _fallback_day_timeline_flags(day_meals: list, all_conditions: set) -> list:
 
 
 @traceable(name="Health Risk Agent", run_type="chain")
-def health_risk_agent(state: Dict[str, Any]) -> Dict[str, Any]:
+def health_risk_agent(state: Dict[str, Any], config: Any = None) -> Dict[str, Any]:
+    started_at = start_timer()
+    latency_status = "llm"
     meal_analysis = state.get("meal_analysis") or {}
     health_conditions = state.get("health_conditions") or []
     deficiencies = state.get("deficiencies") or []
@@ -218,6 +221,7 @@ Retrieved context: {context}
         }
     except LLMProviderChainError as exc:
         logger.exception("Health risk LLM chain failed; using fallback flags")
+        latency_status = "fallback"
         risk_flags = _fallback_risk_flags(
             meal_analysis,
             health_conditions,
@@ -234,8 +238,20 @@ Retrieved context: {context}
             ],
         }
 
+    metric_events = [
+        *(state.get("metric_events") or []),
+        agent_latency_event(
+            "health_risk",
+            started_at,
+            status=latency_status,
+            trace_id=state.get("trace_id"),
+            meal_log_id=state.get("meal_log_id"),
+        ),
+    ]
+
     return {
         **state,
+        "metric_events": metric_events,
         "risk_flags": risk_flags,
         "context": context,
     }

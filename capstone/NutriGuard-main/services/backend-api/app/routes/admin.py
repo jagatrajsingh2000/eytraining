@@ -111,6 +111,95 @@ def api_latency_metrics(metric_events):
     }
 
 
+def agent_latency_metrics(metric_events):
+    latency_events = [
+        event
+        for event in metric_events
+        if event.name == "agent_latency" and isinstance(event.payload, dict)
+    ]
+    durations = [
+        event.payload.get("duration_ms", 0)
+        for event in latency_events
+        if event.payload.get("duration_ms") is not None
+    ]
+    by_agent = defaultdict(list)
+    fallback_counts = Counter()
+
+    for event in latency_events:
+        payload = event.payload or {}
+        duration = payload.get("duration_ms")
+        if duration is None:
+            continue
+        agent = event.source or "unknown"
+        by_agent[agent].append(duration)
+        if payload.get("status") == "fallback":
+            fallback_counts[agent] += 1
+
+    agent_rows = []
+    for agent, agent_durations in by_agent.items():
+        agent_rows.append(
+            {
+                "agent": agent,
+                "count": len(agent_durations),
+                "average_ms": round(sum(agent_durations) / len(agent_durations), 2),
+                "p95_ms": percentile(agent_durations, 0.95),
+                "max_ms": round(max(agent_durations), 2),
+                "fallback_count": fallback_counts[agent],
+            }
+        )
+
+    agent_rows.sort(key=lambda item: item["average_ms"], reverse=True)
+
+    return {
+        "total_runs": len(latency_events),
+        "average_ms": round(sum(durations) / len(durations), 2) if durations else 0,
+        "p95_ms": percentile(durations, 0.95),
+        "max_ms": round(max(durations), 2) if durations else 0,
+        "by_agent": agent_rows,
+    }
+
+
+def token_cost_metrics(metric_events):
+    usage_events = [
+        event
+        for event in metric_events
+        if event.name == "llm_token_usage" and isinstance(event.payload, dict)
+    ]
+    by_provider = defaultdict(lambda: {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0, "estimated_cost_usd": 0.0, "calls": 0})
+    by_agent = defaultdict(lambda: {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0, "estimated_cost_usd": 0.0, "calls": 0})
+
+    for event in usage_events:
+        payload = event.payload or {}
+        provider = payload.get("provider") or "unknown"
+        agent = event.source or "unknown"
+        input_tokens = int(payload.get("input_tokens") or 0)
+        output_tokens = int(payload.get("output_tokens") or 0)
+        total_tokens = int(payload.get("total_tokens") or input_tokens + output_tokens)
+        estimated_cost = float(payload.get("estimated_cost_usd") or 0)
+
+        for bucket in (by_provider[provider], by_agent[agent]):
+            bucket["input_tokens"] += input_tokens
+            bucket["output_tokens"] += output_tokens
+            bucket["total_tokens"] += total_tokens
+            bucket["estimated_cost_usd"] = round(bucket["estimated_cost_usd"] + estimated_cost, 8)
+            bucket["calls"] += 1
+
+    total_input = sum(item["input_tokens"] for item in by_provider.values())
+    total_output = sum(item["output_tokens"] for item in by_provider.values())
+    total_tokens = sum(item["total_tokens"] for item in by_provider.values())
+    total_cost = round(sum(item["estimated_cost_usd"] for item in by_provider.values()), 8)
+
+    return {
+        "calls": len(usage_events),
+        "input_tokens": total_input,
+        "output_tokens": total_output,
+        "total_tokens": total_tokens,
+        "estimated_cost_usd": total_cost,
+        "by_provider": dict(by_provider),
+        "by_agent": dict(by_agent),
+    }
+
+
 def llm_fallback_metrics(metric_events):
     event_names = {
         "gemini_fallback",
@@ -267,5 +356,7 @@ def get_admin_metrics(
         },
         "llm_fallbacks": llm_fallbacks,
         "api_latency": api_latency_metrics(metric_events),
+        "agent_latency": agent_latency_metrics(metric_events),
+        "token_cost": token_cost_metrics(metric_events),
         "rag_eval": serialize_rag_eval(latest_rag_eval),
     }

@@ -24,6 +24,8 @@ Frontend
   -> PostgreSQL
 ```
 
+For production troubleshooting, see [production-debugging-runbook.md](production-debugging-runbook.md).
+
 ## Resource Names
 
 ```text

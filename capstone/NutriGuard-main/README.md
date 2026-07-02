@@ -9,6 +9,8 @@ Local-first NutriGuard setup:
 - Queue pattern: local `outbox_events` table first
 - RAG: mock local retriever first
 
+For the full local runbook, see [docs/development/local-runbook.md](docs/development/local-runbook.md).
+
 ## Local Architecture
 
 ```text
