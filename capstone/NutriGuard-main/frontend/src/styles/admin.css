@@ -1,0 +1,247 @@
+.admin-page {
+  gap: 1.1rem;
+}
+
+.admin-filter-bar {
+  align-items: end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  justify-content: flex-end;
+}
+
+.admin-filter-bar label {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+
+.admin-filter-bar input {
+  min-width: 150px;
+}
+
+.metric-grid {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+}
+
+.metric-card,
+.metric-panel {
+  background: linear-gradient(180deg, var(--panel-soft), color-mix(in srgb, var(--panel-soft) 78%, var(--panel) 22%));
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shine), 0 12px 30px rgba(31, 111, 74, 0.08);
+}
+
+.metric-card {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.9rem;
+}
+
+.metric-card span {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.metric-card strong {
+  color: var(--heading);
+  font-size: 1.65rem;
+  line-height: 1.1;
+}
+
+.metric-card p {
+  color: var(--muted);
+  margin: 0;
+}
+
+.metric-panels {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.metric-panel {
+  display: grid;
+  gap: 0.65rem;
+  padding: 1rem;
+}
+
+.metric-panel h3 {
+  color: var(--heading);
+  margin: 0;
+}
+
+.daily-series,
+.feedback-metrics {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.daily-series-row,
+.feedback-metrics p {
+  align-items: center;
+  background: color-mix(in srgb, var(--panel) 78%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0.55rem 0.65rem;
+}
+
+.feedback-metrics p {
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.feedback-metrics b {
+  color: var(--heading);
+  margin-right: auto;
+  text-transform: capitalize;
+}
+
+.feedback-metrics span,
+.daily-series-row b {
+  color: var(--accent);
+  font-weight: 900;
+}
+
+.wide-metric-panel {
+  grid-column: 1 / -1;
+}
+
+.rag-eval-panel {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.rag-eval-summary {
+  display: grid;
+  gap: 0.6rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.rag-eval-summary span,
+.rag-case-row {
+  background: color-mix(in srgb, var(--panel) 78%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.7rem;
+}
+
+.rag-eval-summary span {
+  color: var(--muted);
+  display: grid;
+  font-size: 0.82rem;
+  font-weight: 900;
+  gap: 0.2rem;
+}
+
+.rag-eval-summary b {
+  color: var(--heading);
+  font-size: 1.1rem;
+  overflow-wrap: anywhere;
+}
+
+.rag-case-list {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.rag-case-row {
+  align-items: center;
+  display: flex;
+  gap: 0.8rem;
+  justify-content: space-between;
+}
+
+.rag-case-row b {
+  color: var(--heading);
+}
+
+.rag-case-row p {
+  color: var(--muted);
+  margin: 0.15rem 0 0;
+}
+
+.rag-case-row span {
+  color: var(--accent);
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.rag-case-scores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  justify-content: flex-end;
+}
+
+.rag-case-scores span {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, transparent);
+  border-radius: 999px;
+  padding: 0.25rem 0.5rem;
+}
+
+.latency-table {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.latency-row {
+  align-items: center;
+  background: color-mix(in srgb, var(--panel) 78%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  display: grid;
+  gap: 0.55rem;
+  grid-template-columns: minmax(180px, 1fr) repeat(5, auto);
+  padding: 0.6rem 0.7rem;
+}
+
+.latency-row b {
+  color: var(--heading);
+  overflow-wrap: anywhere;
+}
+
+.latency-row span {
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+@media (max-width: 820px) {
+  .admin-filter-bar {
+    justify-content: stretch;
+    width: 100%;
+  }
+
+  .admin-filter-bar label,
+  .admin-filter-bar button {
+    flex: 1 1 150px;
+  }
+
+  .latency-row {
+    align-items: start;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .latency-row b {
+    grid-column: 1 / -1;
+  }
+
+  .rag-case-row {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .rag-case-scores {
+    justify-content: flex-start;
+  }
+}

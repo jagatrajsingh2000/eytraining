@@ -1,0 +1,67 @@
+name: Deploy NutriGuard
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "services/backend-api/**"
+      - "services/ai-orchestrator/**"
+      - ".github/workflows/deploy.yml"
+
+env:
+  BACKEND_IMAGE: nutriguard-backend
+  ORCHESTRATOR_IMAGE: nutriguard-orchestrator
+
+jobs:
+  deploy-containers:
+    name: Build and deploy containers
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: ACR login
+        run: az acr login --name "${{ secrets.AZURE_CONTAINER_REGISTRY }}"
+
+      - name: Build and push backend API
+        run: |
+          docker build \
+            --platform linux/amd64 \
+            -t "${{ secrets.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.BACKEND_IMAGE }}:${{ github.sha }}" \
+            -t "${{ secrets.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.BACKEND_IMAGE }}:latest" \
+            services/backend-api
+          docker push "${{ secrets.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.BACKEND_IMAGE }}:${{ github.sha }}"
+          docker push "${{ secrets.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.BACKEND_IMAGE }}:latest"
+
+      - name: Build and push AI orchestrator
+        run: |
+          docker build \
+            --platform linux/amd64 \
+            -f services/ai-orchestrator/Dockerfile.worker \
+            -t "${{ secrets.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.ORCHESTRATOR_IMAGE }}:${{ github.sha }}" \
+            -t "${{ secrets.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.ORCHESTRATOR_IMAGE }}:latest" \
+            services/ai-orchestrator
+          docker push "${{ secrets.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.ORCHESTRATOR_IMAGE }}:${{ github.sha }}"
+          docker push "${{ secrets.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.ORCHESTRATOR_IMAGE }}:latest"
+
+      - name: Deploy backend API image
+        run: |
+          az containerapp update \
+            --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" \
+            --name "${{ secrets.BACKEND_CONTAINER_APP_NAME }}" \
+            --image "${{ secrets.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.BACKEND_IMAGE }}:${{ github.sha }}" \
+            --set-env-vars APP_TIMEZONE=Asia/Kolkata
+
+      - name: Deploy AI orchestrator worker image
+        run: |
+          az containerapp update \
+            --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" \
+            --name "${{ secrets.ORCHESTRATOR_CONTAINER_APP_NAME }}" \
+            --image "${{ secrets.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.ORCHESTRATOR_IMAGE }}:${{ github.sha }}"

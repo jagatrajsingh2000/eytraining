@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ayurveda_viruddha_001",
+    "topic": "ayurveda_food_combination",
+    "goals": ["improve_energy", "reduce_deficiency"],
+    "diet_types": ["vegetarian", "vegan", "eggetarian", "non_vegetarian"],
+    "conditions": [],
+    "tags": ["ayurveda", "viruddha_ahara", "milk", "sour_fruit", "traditional_context"],
+    "content": "Traditional Ayurveda describes some combinations as Viruddha Ahara. Milk with sour fruits is commonly listed in traditional sources as an incompatible pairing.",
+    "source": "Traditional Ayurveda dietary concept: Viruddha Ahara",
+    "evidence_level": "traditional_ayurveda",
+    "safety": "Present this as traditional context only, not as a medical diagnosis or proven clinical harm."
+  },
+  {
+    "id": "ayurveda_viruddha_002",
+    "topic": "ayurveda_food_combination",
+    "goals": ["improve_energy"],
+    "diet_types": ["non_vegetarian"],
+    "conditions": [],
+    "tags": ["ayurveda", "viruddha_ahara", "fish", "milk", "traditional_context"],
+    "content": "Traditional Ayurveda commonly lists fish with milk as a Viruddha Ahara combination to avoid.",
+    "source": "Traditional Ayurveda dietary concept: Viruddha Ahara",
+    "evidence_level": "traditional_ayurveda",
+    "safety": "Frame as Ayurveda/traditional guidance and avoid claiming modern clinical certainty."
+  },
+  {
+    "id": "ayurveda_viruddha_003",
+    "topic": "ayurveda_food_combination",
+    "goals": ["improve_energy", "fat_loss"],
+    "diet_types": ["vegetarian", "eggetarian", "non_vegetarian"],
+    "conditions": [],
+    "tags": ["ayurveda", "viruddha_ahara", "curd", "night", "heating", "traditional_context"],
+    "content": "Traditional Ayurveda often advises caution with curd at night or with strongly heating foods. Use this only as optional traditional dietary context.",
+    "source": "Traditional Ayurveda dietary concept: Viruddha Ahara",
+    "evidence_level": "traditional_ayurveda",
+    "safety": "Do not present Ayurveda cautions as emergency warnings; keep language gentle and optional."
+  },
+  {
+    "id": "ayurveda_viruddha_004",
+    "topic": "ayurveda_food_combination",
+    "goals": ["improve_energy"],
+    "diet_types": ["vegetarian", "vegan", "eggetarian", "non_vegetarian"],
+    "conditions": [],
+    "tags": ["ayurveda", "viruddha_ahara", "fruit", "milk", "banana", "traditional_context"],
+    "content": "Some Ayurveda traditions advise avoiding milk with certain fruits such as banana. This should be treated as traditional preference guidance, not a medical rule.",
+    "source": "Traditional Ayurveda dietary concept: Viruddha Ahara",
+    "evidence_level": "traditional_ayurveda",
+    "safety": "If the user tolerates a food combination well, avoid alarming language."
+  }
+]

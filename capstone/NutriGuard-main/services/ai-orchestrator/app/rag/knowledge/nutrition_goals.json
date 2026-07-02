@@ -1,0 +1,86 @@
+[
+  {
+    "id": "protein_vegetarian_001",
+    "topic": "protein_recommendation",
+    "goals": ["muscle_gain", "fat_loss", "improve_energy", "reduce_deficiency"],
+    "diet_types": ["vegetarian", "eggetarian"],
+    "conditions": [],
+    "tags": ["protein", "vegetarian", "paneer", "tofu", "dal", "chana", "sprouts", "soy_chunks", "curd"],
+    "content": "For vegetarian protein, add dal, chana, rajma, sprouts, paneer, tofu, soy chunks, curd, Greek yogurt, nuts, or seeds depending on the meal.",
+    "source": "Curated nutrition guidance aligned with balanced-diet principles",
+    "evidence_level": "nutrition_guideline",
+    "safety": "Keep advice food-focused and avoid changing prescribed supplements or medicines."
+  },
+  {
+    "id": "protein_vegan_001",
+    "topic": "protein_recommendation",
+    "goals": ["muscle_gain", "fat_loss", "improve_energy"],
+    "diet_types": ["vegan"],
+    "conditions": [],
+    "tags": ["protein", "vegan", "tofu", "tempeh", "soy_chunks", "dal", "chana", "rajma", "sprouts"],
+    "content": "For vegan protein, use tofu, tempeh, soy chunks, dal, chana, rajma, sprouts, peanuts, seeds, or hummus with grains for a more complete meal.",
+    "source": "Curated nutrition guidance aligned with balanced-diet principles",
+    "evidence_level": "nutrition_guideline",
+    "safety": "Check allergies and digestive tolerance before increasing legumes or soy."
+  },
+  {
+    "id": "protein_nonveg_001",
+    "topic": "protein_recommendation",
+    "goals": ["muscle_gain", "fat_loss", "improve_energy"],
+    "diet_types": ["non_vegetarian", "eggetarian"],
+    "conditions": [],
+    "tags": ["protein", "egg", "chicken", "fish", "curd", "lean_protein"],
+    "content": "For non-vegetarian or eggetarian meals, eggs, fish, chicken, curd, or lean meat can improve protein adequacy when paired with vegetables and whole grains.",
+    "source": "Curated nutrition guidance aligned with balanced-diet principles",
+    "evidence_level": "nutrition_guideline",
+    "safety": "Use safe food handling and follow clinician advice for cholesterol, kidney disease, or other medical restrictions."
+  },
+  {
+    "id": "energy_balance_001",
+    "topic": "improve_energy",
+    "goals": ["improve_energy", "muscle_gain", "fat_loss"],
+    "diet_types": ["vegetarian", "vegan", "eggetarian", "non_vegetarian"],
+    "conditions": [],
+    "tags": ["energy", "balanced_meal", "fiber", "protein", "hydration", "complex_carbs"],
+    "content": "For steadier energy, pair complex carbohydrates with protein, fiber-rich vegetables, and fluids instead of having mostly refined carbs or only tea/coffee.",
+    "source": "Curated nutrition guidance aligned with balanced-diet principles",
+    "evidence_level": "nutrition_guideline",
+    "safety": "Persistent fatigue should be discussed with a qualified clinician."
+  },
+  {
+    "id": "muscle_gain_001",
+    "topic": "muscle_gain",
+    "goals": ["muscle_gain"],
+    "diet_types": ["vegetarian", "vegan", "eggetarian", "non_vegetarian"],
+    "conditions": [],
+    "tags": ["muscle_gain", "protein", "strength_training", "meal_spacing", "recovery"],
+    "content": "For muscle gain, distribute protein across meals, include a protein source after training when possible, and combine nutrition with consistent resistance training and sleep.",
+    "source": "Curated nutrition guidance aligned with sports nutrition principles",
+    "evidence_level": "nutrition_guideline",
+    "safety": "Avoid extreme protein changes if the user has kidney disease or clinician-set restrictions."
+  },
+  {
+    "id": "fat_loss_001",
+    "topic": "fat_loss",
+    "goals": ["fat_loss"],
+    "diet_types": ["vegetarian", "vegan", "eggetarian", "non_vegetarian"],
+    "conditions": [],
+    "tags": ["fat_loss", "protein", "fiber", "satiety", "portion", "sugary_drinks"],
+    "content": "For fat loss, prioritize protein and fiber at meals, reduce sugary drinks and frequent fried snacks, and use portions that keep energy intake reasonable without skipping core meals.",
+    "source": "Curated nutrition guidance aligned with balanced-diet principles",
+    "evidence_level": "nutrition_guideline",
+    "safety": "Avoid crash dieting, especially with deficiencies, pregnancy, diabetes, or medical conditions."
+  },
+  {
+    "id": "iron_absorption_001",
+    "topic": "iron_deficiency_support",
+    "goals": ["reduce_deficiency", "improve_energy"],
+    "diet_types": ["vegetarian", "vegan", "eggetarian", "non_vegetarian"],
+    "conditions": ["iron_deficiency"],
+    "tags": ["iron_deficiency", "tea", "coffee", "vitamin_c", "dairy", "calcium", "iron_tablet"],
+    "content": "For iron deficiency support, keep tea/coffee and calcium-rich foods away from iron-rich meals or iron tablets when possible, and add vitamin C sources such as lemon, amla, guava, or citrus.",
+    "source": "Curated nutrition guidance for iron absorption timing",
+    "evidence_level": "nutrition_guideline",
+    "safety": "Do not change iron supplement dose or timing without clinician guidance."
+  }
+]
