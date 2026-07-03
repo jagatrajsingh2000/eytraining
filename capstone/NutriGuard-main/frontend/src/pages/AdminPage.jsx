@@ -63,6 +63,7 @@ export default function AdminPage({
   const apiLatency = metrics?.api_latency || {}
   const agentLatency = metrics?.agent_latency || {}
   const tokenCost = metrics?.token_cost || {}
+  const loadTest = metrics?.load_test?.latest
   const ragEval = metrics?.rag_eval?.latest
   const retrievalMetrics = ragEval?.metrics?.retrieval_metrics || {}
   const ragasMetrics = ragEval?.metrics?.ragas_metrics || {}
@@ -112,6 +113,11 @@ export default function AdminPage({
         <MetricCard label="LLM calls" value={tokenCost.calls ?? 0} />
         <MetricCard label="LLM tokens" value={tokenCost.total_tokens ?? 0} detail={`${tokenCost.input_tokens ?? 0} in / ${tokenCost.output_tokens ?? 0} out`} />
         <MetricCard label="Estimated LLM cost" value={formatUsd(tokenCost.estimated_cost_usd)} />
+        <MetricCard
+          label="Latest load p95"
+          value={loadTest ? `${loadTest.p95_ms ?? 0}ms` : 'No run'}
+          detail={loadTest ? `${loadTest.requests ?? 0} requests, ${loadTest.failed ?? 0} failed` : 'Publish a load test result'}
+        />
         <MetricCard
           label="RAG hit rate"
           value={formatPercent(ragEval?.average_hit_rate)}
@@ -215,6 +221,31 @@ export default function AdminPage({
             <p className="muted">
               No RAG eval result yet. Run the local RAGAS script with publish enabled, then refresh this page.
             </p>
+          )}
+        </section>
+        <section className="metric-panel wide-metric-panel">
+          <h3>Latest load test</h3>
+          {loadTest ? (
+            <div className="latency-table">
+              <div className="latency-row">
+                <b>{loadTest.endpoint || 'unknown endpoint'}</b>
+                <span>{loadTest.requests || 0} requests</span>
+                <span>{loadTest.concurrency || 0} concurrency</span>
+                <span>{loadTest.success || 0} success</span>
+                <span>{loadTest.failed || 0} failed</span>
+                <span>{loadTest.wall_time_seconds || 0}s wall</span>
+              </div>
+              <div className="latency-row">
+                <b>{loadTest.base_url || 'unknown target'}</b>
+                <span>avg {loadTest.average_ms || 0}ms</span>
+                <span>p95 {loadTest.p95_ms || 0}ms</span>
+                <span>max {loadTest.max_ms || 0}ms</span>
+                <span>{formatDateTime(loadTest.created_at)}</span>
+                <span>{loadTest.source || 'load_test_api'}</span>
+              </div>
+            </div>
+          ) : (
+            <p className="muted">No load test report published yet. Run the load test script with publish enabled.</p>
           )}
         </section>
         <section className="metric-panel wide-metric-panel">

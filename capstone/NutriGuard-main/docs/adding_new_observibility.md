@@ -12,8 +12,9 @@ Add observability for:
 2. AI orchestrator agent latency.
 3. Load testing.
 4. LLM token usage and estimated cost.
-5. Admin dashboard visibility.
-6. Unit test coverage for the new metrics.
+5. Published load-test reports in the admin dashboard.
+6. Admin dashboard visibility.
+7. Unit test coverage for the new metrics.
 
 ## Step 1: Reuse Existing Metric Storage
 
@@ -344,7 +345,110 @@ Output example:
 }
 ```
 
-## Step 9: Keep Full Workflow Stress Test Separate
+## Step 9: Publish Load Test Results To Dashboard
+
+Updated:
+
+```text
+test/load_test_api.py
+services/backend-api/app/routes/admin.py
+frontend/src/pages/AdminPage.jsx
+```
+
+The load-test script can now publish its summary to the backend:
+
+```bash
+python test/load_test_api.py \
+  --base-url https://nutriguard-backend.livelypebble-65a075a7.centralindia.azurecontainerapps.io \
+  --endpoint /health \
+  --requests 50 \
+  --concurrency 5 \
+  --publish \
+  --internal-api-key "$INTERNAL_API_KEY"
+```
+
+If Python cannot verify your local/proxy certificate chain, use the explicit insecure flag for demo testing:
+
+```bash
+python test/load_test_api.py \
+  --base-url https://nutriguard-backend.livelypebble-65a075a7.centralindia.azurecontainerapps.io \
+  --endpoint /health \
+  --requests 50 \
+  --concurrency 5 \
+  --publish \
+  --internal-api-key "$INTERNAL_API_KEY" \
+  --insecure-skip-tls-verify
+```
+
+Use this flag only for local/demo troubleshooting, not as a default production habit.
+
+The script sends the summary to:
+
+```text
+POST /internal/load-test-results
+```
+
+The backend stores it as a `MetricEvent`:
+
+```json
+{
+  "name": "load_test_result",
+  "source": "load_test_api",
+  "payload": {
+    "base_url": "https://nutriguard-backend...",
+    "endpoint": "/health",
+    "requests": 50,
+    "concurrency": 5,
+    "success": 50,
+    "failed": 0,
+    "average_ms": 88.42,
+    "p95_ms": 142.11,
+    "max_ms": 201.37
+  }
+}
+```
+
+The admin dashboard shows:
+
+- latest load p95
+- requests
+- concurrency
+- success/failure count
+- average latency
+- p95 latency
+- max latency
+- target endpoint
+- published timestamp
+
+Why:
+
+- We can prove backend latency from a repeatable script.
+- The dashboard keeps the latest report visible for demo and review.
+- No schema migration is needed because we reuse `MetricEvent`.
+
+Authenticated profile endpoint load test:
+
+```bash
+python test/load_test_api.py \
+  --base-url https://nutriguard-backend.livelypebble-65a075a7.centralindia.azurecontainerapps.io \
+  --profile \
+  --profile-user-id 1 \
+  --email "user@example.com" \
+  --password "UserPassword123" \
+  --requests 50 \
+  --concurrency 5 \
+  --publish \
+  --internal-api-key "$INTERNAL_API_KEY"
+```
+
+Why this needs a token:
+
+- `GET /users/{user_id}/profile` is user-protected.
+- The script can fetch the JWT automatically with `--email` and `--password`.
+- You can still pass `--token` directly if you already have a valid JWT.
+- This scenario is useful for testing authenticated DB-backed read latency.
+
+## Step 10: Keep Full Workflow Stress Test Separate
 
 Existing file:
 
@@ -387,7 +491,7 @@ python test/stress_test_api.py \
   --meals-per-user 1
 ```
 
-## Step 10: Add Unit Test Coverage
+## Step 11: Add Unit Test Coverage
 
 Updated:
 
@@ -400,6 +504,7 @@ Added test coverage for:
 ```python
 agent_latency_metrics(...)
 token_cost_metrics(...)
+serialize_latest_load_test(...)
 ```
 
 The test verifies:
@@ -414,13 +519,14 @@ The test verifies:
 - cost totals
 - provider grouping
 - agent grouping
+- latest load-test result selection
 
 Why:
 
 - Admin metrics are product-facing.
 - A small aggregation bug would make the dashboard misleading.
 
-## Step 11: Verify The Changes
+## Step 12: Verify The Changes
 
 Backend tests:
 
@@ -461,7 +567,7 @@ Load test CLI help:
 python3 test/load_test_api.py --help
 ```
 
-## Step 12: How To Confirm In The UI
+## Step 13: How To Confirm In The UI
 
 1. Deploy backend and orchestrator.
 2. Submit a meal.
@@ -477,11 +583,12 @@ Expected dashboard sections:
 - Agent latency by stage
 - Token cost by provider
 - Token cost by agent
+- Latest load test
 - LLM fallback by agent
 - RAGAS / RAG quality
 - Product metrics
 
-## Step 13: Azure Log Checks
+## Step 14: Azure Log Checks
 
 Backend logs:
 
@@ -510,7 +617,7 @@ ContainerAppConsoleLogs_CL
 | take 100
 ```
 
-## Step 14: Troubleshooting
+## Step 15: Troubleshooting
 
 No API latency in dashboard:
 
@@ -532,6 +639,13 @@ No token cost in dashboard:
 - Confirm the orchestrator result contains `llm_token_usage`.
 - Check whether the meal used only local rule fallback; full LLM failure will not produce token usage.
 - Confirm `/internal/meal-results` is returning `200`.
+
+No load test result in dashboard:
+
+- Run `test/load_test_api.py` with `--publish`.
+- Pass the correct `--internal-api-key`.
+- Make sure the Admin Metrics date range includes the publish date.
+- Confirm `/internal/load-test-results` returns `{"status": "saved"}`.
 
 High API latency:
 

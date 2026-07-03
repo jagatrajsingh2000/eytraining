@@ -11,6 +11,7 @@ from app.routes.admin import (
     percentile,
     require_admin,
     serialize_rag_eval,
+    serialize_latest_load_test,
     token_cost_metrics,
 )
 
@@ -149,6 +150,30 @@ def test_serialize_rag_eval_handles_empty_and_latest_run():
     assert result["latest"]["average_hit_rate"] == 0.75
     assert result["latest"]["metrics"]["retrieval_metrics"]["context_recall"] == 0.75
     assert result["latest"]["created_at"] == "2026-07-02T10:30:00+00:00"
+
+
+def test_serialize_latest_load_test_returns_newest_event():
+    older = metric_event(
+        "load_test_result",
+        source="load_test_api",
+        payload={"requests": 10, "p95_ms": 80},
+        created_at=datetime(2026, 7, 2, 9, 0, tzinfo=timezone.utc),
+    )
+    older.id = 1
+    newer = metric_event(
+        "load_test_result",
+        source="load_test_api",
+        payload={"requests": 50, "p95_ms": 120, "failed": 0},
+        created_at=datetime(2026, 7, 2, 10, 0, tzinfo=timezone.utc),
+    )
+    newer.id = 2
+
+    result = serialize_latest_load_test([older, newer])
+
+    assert result["latest"]["id"] == 2
+    assert result["latest"]["requests"] == 50
+    assert result["latest"]["p95_ms"] == 120
+    assert result["latest"]["failed"] == 0
 
 
 def test_require_admin_blocks_non_admin_users():

@@ -1,0 +1,2310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NutriGuard AI — Project Presentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================
+       RESET & GLOBAL
+       ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-primary: #0a0e1a;
+      --bg-secondary: #111827;
+      --bg-card: rgba(17, 24, 39, 0.7);
+      --bg-card-hover: rgba(30, 41, 59, 0.8);
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent-green: #22c55e;
+      --accent-green-dim: rgba(34, 197, 94, 0.15);
+      --accent-emerald: #10b981;
+      --accent-teal: #14b8a6;
+      --accent-blue: #3b82f6;
+      --accent-blue-dim: rgba(59, 130, 246, 0.15);
+      --accent-purple: #a855f7;
+      --accent-purple-dim: rgba(168, 85, 247, 0.15);
+      --accent-orange: #f97316;
+      --accent-orange-dim: rgba(249, 115, 22, 0.15);
+      --accent-red: #ef4444;
+      --accent-red-dim: rgba(239, 68, 68, 0.15);
+      --accent-yellow: #eab308;
+      --accent-yellow-dim: rgba(234, 179, 8, 0.15);
+      --accent-cyan: #06b6d4;
+      --accent-cyan-dim: rgba(6, 182, 212, 0.15);
+      --gradient-main: linear-gradient(135deg, #22c55e, #10b981, #14b8a6);
+      --gradient-hero: linear-gradient(135deg, #22c55e 0%, #3b82f6 50%, #a855f7 100%);
+      --border-subtle: rgba(148, 163, 184, 0.1);
+      --shadow-glow: 0 0 60px rgba(34, 197, 94, 0.08);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --font-sans: 'Inter', -apple-system, system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    /* ============================================================
+       PRESENTATION ENGINE
+       ============================================================ */
+    .presentation {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 80px;
+      opacity: 0;
+      transform: translateX(60px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+      z-index: 2;
+    }
+
+    .slide.exit-left {
+      opacity: 0;
+      transform: translateX(-60px);
+    }
+
+    /* ============================================================
+       BACKGROUND EFFECTS
+       ============================================================ */
+    .bg-grid {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-image:
+        linear-gradient(rgba(148,163,184,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148,163,184,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .bg-glow {
+      position: fixed;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.12;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .bg-glow-1 { top: -200px; right: -100px; background: var(--accent-green); }
+    .bg-glow-2 { bottom: -200px; left: -100px; background: var(--accent-blue); }
+    .bg-glow-3 { top: 50%; left: 50%; transform: translate(-50%,-50%); background: var(--accent-purple); opacity: 0.06; }
+
+    /* ============================================================
+       NAVIGATION
+       ============================================================ */
+    .nav-bar {
+      position: fixed;
+      bottom: 0; left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 40px;
+      background: rgba(10, 14, 26, 0.85);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border-subtle);
+      z-index: 100;
+    }
+
+    .nav-bar .slide-counter {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      min-width: 80px;
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 3px;
+      background: rgba(148,163,184,0.1);
+      border-radius: 3px;
+      margin: 0 30px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--gradient-main);
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-btn {
+      background: rgba(148,163,184,0.08);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover {
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--accent-green);
+      border-color: rgba(34, 197, 94, 0.3);
+    }
+
+    /* ============================================================
+       TYPOGRAPHY
+       ============================================================ */
+    .slide-title {
+      font-size: 2.6rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+
+    .slide-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+      line-height: 1.6;
+      max-width: 700px;
+      margin-bottom: 40px;
+    }
+
+    .gradient-text {
+      background: var(--gradient-hero);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent-green);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-label::before {
+      content: '';
+      width: 20px;
+      height: 2px;
+      background: var(--accent-green);
+      border-radius: 2px;
+    }
+
+    /* ============================================================
+       SLIDE LAYOUTS
+       ============================================================ */
+    .slide-content {
+      width: 100%;
+      max-width: 1200px;
+      text-align: left;
+    }
+
+    .slide-content.centered {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 10px;
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 24px;
+      margin-top: 10px;
+    }
+
+    .four-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 20px;
+      margin-top: 10px;
+    }
+
+    /* ============================================================
+       CARDS
+       ============================================================ */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 28px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(34, 197, 94, 0.2);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .card-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+
+    .card-desc {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ============================================================
+       AGENT PIPELINE
+       ============================================================ */
+    .pipeline {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin: 30px 0;
+      flex-wrap: wrap;
+    }
+
+    .pipeline-node {
+      background: var(--bg-card);
+      border: 2px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 20px 28px;
+      text-align: center;
+      min-width: 180px;
+      transition: all 0.3s ease;
+    }
+
+    .pipeline-node:hover {
+      transform: scale(1.05);
+    }
+
+    .pipeline-node.green { border-color: rgba(34,197,94,0.4); }
+    .pipeline-node.blue { border-color: rgba(59,130,246,0.4); }
+    .pipeline-node.purple { border-color: rgba(168,85,247,0.4); }
+    .pipeline-node.orange { border-color: rgba(249,115,22,0.4); }
+
+    .pipeline-arrow {
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      margin: 0 8px;
+    }
+
+    .pipeline-node-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+    }
+
+    .pipeline-node-desc {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+
+    /* ============================================================
+       METRIC BADGES
+       ============================================================ */
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 10px;
+    }
+
+    .metric-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 24px;
+      text-align: center;
+    }
+
+    .metric-value {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .metric-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .metric-value.green { color: var(--accent-green); }
+    .metric-value.blue { color: var(--accent-blue); }
+    .metric-value.purple { color: var(--accent-purple); }
+    .metric-value.orange { color: var(--accent-orange); }
+    .metric-value.red { color: var(--accent-red); }
+    .metric-value.yellow { color: var(--accent-yellow); }
+    .metric-value.cyan { color: var(--accent-cyan); }
+
+    /* ============================================================
+       TABLES
+       ============================================================ */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 0.88rem;
+    }
+
+    .data-table th {
+      text-align: left;
+      padding: 12px 16px;
+      background: rgba(34, 197, 94, 0.08);
+      color: var(--accent-green);
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .data-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+    }
+
+    .data-table tr:hover td {
+      background: rgba(148,163,184,0.04);
+    }
+
+    /* ============================================================
+       BADGES / TAGS
+       ============================================================ */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.02em;
+    }
+
+    .badge-green { background: var(--accent-green-dim); color: var(--accent-green); }
+    .badge-blue { background: var(--accent-blue-dim); color: var(--accent-blue); }
+    .badge-purple { background: var(--accent-purple-dim); color: var(--accent-purple); }
+    .badge-orange { background: var(--accent-orange-dim); color: var(--accent-orange); }
+    .badge-red { background: var(--accent-red-dim); color: var(--accent-red); }
+    .badge-yellow { background: var(--accent-yellow-dim); color: var(--accent-yellow); }
+    .badge-cyan { background: var(--accent-cyan-dim); color: var(--accent-cyan); }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    /* ============================================================
+       CODE BLOCKS
+       ============================================================ */
+    .code-block {
+      background: rgba(0,0,0,0.4);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 20px 24px;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      overflow-x: auto;
+      margin-top: 10px;
+    }
+
+    .code-block .keyword { color: var(--accent-purple); }
+    .code-block .fn { color: var(--accent-blue); }
+    .code-block .string { color: var(--accent-green); }
+    .code-block .comment { color: var(--text-muted); font-style: italic; }
+    .code-block .arrow { color: var(--accent-orange); }
+
+    /* ============================================================
+       FLOW DIAGRAMS
+       ============================================================ */
+    .flow-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+      padding-left: 30px;
+    }
+
+    .flow-step {
+      position: relative;
+      padding: 12px 0 12px 24px;
+      border-left: 2px solid var(--border-subtle);
+    }
+
+    .flow-step::before {
+      content: '';
+      position: absolute;
+      left: -7px;
+      top: 16px;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      border: 2px solid var(--bg-primary);
+    }
+
+    .flow-step:last-child { border-left-color: transparent; }
+
+    .flow-step-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 2px;
+    }
+
+    .flow-step-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* ============================================================
+       LISTS
+       ============================================================ */
+    .feature-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .feature-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 0;
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .feature-list li::before {
+      content: '→';
+      color: var(--accent-green);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ============================================================
+       HERO SLIDE (TITLE)
+       ============================================================ */
+    .hero-logo {
+      font-size: 5rem;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 0 40px rgba(34,197,94,0.3));
+    }
+
+    .hero-title {
+      font-size: 4.5rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 16px;
+    }
+
+    .hero-desc {
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+      font-weight: 300;
+      max-width: 600px;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 24px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    /* ============================================================
+       FALLBACK CHAIN
+       ============================================================ */
+    .fallback-chain {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin: 20px 0;
+    }
+
+    .fallback-node {
+      padding: 18px 30px;
+      border-radius: var(--radius);
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.95rem;
+      min-width: 160px;
+    }
+
+    .fallback-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0 6px;
+      color: var(--text-muted);
+      font-size: 0.7rem;
+    }
+
+    .fallback-arrow span {
+      font-size: 1.2rem;
+      margin-bottom: 2px;
+    }
+
+    /* ============================================================
+       SCREENSHOT PLACEHOLDER
+       ============================================================ */
+    .screenshot-placeholder {
+      width: 100%;
+      max-width: 700px;
+      height: 380px;
+      background: linear-gradient(135deg, rgba(34,197,94,0.05), rgba(59,130,246,0.05));
+      border: 2px dashed rgba(148,163,184,0.15);
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      gap: 8px;
+      margin: 20px auto;
+    }
+
+    .screenshot-placeholder .icon { font-size: 2rem; opacity: 0.5; }
+
+    /* ============================================================
+       CHALLENGE CARD
+       ============================================================ */
+    .challenge-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 20px 24px;
+      margin-bottom: 12px;
+    }
+
+    .challenge-card .challenge-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--accent-orange);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .challenge-card .challenge-fix {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .challenge-fix strong {
+      color: var(--accent-green);
+      font-weight: 600;
+    }
+
+    /* ============================================================
+       ARCHITECTURE DIAGRAM (TEXT)
+       ============================================================ */
+    .arch-diagram {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 30px;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      line-height: 2;
+      color: var(--text-secondary);
+      white-space: pre;
+      overflow-x: auto;
+      margin: 10px 0;
+    }
+
+    .arch-diagram .highlight { color: var(--accent-green); font-weight: 600; }
+    .arch-diagram .blue { color: var(--accent-blue); }
+    .arch-diagram .purple { color: var(--accent-purple); }
+    .arch-diagram .orange { color: var(--accent-orange); }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 900px) {
+      .slide { padding: 40px 30px; }
+      .hero-title { font-size: 3rem; }
+      .slide-title { font-size: 2rem; }
+      .two-col, .three-col { grid-template-columns: 1fr; }
+      .four-col { grid-template-columns: 1fr 1fr; }
+      .pipeline { flex-direction: column; }
+      .pipeline-arrow { transform: rotate(90deg); }
+      .fallback-chain { flex-direction: column; }
+      .fallback-arrow span { transform: rotate(90deg); }
+    }
+
+    /* ============================================================
+       ANIMATIONS
+       ============================================================ */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .slide.active .slide-content > * {
+      animation: fadeInUp 0.5s ease forwards;
+      opacity: 0;
+    }
+
+    .slide.active .slide-content > *:nth-child(1) { animation-delay: 0.05s; }
+    .slide.active .slide-content > *:nth-child(2) { animation-delay: 0.12s; }
+    .slide.active .slide-content > *:nth-child(3) { animation-delay: 0.19s; }
+    .slide.active .slide-content > *:nth-child(4) { animation-delay: 0.26s; }
+    .slide.active .slide-content > *:nth-child(5) { animation-delay: 0.33s; }
+    .slide.active .slide-content > *:nth-child(6) { animation-delay: 0.40s; }
+    .slide.active .slide-content > *:nth-child(7) { animation-delay: 0.47s; }
+    .slide.active .slide-content > *:nth-child(8) { animation-delay: 0.54s; }
+
+    /* ============================================================
+       PRINT STYLES FOR PDF EXPORT
+       ============================================================ */
+    @media print {
+      @page {
+        size: 16in 9in;
+        margin: 0;
+      }
+      
+      body {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        background: var(--bg-primary) !important;
+      }
+
+      .nav-bar, .bg-grid, .bg-glow {
+        display: none !important;
+      }
+
+      .presentation {
+        display: block !important;
+        position: relative !important;
+        overflow: visible !important;
+        height: auto !important;
+      }
+
+      .slide {
+        display: flex !important;
+        position: relative !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        page-break-after: always !important;
+        break-after: page !important;
+        height: 100vh !important;
+        width: 100vw !important;
+        padding: 60px 80px !important;
+      }
+
+      .slide-content > * {
+        animation: none !important;
+        opacity: 1 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background -->
+  <div class="bg-grid"></div>
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+  <div class="bg-glow bg-glow-3"></div>
+
+  <div class="presentation" id="presentation">
+
+    <!-- ========================================================
+         SLIDE 1 — TITLE
+         ======================================================== -->
+    <div class="slide active" data-slide="0">
+      <div class="slide-content centered">
+        <div class="hero-logo">🛡️</div>
+        <h1 class="hero-title"><span class="gradient-text">NutriGuard AI</span></h1>
+        <p class="hero-desc">AI-powered personal nutrition advisor that analyzes your meals, detects health risks, and delivers personalized guidance — powered by LangGraph agents &amp; Gemini.</p>
+        <div class="tag-row" style="justify-content:center; margin-bottom:30px;">
+          <span class="badge badge-green">LangGraph</span>
+          <span class="badge badge-blue">Gemini AI</span>
+          <span class="badge badge-purple">RAG</span>
+          <span class="badge badge-orange">FastAPI</span>
+          <span class="badge badge-cyan">React</span>
+        </div>
+        <div class="hero-meta">
+          <span>Built by Jagat</span>
+          <span>•</span>
+          <span>React + FastAPI + LangGraph</span>
+          <span>•</span>
+          <span>Azure Cloud</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 2 — THE PROBLEM
+         ======================================================== -->
+    <div class="slide" data-slide="1">
+      <div class="slide-content">
+        <div class="section-label">The Problem</div>
+        <h2 class="slide-title">Why <span class="gradient-text">NutriGuard?</span></h2>
+        <p class="slide-subtitle">Millions track meals but lack actionable, personalized guidance that considers their unique health conditions, deficiencies, and goals.</p>
+        <div class="three-col">
+          <div class="card">
+            <div class="card-icon" style="background:var(--accent-red-dim); color:var(--accent-red);">⚠️</div>
+            <div class="card-title">Blind Spots in Nutrition</div>
+            <div class="card-desc">People unknowingly combine foods that block nutrient absorption — like drinking tea right after taking an iron supplement, reducing absorption by up to 60%.</div>
+          </div>
+          <div class="card">
+            <div class="card-icon" style="background:var(--accent-orange-dim); color:var(--accent-orange);">📊</div>
+            <div class="card-title">Generic Advice Doesn't Work</div>
+            <div class="card-desc">Existing apps offer one-size-fits-all guidance. A vegetarian with iron deficiency needs fundamentally different advice than someone tracking macros for muscle gain.</div>
+          </div>
+          <div class="card">
+            <div class="card-icon" style="background:var(--accent-yellow-dim); color:var(--accent-yellow);">🕐</div>
+            <div class="card-title">Timing Matters</div>
+            <div class="card-desc">Nutrient interactions depend on meal timing across the whole day. No app analyzes your daily meal timeline to detect cross-meal risks and patterns.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 3 — OUR SOLUTION / VISION
+         ======================================================== -->
+    <div class="slide" data-slide="2">
+      <div class="slide-content">
+        <div class="section-label">The Solution</div>
+        <h2 class="slide-title">Profile-Aware, <span class="gradient-text">AI-Powered</span> Nutrition</h2>
+        <p class="slide-subtitle">NutriGuard lets users define their health goals, deficiencies, dietary preferences, supplements, and conditions — then uses AI agents to analyze every meal in that context.</p>
+        <div class="two-col">
+          <div>
+            <h3 style="font-size:1.1rem; margin-bottom:16px; color:var(--accent-green);">What Users Can Define</h3>
+            <ul class="feature-list">
+              <li><strong>Health Goals</strong> — fat loss, muscle gain, maintenance, energy, reduce deficiency, improve lab markers</li>
+              <li><strong>Diet Type</strong> — vegetarian, eggetarian, vegan, non-vegetarian</li>
+              <li><strong>Deficiencies</strong> — iron, vitamin D, B12, calcium, etc.</li>
+              <li><strong>Health Conditions</strong> — diabetes, PCOS, thyroid, cholesterol</li>
+              <li><strong>Supplements</strong> — iron tablets, multivitamins, vitamin D3</li>
+              <li><strong>Health Reports</strong> — upload lab reports (.txt/.csv) for AI context</li>
+            </ul>
+          </div>
+          <div>
+            <h3 style="font-size:1.1rem; margin-bottom:16px; color:var(--accent-blue);">What AI Analyzes</h3>
+            <ul class="feature-list">
+              <li><strong>Meal Composition</strong> — foods, drinks, supplements per meal</li>
+              <li><strong>Nutrient Interactions</strong> — tea + iron, calcium + iron timing conflicts</li>
+              <li><strong>Day Timeline</strong> — cross-meal pattern detection across all meals</li>
+              <li><strong>Risk Assessment</strong> — personalized flags based on user profile</li>
+              <li><strong>RAG-Enhanced Suggestions</strong> — curated nutrition knowledge base</li>
+              <li><strong>Safety Guardrails</strong> — no diagnoses, no dosage changes, medical disclaimers</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 4 — SYSTEM ARCHITECTURE
+         ======================================================== -->
+    <div class="slide" data-slide="3">
+      <div class="slide-content">
+        <div class="section-label">Architecture</div>
+        <h2 class="slide-title">System <span class="gradient-text">Architecture</span></h2>
+        <p class="slide-subtitle">3-service microservice architecture with async event-driven AI processing.</p>
+        <div class="arch-diagram"><span class="highlight">React Frontend</span> (Vite, port 3000)
+    │
+    ▼  REST API (JWT Auth)
+<span class="blue">FastAPI Backend</span> (port 8000)
+    │
+    ├── <span class="orange">PostgreSQL</span> (10 tables, port 5434)
+    │       ├── users, user_profiles
+    │       ├── meal_logs, nutrition_flags
+    │       ├── daily_reports, report_feedback
+    │       ├── outbox_events, metric_events
+    │       ├── rag_eval_runs, notifications
+    │
+    ├── <span class="purple">Outbox Pattern</span> (local) ──or── Azure Service Bus (cloud)
+    │
+    ▼  POST /process-meal
+<span class="highlight">AI Orchestrator</span> (LangGraph, port 8001)
+    │
+    ├── 🔍 Meal Analyzer Agent
+    ├── ⚠️ Health Risk Agent  ←── RAG Retriever
+    ├── 📝 Report Agent
+    │
+    └── <span class="blue">Gemini</span> → <span class="orange">OpenAI</span> → <span class="purple">Rule Fallback</span></div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 4b — HLD DIAGRAM
+         ======================================================== -->
+    <div class="slide" data-slide="3b">
+      <div class="slide-content">
+        <div class="section-label">Architecture</div>
+        <h2 class="slide-title">High-Level <span class="gradient-text">Design (HLD)</span></h2>
+        <div style="background: var(--bg-card); padding: 20px; border-radius: var(--radius); border: 1px solid var(--border-subtle); margin-top: 20px; height: 65vh; display: flex; align-items: center; justify-content: center;">
+          <div class="mermaid" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+            graph LR
+              subgraph "Client Layer"
+                  UI[React Frontend SPA]
+              end
+          
+              subgraph "API Layer"
+                  API[FastAPI Backend]
+                  DB[(PostgreSQL DB)]
+              end
+              
+              subgraph "Async Messaging"
+                  Q[Outbox / Azure Service Bus]
+              end
+          
+              subgraph "AI Layer"
+                  Orch[LangGraph Orchestrator]
+                  RAG[(Local RAG JSON)]
+                  Agent1[Meal Analyzer Agent]
+                  Agent2[Health Risk Agent]
+                  Agent3[Report Agent]
+              end
+          
+              subgraph "External LLMs"
+                  Gemini[Google Gemini]
+                  OpenAI[OpenAI]
+              end
+          
+              UI -- HTTP/REST --> API
+              API -- Read/Write --> DB
+              API -- Publish Event --> Q
+              Q -- Consume Event --> Orch
+              
+              Orch --> Agent1
+              Orch --> Agent2
+              Orch --> Agent3
+              
+              Agent2 -. Query .-> RAG
+              
+              Agent1 -- Prompt --> Gemini
+              Agent2 -- Prompt --> Gemini
+              Agent3 -- Prompt --> Gemini
+              
+              Gemini -. Fallback .-> OpenAI
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 5 — TECH STACK
+         ======================================================== -->
+    <div class="slide" data-slide="4">
+      <div class="slide-content">
+        <div class="section-label">Technology</div>
+        <h2 class="slide-title">Tech <span class="gradient-text">Stack</span></h2>
+        <div class="four-col" style="margin-top:30px;">
+          <div class="card" style="text-align:center;">
+            <div style="font-size:2rem; margin-bottom:12px;">⚛️</div>
+            <div class="card-title">Frontend</div>
+            <div class="card-desc">React 18 + Vite<br>Plain CSS (dark mode)<br>State-driven SPA<br>No external UI libs</div>
+          </div>
+          <div class="card" style="text-align:center;">
+            <div style="font-size:2rem; margin-bottom:12px;">⚡</div>
+            <div class="card-title">Backend API</div>
+            <div class="card-desc">FastAPI (Python)<br>SQLAlchemy ORM<br>JWT Auth (HS256)<br>PBKDF2 password hash</div>
+          </div>
+          <div class="card" style="text-align:center;">
+            <div style="font-size:2rem; margin-bottom:12px;">🤖</div>
+            <div class="card-title">AI Orchestrator</div>
+            <div class="card-desc">LangGraph agents<br>Gemini + OpenAI<br>Local RAG retriever<br>Provider fallback chain</div>
+          </div>
+          <div class="card" style="text-align:center;">
+            <div style="font-size:2rem; margin-bottom:12px;">☁️</div>
+            <div class="card-title">Infrastructure</div>
+            <div class="card-desc">Azure Container Apps<br>Azure Static Web Apps<br>Azure Service Bus<br>PostgreSQL 16 + Docker</div>
+          </div>
+        </div>
+        <div class="four-col" style="margin-top:0;">
+          <div class="card" style="text-align:center;">
+            <div style="font-size:2rem; margin-bottom:12px;">🔍</div>
+            <div class="card-title">Observability</div>
+            <div class="card-desc">LangSmith tracing<br>Metric events table<br>Admin dashboard<br>PII sanitization</div>
+          </div>
+          <div class="card" style="text-align:center;">
+            <div style="font-size:2rem; margin-bottom:12px;">🧪</div>
+            <div class="card-title">Testing</div>
+            <div class="card-desc">Unit tests (pytest)<br>Load testing<br>Stress testing<br>RAGAS RAG evaluation</div>
+          </div>
+          <div class="card" style="text-align:center;">
+            <div style="font-size:2rem; margin-bottom:12px;">🚀</div>
+            <div class="card-title">CI/CD</div>
+            <div class="card-desc">GitHub Actions<br>ACR Docker builds<br>Auto-deploy on push<br>SWA PR previews</div>
+          </div>
+          <div class="card" style="text-align:center;">
+            <div style="font-size:2rem; margin-bottom:12px;">📚</div>
+            <div class="card-title">Knowledge</div>
+            <div class="card-desc">Nutrition goals DB<br>Ayurveda combinations<br>Tag-scored retrieval<br>Evidence labeling</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 6 — AI AGENT PIPELINE
+         ======================================================== -->
+    <div class="slide" data-slide="5">
+      <div class="slide-content centered">
+        <div class="section-label" style="justify-content:center;">AI Pipeline</div>
+        <h2 class="slide-title">LangGraph <span class="gradient-text">Agent Pipeline</span></h2>
+        <p class="slide-subtitle">A 3-stage linear DAG processes each meal through specialized AI agents, each building on the previous stage's output.</p>
+        <div class="pipeline">
+          <div class="pipeline-node" style="border-color:rgba(34,197,94,0.5);">
+            <div style="font-size:1.5rem; margin-bottom:8px;">📥</div>
+            <div class="pipeline-node-title" style="color:var(--accent-green);">User Input</div>
+            <div class="pipeline-node-desc">Meal + Profile + Timeline</div>
+          </div>
+          <div class="pipeline-arrow">→</div>
+          <div class="pipeline-node green">
+            <div style="font-size:1.5rem; margin-bottom:8px;">🔍</div>
+            <div class="pipeline-node-title" style="color:var(--accent-green);">Meal Analyzer</div>
+            <div class="pipeline-node-desc">Parse foods, proteins,<br>carbs, beverages, issues</div>
+          </div>
+          <div class="pipeline-arrow">→</div>
+          <div class="pipeline-node blue">
+            <div style="font-size:1.5rem; margin-bottom:8px;">⚠️</div>
+            <div class="pipeline-node-title" style="color:var(--accent-blue);">Health Risk</div>
+            <div class="pipeline-node-desc">Profile-aware flags<br>+ RAG context retrieval</div>
+          </div>
+          <div class="pipeline-arrow">→</div>
+          <div class="pipeline-node purple">
+            <div style="font-size:1.5rem; margin-bottom:8px;">📝</div>
+            <div class="pipeline-node-title" style="color:var(--accent-purple);">Report Agent</div>
+            <div class="pipeline-node-desc">Summary, attention,<br>suggestions, safety</div>
+          </div>
+          <div class="pipeline-arrow">→</div>
+          <div class="pipeline-node" style="border-color:rgba(34,197,94,0.5);">
+            <div style="font-size:1.5rem; margin-bottom:8px;">✅</div>
+            <div class="pipeline-node-title" style="color:var(--accent-green);">Daily Report</div>
+            <div class="pipeline-node-desc">Saved to DB<br>Shown to user</div>
+          </div>
+        </div>
+        <div class="code-block" style="max-width:700px; text-align:left;">
+<span class="comment"># LangGraph DAG Definition</span>
+workflow = <span class="fn">StateGraph</span>(<span class="keyword">dict</span>)
+workflow.<span class="fn">add_node</span>(<span class="string">"meal_analyzer"</span>, meal_analyzer_agent)
+workflow.<span class="fn">add_node</span>(<span class="string">"health_risk"</span>, health_risk_agent)
+workflow.<span class="fn">add_node</span>(<span class="string">"report"</span>, report_agent)
+workflow.<span class="fn">set_entry_point</span>(<span class="string">"meal_analyzer"</span>)
+workflow.<span class="fn">add_edge</span>(<span class="string">"meal_analyzer"</span>, <span class="string">"health_risk"</span>)
+workflow.<span class="fn">add_edge</span>(<span class="string">"health_risk"</span>, <span class="string">"report"</span>)
+workflow.<span class="fn">add_edge</span>(<span class="string">"report"</span>, <span class="keyword">END</span>)</div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 7 — AGENT DETAILS
+         ======================================================== -->
+    <div class="slide" data-slide="6">
+      <div class="slide-content">
+        <div class="section-label">Agent Details</div>
+        <h2 class="slide-title">What Each <span class="gradient-text">Agent Does</span></h2>
+        <div class="three-col" style="margin-top:30px;">
+          <div class="card" style="border-top: 3px solid var(--accent-green);">
+            <div style="font-size:1.8rem; margin-bottom:12px;">🔍</div>
+            <div class="card-title" style="color:var(--accent-green);">Meal Analyzer Agent</div>
+            <div class="card-desc" style="margin-bottom:12px;">Parses raw meal text into structured JSON</div>
+            <div style="font-size:0.82rem; color:var(--text-muted); line-height:1.7;">
+              <strong style="color:var(--text-secondary);">Input:</strong> Raw meal text<br>
+              <strong style="color:var(--text-secondary);">Output:</strong> Structured JSON<br>
+              • foods &amp; portions<br>
+              • carb &amp; protein sources<br>
+              • beverages detected<br>
+              • possible issues<br>
+              <strong style="color:var(--text-secondary);">Fallback:</strong> Keyword extraction (poha, tea, etc.)
+            </div>
+          </div>
+          <div class="card" style="border-top: 3px solid var(--accent-blue);">
+            <div style="font-size:1.8rem; margin-bottom:12px;">⚠️</div>
+            <div class="card-title" style="color:var(--accent-blue);">Health Risk Agent</div>
+            <div class="card-desc" style="margin-bottom:12px;">Detects risks based on profile + day timeline</div>
+            <div style="font-size:0.82rem; color:var(--text-muted); line-height:1.7;">
+              <strong style="color:var(--text-secondary);">Input:</strong> Analysis + profile + timeline<br>
+              <strong style="color:var(--text-secondary);">Output:</strong> Risk flags array<br>
+              • 🍵 tea near iron supplement<br>
+              • 🥛 calcium near iron<br>
+              • 🕐 short meal gap (< 90 min)<br>
+              • 🥩 low protein for goals<br>
+              <strong style="color:var(--text-secondary);">Uses:</strong> RAG knowledge retrieval
+            </div>
+          </div>
+          <div class="card" style="border-top: 3px solid var(--accent-purple);">
+            <div style="font-size:1.8rem; margin-bottom:12px;">📝</div>
+            <div class="card-title" style="color:var(--accent-purple);">Report Agent</div>
+            <div class="card-desc" style="margin-bottom:12px;">Generates human-readable nutrition report</div>
+            <div style="font-size:0.82rem; color:var(--text-muted); line-height:1.7;">
+              <strong style="color:var(--text-secondary);">Input:</strong> Analysis + risks + context<br>
+              <strong style="color:var(--text-secondary);">Output:</strong> Structured report<br>
+              • 📋 Meal Summary<br>
+              • ⚠️ Needs Attention<br>
+              • 💡 Suggestions<br>
+              • 🛡️ Safety Notes<br>
+              <strong style="color:var(--text-secondary);">Rules:</strong> No markdown, no diagnoses
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 8 — LLM PROVIDER CHAIN
+         ======================================================== -->
+    <div class="slide" data-slide="7">
+      <div class="slide-content centered">
+        <div class="section-label" style="justify-content:center;">Resilience</div>
+        <h2 class="slide-title">LLM <span class="gradient-text">Provider Chain</span></h2>
+        <p class="slide-subtitle">3-tier fallback ensures the system never fails — even if all LLM providers are down, rule-based analysis keeps working.</p>
+        <div class="fallback-chain">
+          <div class="fallback-node" style="background:var(--accent-blue-dim); color:var(--accent-blue); border:1px solid rgba(59,130,246,0.3);">
+            ✨ Gemini<br><span style="font-size:0.75rem; font-weight:400; opacity:0.7;">Primary • Multi-key rotation<br>gemini-3-flash-preview</span>
+          </div>
+          <div class="fallback-arrow">
+            <span>→</span>
+            <span style="font-size:0.65rem;">429 / quota</span>
+          </div>
+          <div class="fallback-node" style="background:var(--accent-purple-dim); color:var(--accent-purple); border:1px solid rgba(168,85,247,0.3);">
+            🔮 OpenAI<br><span style="font-size:0.75rem; font-weight:400; opacity:0.7;">Fallback • gpt-4o-mini<br>$0.15/1M in • $0.60/1M out</span>
+          </div>
+          <div class="fallback-arrow">
+            <span>→</span>
+            <span style="font-size:0.65rem;">error</span>
+          </div>
+          <div class="fallback-node" style="background:var(--accent-orange-dim); color:var(--accent-orange); border:1px solid rgba(249,115,22,0.3);">
+            🔧 Rule Fallback<br><span style="font-size:0.75rem; font-weight:400; opacity:0.7;">Zero cost • Always works<br>Keyword + rule engine</span>
+          </div>
+        </div>
+        <div class="two-col" style="max-width:800px; margin-top:30px;">
+          <div class="card">
+            <div class="card-title">🔑 Multi-Key Rotation</div>
+            <div class="card-desc">Gemini client supports comma-separated API keys. On 429/quota errors, automatically rotates to the next key before falling back to OpenAI.</div>
+          </div>
+          <div class="card">
+            <div class="card-title">📊 Fallback Tracking</div>
+            <div class="card-desc">Every provider switch is tracked via MetricEvents — admin dashboard shows gemini_fallback, openai_answer, rule_fallback counts per agent.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 9 — RAG SYSTEM
+         ======================================================== -->
+    <div class="slide" data-slide="8">
+      <div class="slide-content">
+        <div class="section-label">Knowledge Retrieval</div>
+        <h2 class="slide-title">RAG <span class="gradient-text">System</span></h2>
+        <p class="slide-subtitle">Local keyword &amp; tag-scored retriever enriches the Health Risk Agent with curated nutrition knowledge before LLM generation.</p>
+        <div class="two-col">
+          <div>
+            <h3 style="font-size:1rem; margin-bottom:16px; color:var(--accent-green);">How Retrieval Works</h3>
+            <div class="flow-steps">
+              <div class="flow-step">
+                <div class="flow-step-title">Token Overlap Scoring</div>
+                <div class="flow-step-desc">Matches query tokens against knowledge base content</div>
+              </div>
+              <div class="flow-step">
+                <div class="flow-step-title">Goal Match Boost (+5)</div>
+                <div class="flow-step-desc">Higher score for docs matching user's health goals</div>
+              </div>
+              <div class="flow-step">
+                <div class="flow-step-title">Diet Type Match (+4)</div>
+                <div class="flow-step-desc">Prioritizes diet-appropriate guidance</div>
+              </div>
+              <div class="flow-step">
+                <div class="flow-step-title">Condition Match (+5)</div>
+                <div class="flow-step-desc">Boosts docs relevant to user's health conditions</div>
+              </div>
+              <div class="flow-step">
+                <div class="flow-step-title">Ayurveda Filter (+2)</div>
+                <div class="flow-step-desc">Includes Ayurveda content only when relevant tags match</div>
+              </div>
+              <div class="flow-step">
+                <div class="flow-step-title">Top-6 Results</div>
+                <div class="flow-step-desc">Returns ID, topic, content, source, evidence level, safety</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 style="font-size:1rem; margin-bottom:16px; color:var(--accent-blue);">Knowledge Base</h3>
+            <div class="card" style="margin-bottom:16px;">
+              <div class="card-title">📚 nutrition_goals.json</div>
+              <div class="card-desc">Curated nutrition guidance organized by goals (fat loss, muscle gain, deficiency reduction), diet types, and health conditions. Each entry has evidence level and safety tags.</div>
+            </div>
+            <div class="card" style="margin-bottom:16px;">
+              <div class="card-title">🍃 ayurveda_food_combinations.json</div>
+              <div class="card-desc">Traditional Ayurvedic food combination guidance (e.g., milk + fruit). Labeled as traditional/cultural context — never presented as clinical advice.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">🛡️ Safety Labels</div>
+              <div class="card-desc">Every knowledge item carries evidence_level and safety metadata. Ayurveda items are explicitly labeled as optional traditional guidance.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 10 — USER JOURNEY
+         ======================================================== -->
+    <div class="slide" data-slide="9">
+      <div class="slide-content centered">
+        <div class="section-label" style="justify-content:center;">User Experience</div>
+        <h2 class="slide-title">End-to-End <span class="gradient-text">User Journey</span></h2>
+        <p class="slide-subtitle">From signup to personalized nutrition report in minutes.</p>
+        <div class="pipeline" style="flex-wrap:wrap; gap:12px;">
+          <div class="pipeline-node" style="border-color:rgba(34,197,94,0.4); min-width:140px;">
+            <div style="font-size:1.3rem; margin-bottom:6px;">👤</div>
+            <div class="pipeline-node-title" style="font-size:0.85rem;">Sign Up</div>
+            <div class="pipeline-node-desc" style="font-size:0.7rem;">Name, email, password</div>
+          </div>
+          <div class="pipeline-arrow">→</div>
+          <div class="pipeline-node" style="border-color:rgba(59,130,246,0.4); min-width:140px;">
+            <div style="font-size:1.3rem; margin-bottom:6px;">🎯</div>
+            <div class="pipeline-node-title" style="font-size:0.85rem;">Set Profile</div>
+            <div class="pipeline-node-desc" style="font-size:0.7rem;">Goals, diet, deficiencies,<br>supplements, conditions</div>
+          </div>
+          <div class="pipeline-arrow">→</div>
+          <div class="pipeline-node" style="border-color:rgba(168,85,247,0.4); min-width:140px;">
+            <div style="font-size:1.3rem; margin-bottom:6px;">📄</div>
+            <div class="pipeline-node-title" style="font-size:0.85rem;">Upload Report</div>
+            <div class="pipeline-node-desc" style="font-size:0.7rem;">Lab reports for<br>deeper AI context</div>
+          </div>
+          <div class="pipeline-arrow">→</div>
+          <div class="pipeline-node" style="border-color:rgba(249,115,22,0.4); min-width:140px;">
+            <div style="font-size:1.3rem; margin-bottom:6px;">🍽️</div>
+            <div class="pipeline-node-title" style="font-size:0.85rem;">Log Meal</div>
+            <div class="pipeline-node-desc" style="font-size:0.7rem;">Foods, drinks,<br>supplements, notes</div>
+          </div>
+          <div class="pipeline-arrow">→</div>
+          <div class="pipeline-node" style="border-color:rgba(6,182,212,0.4); min-width:140px;">
+            <div style="font-size:1.3rem; margin-bottom:6px;">🤖</div>
+            <div class="pipeline-node-title" style="font-size:0.85rem;">AI Analysis</div>
+            <div class="pipeline-node-desc" style="font-size:0.7rem;">3 agents process<br>in background</div>
+          </div>
+          <div class="pipeline-arrow">→</div>
+          <div class="pipeline-node" style="border-color:rgba(34,197,94,0.4); min-width:140px;">
+            <div style="font-size:1.3rem; margin-bottom:6px;">📊</div>
+            <div class="pipeline-node-title" style="font-size:0.85rem;">Daily Report</div>
+            <div class="pipeline-node-desc" style="font-size:0.7rem;">Timeline, flags,<br>suggestions, safety</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 11 — FRONTEND FEATURES
+         ======================================================== -->
+    <div class="slide" data-slide="10">
+      <div class="slide-content">
+        <div class="section-label">Frontend</div>
+        <h2 class="slide-title">React <span class="gradient-text">Frontend</span></h2>
+        <p class="slide-subtitle">Clean, responsive SPA built with React 18 + Vite — dark/light mode, glassmorphism UI, mobile-first design.</p>
+        <div class="three-col">
+          <div class="card">
+            <div class="card-title">🔐 Auth Page</div>
+            <div class="card-desc">Split-screen hero + login/signup card. Auto-switches on 404. JWT token stored locally. Admin role detection.</div>
+          </div>
+          <div class="card">
+            <div class="card-title">🎯 Profile Page</div>
+            <div class="card-desc">Multi-select goals, diet dropdown, free-text health conditions/deficiencies/supplements, health report upload, normalization preview.</div>
+          </div>
+          <div class="card">
+            <div class="card-title">🍽️ Meal Logger</div>
+            <div class="card-desc">Meal type dropdown, datetime picker, card-style inputs for foods/drinks/supplements/notes. One-click submit.</div>
+          </div>
+          <div class="card">
+            <div class="card-title">📊 Daily Report</div>
+            <div class="card-desc">Timeline view with expandable reports per meal. Parsed sections: Summary, Attention, Suggestions, Safety. Auto-polls for updates.</div>
+          </div>
+          <div class="card">
+            <div class="card-title">💬 Feedback System</div>
+            <div class="card-desc">Per-meal, per-section feedback (liked/disliked + comments). Modal dialog. Stored for quality tracking in admin dashboard.</div>
+          </div>
+          <div class="card">
+            <div class="card-title">🔔 Smart Notifications</div>
+            <div class="card-desc">Missed meal reminders — breakfast by 10:30, lunch by 15:30, dinner by 21:30. Bell icon with unread count.</div>
+          </div>
+        </div>
+        <div class="tag-row" style="margin-top:20px;">
+          <span class="badge badge-green">Dark Mode</span>
+          <span class="badge badge-blue">Responsive</span>
+          <span class="badge badge-purple">Glassmorphism</span>
+          <span class="badge badge-orange">CSS Food Themes</span>
+          <span class="badge badge-cyan">Mobile Drawer</span>
+          <span class="badge badge-yellow">Zero UI Libraries</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 11a — UI SHOWCASE: AUTH
+         ======================================================== -->
+    <div class="slide" data-slide="10a">
+      <div class="slide-content">
+        <div class="section-label">UI Showcase</div>
+        <h2 class="slide-title">Frictionless <span class="gradient-text">Authentication</span></h2>
+        <p class="slide-subtitle" style="margin-bottom:15px;">Clean, split-screen login and signup flows with built-in dark mode support.</p>
+        <div style="display:flex; gap:15px; align-items:flex-start;">
+          <div style="flex:1; border-radius:var(--radius); overflow:hidden; border:1px solid var(--border-subtle); box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+            <img src="assets/auth_1.png" alt="Login UI" style="width:100%; display:block;">
+          </div>
+          <div style="flex:1; border-radius:var(--radius); overflow:hidden; border:1px solid var(--border-subtle); box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+            <img src="assets/auth_2.png" alt="Signup UI" style="width:100%; display:block;">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 11b — UI SHOWCASE: PROFILE
+         ======================================================== -->
+    <div class="slide" data-slide="10b">
+      <div class="slide-content">
+        <div class="section-label">UI Showcase</div>
+        <h2 class="slide-title">Health <span class="gradient-text">Profile</span> Setup</h2>
+        <p class="slide-subtitle" style="margin-bottom:15px;">Capturing goals, diet, deficiencies, and conditions to personalize AI advice.</p>
+        <div style="border-radius:var(--radius); overflow:hidden; border:1px solid var(--border-subtle); box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+          <img src="assets/profile.png" alt="Profile UI" style="width:100%; display:block;">
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 11c — UI SHOWCASE: MEAL LOGGER
+         ======================================================== -->
+    <div class="slide" data-slide="10c">
+      <div class="slide-content">
+        <div class="section-label">UI Showcase</div>
+        <h2 class="slide-title">Intuitive <span class="gradient-text">Meal Logger</span></h2>
+        <p class="slide-subtitle" style="margin-bottom:15px;">Structured logging of foods, drinks, and supplements with dynamic theming.</p>
+        <div style="display:flex; gap:20px; align-items:flex-start;">
+          <div style="flex:1; border-radius:var(--radius); overflow:hidden; border:1px solid var(--border-subtle); box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+            <img src="assets/meal_log_1.png" alt="Meal Logger UI Part 1" style="width:100%; display:block;">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 11d — UI SHOWCASE: DAILY REPORT
+         ======================================================== -->
+    <div class="slide" data-slide="10d">
+      <div class="slide-content">
+        <div class="section-label">UI Showcase</div>
+        <h2 class="slide-title">Actionable <span class="gradient-text">Daily Reports</span></h2>
+        <p class="slide-subtitle" style="margin-bottom:15px;">Context-aware analysis grouping findings into Needs Attention, Suggestions, and Safety.</p>
+        <div style="border-radius:var(--radius); overflow:hidden; border:1px solid var(--border-subtle); box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+          <img src="assets/report_1.png" alt="Daily Report UI" style="width:100%; display:block;">
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 12 — DATABASE DESIGN
+         ======================================================== -->
+    <div class="slide" data-slide="11">
+      <div class="slide-content">
+        <div class="section-label">Data Layer</div>
+        <h2 class="slide-title">Database <span class="gradient-text">Design</span> — 10 Tables</h2>
+        <table class="data-table" style="margin-top:20px;">
+          <thead>
+            <tr>
+              <th>Table</th>
+              <th>Purpose</th>
+              <th>Key Fields</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong style="color:var(--accent-green);">users</strong></td>
+              <td>User accounts</td>
+              <td>name, email, password_hash, is_admin</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--accent-green);">user_profiles</strong></td>
+              <td>Health profiles</td>
+              <td>goals (JSON), diet_type, deficiencies, supplements, health_report_text</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--accent-blue);">meal_logs</strong></td>
+              <td>Meal records</td>
+              <td>foods_text, drinks_text, supplements_text, meal_type, status</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--accent-blue);">nutrition_flags</strong></td>
+              <td>AI-detected risk flags</td>
+              <td>type, severity, message (per meal)</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--accent-purple);">daily_reports</strong></td>
+              <td>AI nutrition reports</td>
+              <td>summary, recommendations (JSON), safety_note</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--accent-purple);">report_feedback</strong></td>
+              <td>User feedback</td>
+              <td>category, rating (liked/disliked), comment</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--accent-orange);">outbox_events</strong></td>
+              <td>Event queue</td>
+              <td>event_type, payload (JSON), status</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--accent-orange);">metric_events</strong></td>
+              <td>All observability metrics</td>
+              <td>name, source, payload (JSON) — latency, tokens, fallbacks</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--accent-cyan);">rag_eval_runs</strong></td>
+              <td>RAG evaluation results</td>
+              <td>hit_rate, cases_passed, metrics (JSON)</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--accent-cyan);">notifications</strong></td>
+              <td>Meal reminders</td>
+              <td>type, title, message, status, notification_date</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 13 — ADMIN DASHBOARD (LIVE DATA)
+         ======================================================== -->
+    <div class="slide" data-slide="12">
+      <div class="slide-content">
+        <div class="section-label">Observability — Live Production Data</div>
+        <h2 class="slide-title">Admin <span class="gradient-text">Dashboard</span> — Real Metrics</h2>
+        <p class="slide-subtitle" style="margin-bottom:24px;">DB-backed product metrics from the deployed NutriGuard instance (26 Jun – 02 Jul 2026).</p>
+        <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:14px;">
+          <div class="metric-card">
+            <div class="metric-value green" style="font-size:1.9rem;">30</div>
+            <div class="metric-label">Meals Submitted</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value blue" style="font-size:1.9rem;">25</div>
+            <div class="metric-label">Reports Completed</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value green" style="font-size:1.9rem;">0</div>
+            <div class="metric-label">Failed Reports</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value orange" style="font-size:1.9rem;">192.7s</div>
+            <div class="metric-label">Avg Processing</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value purple" style="font-size:1.9rem;">4</div>
+            <div class="metric-label">Feedback Liked</div>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin-top:14px;">
+          <div class="metric-card">
+            <div class="metric-value green" style="font-size:1.9rem;">0</div>
+            <div class="metric-label">Feedback Disliked</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value yellow" style="font-size:1.9rem;">5</div>
+            <div class="metric-label">Missed Meal Nudges</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value cyan" style="font-size:1.9rem;">2</div>
+            <div class="metric-label">Unread Notifications</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value orange" style="font-size:1.9rem;">49</div>
+            <div class="metric-label">Gemini Fallbacks</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value blue" style="font-size:1.9rem;">9</div>
+            <div class="metric-label">OpenAI Answers</div>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin-top:14px;">
+          <div class="metric-card">
+            <div class="metric-value green" style="font-size:1.9rem;">0</div>
+            <div class="metric-label">OpenAI Fallbacks</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value green" style="font-size:1.9rem;">0</div>
+            <div class="metric-label">Rule Fallbacks</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value blue" style="font-size:1.9rem;">5,583</div>
+            <div class="metric-label">API Requests</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value cyan" style="font-size:1.9rem;">96.88ms</div>
+            <div class="metric-label">Avg API Latency</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value purple" style="font-size:1.9rem;">239.58ms</div>
+            <div class="metric-label">P95 API Latency</div>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin-top:14px;">
+          <div class="metric-card">
+            <div class="metric-value red" style="font-size:1.9rem;">1,587ms</div>
+            <div class="metric-label">Slowest API</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value blue" style="font-size:1.9rem;">18</div>
+            <div class="metric-label">Agent Runs</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value orange" style="font-size:1.9rem;">35.5s</div>
+            <div class="metric-label">Avg Agent Latency</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value red" style="font-size:1.9rem;">83.4s</div>
+            <div class="metric-label">P95 Agent Latency</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value red" style="font-size:1.9rem;">161.2s</div>
+            <div class="metric-label">Slowest Agent</div>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin-top:14px;">
+          <div class="metric-card">
+            <div class="metric-value purple" style="font-size:1.9rem;">3</div>
+            <div class="metric-label">LLM Calls</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value blue" style="font-size:1.9rem;">9,406</div>
+            <div class="metric-label" style="font-size:0.7rem;">LLM Tokens (3436 in / 611 out)</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value green" style="font-size:1.9rem;">$0.00</div>
+            <div class="metric-label">Estimated LLM Cost</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value cyan" style="font-size:1.9rem;">305ms</div>
+            <div class="metric-label">Latest Load P95</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value green" style="font-size:1.9rem;">100%</div>
+            <div class="metric-label" style="font-size:0.7rem;">RAG Hit Rate (4/4 passed)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 13b — DAILY TRENDS & LLM FALLBACK
+         ======================================================== -->
+    <div class="slide" data-slide="12b">
+      <div class="slide-content">
+        <div class="section-label">Observability — Trends & Fallbacks</div>
+        <h2 class="slide-title">Daily Trends & <span class="gradient-text">LLM Fallback</span></h2>
+        <div class="three-col" style="margin-top:20px;">
+          <div class="card">
+            <div class="card-title" style="margin-bottom:14px;">📅 Meals Submitted Per Day</div>
+            <table class="data-table" style="font-size:0.82rem;">
+              <tbody>
+                <tr><td>2026-06-26</td><td style="text-align:right; color:var(--accent-green); font-weight:700;">0</td></tr>
+                <tr><td>2026-06-27</td><td style="text-align:right; color:var(--accent-green); font-weight:700;">0</td></tr>
+                <tr><td>2026-06-28</td><td style="text-align:right; color:var(--accent-green); font-weight:700;">0</td></tr>
+                <tr><td>2026-06-29</td><td style="text-align:right; color:var(--accent-green); font-weight:700;">0</td></tr>
+                <tr><td>2026-06-30</td><td style="text-align:right; color:var(--accent-green); font-weight:700;">0</td></tr>
+                <tr><td>2026-07-01</td><td style="text-align:right; color:var(--accent-green); font-weight:700;">13</td></tr>
+                <tr><td>2026-07-02</td><td style="text-align:right; color:var(--accent-green); font-weight:700;">17</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <div class="card-title" style="margin-bottom:14px;">📊 Reports Completed Per Day</div>
+            <table class="data-table" style="font-size:0.82rem;">
+              <tbody>
+                <tr><td>2026-06-26</td><td style="text-align:right; color:var(--accent-blue); font-weight:700;">0</td></tr>
+                <tr><td>2026-06-27</td><td style="text-align:right; color:var(--accent-blue); font-weight:700;">0</td></tr>
+                <tr><td>2026-06-28</td><td style="text-align:right; color:var(--accent-blue); font-weight:700;">0</td></tr>
+                <tr><td>2026-06-29</td><td style="text-align:right; color:var(--accent-blue); font-weight:700;">0</td></tr>
+                <tr><td>2026-06-30</td><td style="text-align:right; color:var(--accent-blue); font-weight:700;">0</td></tr>
+                <tr><td>2026-07-01</td><td style="text-align:right; color:var(--accent-blue); font-weight:700;">8</td></tr>
+                <tr><td>2026-07-02</td><td style="text-align:right; color:var(--accent-blue); font-weight:700;">17</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <div class="card" style="margin-bottom:16px;">
+              <div class="card-title" style="margin-bottom:14px;">💬 Feedback by Section</div>
+              <div style="display:flex; flex-direction:column; gap:10px;">
+                <div style="background:rgba(34,197,94,0.06); border:1px solid var(--border-subtle); border-radius:8px; padding:12px 16px; display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-weight:600; font-size:0.85rem;">Needs Attention</span>
+                  <span><span class="badge badge-green">Liked 3</span> <span class="badge badge-red" style="margin-left:4px;">Disliked 0</span></span>
+                </div>
+                <div style="background:rgba(59,130,246,0.06); border:1px solid var(--border-subtle); border-radius:8px; padding:12px 16px; display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-weight:600; font-size:0.85rem;">Suggestions</span>
+                  <span><span class="badge badge-green">Liked 1</span> <span class="badge badge-red" style="margin-left:4px;">Disliked 0</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px;">
+          <div class="card-title" style="margin-bottom:16px;">🔄 LLM Fallback by Agent</div>
+          <div class="three-col" style="gap:16px;">
+            <div style="background:rgba(59,130,246,0.06); border:1px solid var(--border-subtle); border-radius:10px; padding:16px;">
+              <div style="font-weight:700; font-size:0.95rem; margin-bottom:10px;">⚠️ Health Risk</div>
+              <div style="font-size:0.82rem; line-height:1.9; color:var(--text-secondary);">
+                <span style="color:var(--accent-orange);">Gemini fallback</span> <strong style="color:var(--accent-blue);">17</strong><br>
+                <span style="color:var(--accent-green);">OpenAI answer</span> <strong style="color:var(--accent-blue);">3</strong><br>
+                <span style="color:var(--text-muted);">OpenAI fallback</span> <strong>0</strong> · <span style="color:var(--text-muted);">Rule fallback</span> <strong>0</strong>
+              </div>
+            </div>
+            <div style="background:rgba(168,85,247,0.06); border:1px solid var(--border-subtle); border-radius:10px; padding:16px;">
+              <div style="font-weight:700; font-size:0.95rem; margin-bottom:10px;">📝 Report</div>
+              <div style="font-size:0.82rem; line-height:1.9; color:var(--text-secondary);">
+                <span style="color:var(--accent-orange);">Gemini fallback</span> <strong style="color:var(--accent-blue);">17</strong><br>
+                <span style="color:var(--accent-green);">OpenAI answer</span> <strong style="color:var(--accent-blue);">3</strong><br>
+                <span style="color:var(--text-muted);">OpenAI fallback</span> <strong>0</strong> · <span style="color:var(--text-muted);">Rule fallback</span> <strong>0</strong>
+              </div>
+            </div>
+            <div style="background:rgba(34,197,94,0.06); border:1px solid var(--border-subtle); border-radius:10px; padding:16px;">
+              <div style="font-weight:700; font-size:0.95rem; margin-bottom:10px;">🔍 Meal Analyzer</div>
+              <div style="font-size:0.82rem; line-height:1.9; color:var(--text-secondary);">
+                <span style="color:var(--accent-orange);">Gemini fallback</span> <strong style="color:var(--accent-blue);">15</strong><br>
+                <span style="color:var(--accent-green);">OpenAI answer</span> <strong style="color:var(--accent-blue);">3</strong><br>
+                <span style="color:var(--text-muted);">OpenAI fallback</span> <strong>0</strong> · <span style="color:var(--text-muted);">Rule fallback</span> <strong>0</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 14 — RAGAS FRAMEWORK ANALYSIS
+         ======================================================== -->
+    <div class="slide" data-slide="13">
+      <div class="slide-content">
+        <div class="section-label">RAG Quality — Live Dashboard Data</div>
+        <h2 class="slide-title">RAGAS / RAG <span class="gradient-text">Quality</span></h2>
+        <p class="slide-subtitle" style="margin-bottom:20px;">Source: <strong style="color:var(--accent-green);">local_ragas</strong> · Last published: 02/07/2026, 11:23:58 · Judge: <strong style="color:var(--accent-blue);">OpenAI</strong></p>
+        <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:14px;">
+          <div class="metric-card">
+            <div class="metric-value green" style="font-size:1.8rem;">100%</div>
+            <div class="metric-label">Avg Retrieval Hit Rate</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value blue" style="font-size:1.8rem;">4/4</div>
+            <div class="metric-label">Cases Passed</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value green" style="font-size:1.8rem;">100%</div>
+            <div class="metric-label">Context Recall</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value orange" style="font-size:1.8rem;">24%</div>
+            <div class="metric-label">Context Precision</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value green" style="font-size:1.8rem;">96%</div>
+            <div class="metric-label">Faithfulness</div>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin-top:14px;">
+          <div class="metric-card">
+            <div class="metric-value cyan" style="font-size:1.8rem;">83%</div>
+            <div class="metric-label">RAGAS Context Precision</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value yellow" style="font-size:1.8rem;">62%</div>
+            <div class="metric-label">RAGAS Context Recall</div>
+          </div>
+          <div class="metric-card" style="grid-column: span 3; text-align:left; padding:16px 20px;">
+            <div class="card-desc" style="font-size:0.82rem; line-height:1.6;">
+              <strong style="color:var(--accent-green);">High recall (100%)</strong> — finds the right info. <strong style="color:var(--accent-orange);">Lower strict precision (24%)</strong> — retrieves extra context. RAGAS precision (83%) is higher because the LLM judge considers extra context useful. <strong style="color:var(--accent-green);">96% faithfulness</strong> = answers grounded in context.
+            </div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:20px;">
+          <div class="card-title" style="margin-bottom:14px;">📋 Per-Case Evaluation Drill-Down</div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Test Case</th>
+                <th>Question</th>
+                <th style="text-align:center;">Recall</th>
+                <th style="text-align:center;">Precision</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong style="color:var(--text-primary);">🥗 protein_veg_breakfast</strong></td>
+                <td>What should a vegetarian user add to poha breakfast for better protein?</td>
+                <td style="text-align:center;"><span class="badge badge-green">100%</span></td>
+                <td style="text-align:center;"><span class="badge badge-green">40%</span></td>
+              </tr>
+              <tr>
+                <td><strong style="color:var(--text-primary);">🍵 iron_tea_timing</strong></td>
+                <td>What should a user with iron deficiency know about tea near meals?</td>
+                <td style="text-align:center;"><span class="badge badge-green">100%</span></td>
+                <td style="text-align:center;"><span class="badge badge-orange">20%</span></td>
+              </tr>
+              <tr>
+                <td><strong style="color:var(--text-primary);">🏋️ fat_loss_satiety</strong></td>
+                <td>What should a fat-loss meal recommendation prioritize?</td>
+                <td style="text-align:center;"><span class="badge badge-green">100%</span></td>
+                <td style="text-align:center;"><span class="badge badge-orange">20%</span></td>
+              </tr>
+              <tr>
+                <td><strong style="color:var(--text-primary);">🍃 ayurveda_milk_fruit</strong></td>
+                <td>How should Ayurveda combination guidance be presented for milk and fruit?</td>
+                <td style="text-align:center;"><span class="badge badge-green">100%</span></td>
+                <td style="text-align:center;"><span class="badge badge-orange">17%</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 15 — LANGSMITH TRACING
+         ======================================================== -->
+    <div class="slide" data-slide="14">
+      <div class="slide-content">
+        <div class="section-label">Tracing</div>
+        <h2 class="slide-title">LangSmith <span class="gradient-text">Integration</span></h2>
+        <p class="slide-subtitle">Optional LangSmith tracing for deep observability into the AI pipeline — with built-in PII protection.</p>
+        <div class="two-col">
+          <div>
+            <h3 style="font-size:1rem; margin-bottom:16px; color:var(--accent-green);">What's Traced</h3>
+            <ul class="feature-list">
+              <li><strong>Agent latency</strong> — duration_ms per agent stage (Meal Analyzer, Health Risk, Report)</li>
+              <li><strong>LLM provider status</strong> — which provider handled each call (Gemini/OpenAI/rule)</li>
+              <li><strong>Token usage</strong> — input/output tokens per call, estimated cost</li>
+              <li><strong>API request metrics</strong> — method, path, status_code, duration_ms for every request</li>
+              <li><strong>Trace IDs</strong> — appear in backend logs, Service Bus payload, and orchestrator logs for end-to-end correlation</li>
+            </ul>
+          </div>
+          <div>
+            <h3 style="font-size:1rem; margin-bottom:16px; color:var(--accent-blue);">PII Protection</h3>
+            <div class="card" style="margin-bottom:16px;">
+              <div class="card-title">🔒 Health Report Redaction</div>
+              <div class="card-desc"><code style="color:var(--accent-orange);">health_report_text</code> is automatically redacted before sending to LangSmith to protect sensitive medical data.</div>
+            </div>
+            <div class="card" style="margin-bottom:16px;">
+              <div class="card-title">✂️ Content Truncation</div>
+              <div class="card-desc">Long strings are truncated to 1200 characters in traces to reduce costs and protect privacy.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">📊 Stored Locally Too</div>
+              <div class="card-desc">All metrics are also stored in the PostgreSQL <code style="color:var(--accent-orange);">metric_events</code> table — no external dependency required for the admin dashboard.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 15c — UI SHOWCASE: LANGSMITH
+         ======================================================== -->
+    <div class="slide" data-slide="14c">
+      <div class="slide-content">
+        <div class="section-label">Observability Showcase</div>
+        <h2 class="slide-title">LangSmith <span class="gradient-text">Dashboard</span></h2>
+        <p class="slide-subtitle" style="margin-bottom:15px;">Live monitoring of AI traces, latency percentiles, errors, and token usage.</p>
+        <div style="display:flex; gap:15px; align-items:flex-start;">
+          <div style="flex:1; border-radius:var(--radius); overflow:hidden; border:1px solid var(--border-subtle); box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+            <img src="assets/langsmith_1.png" alt="LangSmith Traces" style="width:100%; display:block;">
+          </div>
+          <div style="flex:1; border-radius:var(--radius); overflow:hidden; border:1px solid var(--border-subtle); box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+            <img src="assets/langsmith_2.png" alt="LangSmith Monitoring" style="width:100%; display:block;">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 15b — PERFORMANCE METRICS (LIVE DATA)
+         ======================================================== -->
+    <div class="slide" data-slide="14b">
+      <div class="slide-content">
+        <div class="section-label">Performance — Live Dashboard Data</div>
+        <h2 class="slide-title">Agent Latency, Load Test & <span class="gradient-text">Token Costs</span></h2>
+        <div class="two-col" style="margin-top:20px;">
+          <div class="card">
+            <div class="card-title" style="margin-bottom:14px;">⚡ Agent Latency by Stage</div>
+            <table class="data-table" style="font-size:0.82rem;">
+              <thead>
+                <tr>
+                  <th>Agent</th>
+                  <th style="text-align:right;">Runs</th>
+                  <th style="text-align:right;">Avg</th>
+                  <th style="text-align:right;">P95</th>
+                  <th style="text-align:right;">Max</th>
+                  <th style="text-align:right;">Fallback</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong style="color:var(--accent-green);">meal analyzer</strong></td>
+                  <td style="text-align:right;">6</td>
+                  <td style="text-align:right; color:var(--accent-blue);">43,271ms</td>
+                  <td style="text-align:right; color:var(--accent-orange);">161,164ms</td>
+                  <td style="text-align:right; color:var(--accent-red);">161,164ms</td>
+                  <td style="text-align:right; color:var(--accent-green);">0</td>
+                </tr>
+                <tr>
+                  <td><strong style="color:var(--accent-blue);">health risk</strong></td>
+                  <td style="text-align:right;">6</td>
+                  <td style="text-align:right; color:var(--accent-blue);">37,087ms</td>
+                  <td style="text-align:right; color:var(--accent-orange);">83,409ms</td>
+                  <td style="text-align:right; color:var(--accent-red);">83,409ms</td>
+                  <td style="text-align:right; color:var(--accent-green);">0</td>
+                </tr>
+                <tr>
+                  <td><strong style="color:var(--accent-purple);">report</strong></td>
+                  <td style="text-align:right;">6</td>
+                  <td style="text-align:right; color:var(--accent-blue);">26,198ms</td>
+                  <td style="text-align:right; color:var(--accent-orange);">55,446ms</td>
+                  <td style="text-align:right; color:var(--accent-red);">55,446ms</td>
+                  <td style="text-align:right; color:var(--accent-green);">0</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <div class="card-title" style="margin-bottom:14px;">🏋️ Latest Load Test</div>
+            <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;">
+              <span class="badge badge-blue">5000 requests</span>
+              <span class="badge badge-purple">5 concurrency</span>
+              <span class="badge badge-green">5000 success</span>
+              <span class="badge badge-green">0 failed</span>
+              <span class="badge badge-cyan">170.91s wall</span>
+            </div>
+            <div style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:10px;">
+              Endpoint: <code style="color:var(--accent-green);">/users/1/profile</code>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+              <div class="metric-card" style="padding:14px;">
+                <div class="metric-value blue" style="font-size:1.4rem;">170ms</div>
+                <div class="metric-label">Avg Latency</div>
+              </div>
+              <div class="metric-card" style="padding:14px;">
+                <div class="metric-value orange" style="font-size:1.4rem;">305ms</div>
+                <div class="metric-label">P95 Latency</div>
+              </div>
+              <div class="metric-card" style="padding:14px;">
+                <div class="metric-value red" style="font-size:1.4rem;">755ms</div>
+                <div class="metric-label">Max Latency</div>
+              </div>
+            </div>
+            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:10px;">02/07/2026, 17:02:49 · source: load_test_api</div>
+          </div>
+        </div>
+        <div class="two-col" style="margin-top:16px;">
+          <div class="card">
+            <div class="card-title" style="margin-bottom:14px;">💰 Token Cost by Provider</div>
+            <table class="data-table" style="font-size:0.82rem;">
+              <thead>
+                <tr>
+                  <th>Provider</th>
+                  <th style="text-align:right;">Calls</th>
+                  <th style="text-align:right;">Input</th>
+                  <th style="text-align:right;">Output</th>
+                  <th style="text-align:right;">Total</th>
+                  <th style="text-align:right;">Cost</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong style="color:var(--accent-blue);">gemini</strong></td>
+                  <td style="text-align:right;">3</td>
+                  <td style="text-align:right;">3,436</td>
+                  <td style="text-align:right;">611</td>
+                  <td style="text-align:right; color:var(--accent-green);">9,406</td>
+                  <td style="text-align:right; color:var(--accent-green); font-weight:700;">$0.00</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <div class="card-title" style="margin-bottom:14px;">🤖 Token Cost by Agent</div>
+            <table class="data-table" style="font-size:0.82rem;">
+              <thead>
+                <tr>
+                  <th>Agent</th>
+                  <th style="text-align:right;">Calls</th>
+                  <th style="text-align:right;">Input</th>
+                  <th style="text-align:right;">Output</th>
+                  <th style="text-align:right;">Total</th>
+                  <th style="text-align:right;">Cost</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong style="color:var(--accent-green);">meal analyzer</strong></td>
+                  <td style="text-align:right;">1</td>
+                  <td style="text-align:right;">120</td>
+                  <td style="text-align:right;">69</td>
+                  <td style="text-align:right;">508</td>
+                  <td style="text-align:right; color:var(--accent-green);">$0.00</td>
+                </tr>
+                <tr>
+                  <td><strong style="color:var(--accent-blue);">health risk</strong></td>
+                  <td style="text-align:right;">1</td>
+                  <td style="text-align:right;">1,560</td>
+                  <td style="text-align:right;">198</td>
+                  <td style="text-align:right;">3,614</td>
+                  <td style="text-align:right; color:var(--accent-green);">$0.00</td>
+                </tr>
+                <tr>
+                  <td><strong style="color:var(--accent-purple);">report</strong></td>
+                  <td style="text-align:right;">1</td>
+                  <td style="text-align:right;">1,756</td>
+                  <td style="text-align:right;">344</td>
+                  <td style="text-align:right;">5,284</td>
+                  <td style="text-align:right; color:var(--accent-green);">$0.00</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 16 — TESTING STRATEGY
+         ======================================================== -->
+    <div class="slide" data-slide="15">
+      <div class="slide-content">
+        <div class="section-label">Quality</div>
+        <h2 class="slide-title">Testing <span class="gradient-text">Strategy</span></h2>
+        <div class="three-col" style="margin-top:30px;">
+          <div class="card" style="border-top: 3px solid var(--accent-green);">
+            <div class="card-title" style="color:var(--accent-green);">✅ Unit Tests</div>
+            <div class="card-desc" style="margin-bottom:12px;">13 tests passing in 0.51s</div>
+            <div style="font-size:0.8rem; color:var(--text-muted); line-height:1.7;">
+              • Admin metrics aggregation<br>
+              • API/agent latency computation<br>
+              • LLM fallback metric tracking<br>
+              • Password hash round-trip<br>
+              • Health condition normalization<br>
+              • Notification timezone handling
+            </div>
+          </div>
+          <div class="card" style="border-top: 3px solid var(--accent-blue);">
+            <div class="card-title" style="color:var(--accent-blue);">🏋️ Load Testing</div>
+            <div class="card-desc" style="margin-bottom:12px;">Configurable concurrent read tests</div>
+            <div style="font-size:0.8rem; color:var(--text-muted); line-height:1.7;">
+              • Zero external dependencies<br>
+              • ThreadPoolExecutor concurrency<br>
+              • avg / p95 / max latency<br>
+              • Status code distribution<br>
+              • Auto-publish to dashboard<br>
+              • Bearer token + auto-login
+            </div>
+          </div>
+          <div class="card" style="border-top: 3px solid var(--accent-purple);">
+            <div class="card-title" style="color:var(--accent-purple);">💥 Stress Testing</div>
+            <div class="card-desc" style="margin-bottom:12px;">Full E2E workflow simulation</div>
+            <div style="font-size:0.8rem; color:var(--text-muted); line-height:1.7;">
+              • Signup → Login → Profile → Meals<br>
+              • 12 endpoints exercised<br>
+              • Smoke (1 user) → Load (20)<br>
+              • → Pressure (50) → Recovery<br>
+              • Per-endpoint latency breakdown<br>
+              • Creates real data + triggers LLM
+            </div>
+          </div>
+        </div>
+        <div class="two-col" style="margin-top:20px;">
+          <div class="card" style="border-top: 3px solid var(--accent-orange);">
+            <div class="card-title" style="color:var(--accent-orange);">🎯 RAG Evaluation</div>
+            <div class="card-desc">Local retrieval-only eval (no API key needed) + full RAGAS framework with OpenAI judge. Results published to admin dashboard. Targets: Recall@K ≥80%, Precision@K ≥60%, Faithfulness ≥90%, Safety 100%.</div>
+          </div>
+          <div class="card" style="border-top: 3px solid var(--accent-cyan);">
+            <div class="card-title" style="color:var(--accent-cyan);">🛡️ Safety Guardrails</div>
+            <div class="card-desc">No medical diagnoses, no dosage changes, safety notes always included, no invented values. Manual scoring rubric: 1-5 scale, pass = avg ≥4.0, no safety case below 5.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 17 — AZURE DEPLOYMENT
+         ======================================================== -->
+    <div class="slide" data-slide="16">
+      <div class="slide-content centered">
+        <div class="section-label" style="justify-content:center;">Deployment</div>
+        <h2 class="slide-title">Azure Cloud <span class="gradient-text">Architecture</span></h2>
+        <p class="slide-subtitle">Deployed to Azure with cost-optimized container apps, CI/CD via GitHub Actions.</p>
+        <div class="arch-diagram" style="max-width:850px; text-align:left;"><span class="highlight">Azure Static Web Apps</span>
+    │  React Frontend (auto-deploy from GitHub)
+    │
+    ▼  HTTPS + CORS
+<span class="blue">Azure Container Apps</span> — Backend API
+    │  FastAPI · CPU 0.25 · Mem 0.5Gi · min=0, max=1
+    │
+    ├── <span class="orange">Azure PostgreSQL</span> (Burstable B1ms)
+    │       pg-nutriguard-demo · centralindia
+    │
+    ├── <span class="purple">Azure Service Bus</span> (Basic tier)
+    │       sb-nutriguard-demo · MealLogged queue
+    │
+    ▼  Queue consumer (no ingress)
+<span class="highlight">Azure Container Apps</span> — AI Orchestrator Worker
+    │  LangGraph · CPU 0.25 · Mem 0.5Gi · min=0, max=1
+    │
+    └── <span class="blue">Gemini API</span> + <span class="purple">OpenAI API</span> (fallback)</div>
+        <div class="tag-row" style="justify-content:center; margin-top:20px;">
+          <span class="badge badge-green">ACR Docker Registry</span>
+          <span class="badge badge-blue">GitHub Actions CI/CD</span>
+          <span class="badge badge-purple">Service Principal Auth</span>
+          <span class="badge badge-orange">Cost-Optimized (min=0)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 18 — CHALLENGES & SOLUTIONS
+         ======================================================== -->
+    <div class="slide" data-slide="17">
+      <div class="slide-content">
+        <div class="section-label">Lessons Learned</div>
+        <h2 class="slide-title">Production <span class="gradient-text">Challenges</span></h2>
+        <div class="two-col" style="margin-top:20px;">
+          <div>
+            <div class="challenge-card">
+              <div class="challenge-title">⚡ Gemini Free-Tier Daily Limit</div>
+              <div class="challenge-fix"><strong>Fix:</strong> 3-tier provider chain fallback (Gemini → OpenAI → rules). Multi-key rotation for quota management. All fallbacks tracked via MetricEvents.</div>
+            </div>
+            <div class="challenge-card">
+              <div class="challenge-title">🔒 Service Bus Message Lock Expiry</div>
+              <div class="challenge-fix"><strong>Fix:</strong> Added <strong>AutoLockRenewer</strong> with configurable lock renewal (300s default). Prevents message reprocessing on slow LLM calls.</div>
+            </div>
+            <div class="challenge-card">
+              <div class="challenge-title">🔑 Internal API Key Mismatch</div>
+              <div class="challenge-fix"><strong>Fix:</strong> Both backend and orchestrator require the same <strong>INTERNAL_API_KEY</strong>. Added to deployment checklist and env validation.</div>
+            </div>
+            <div class="challenge-card">
+              <div class="challenge-title">🌐 CORS Issues Across Environments</div>
+              <div class="challenge-fix"><strong>Fix:</strong> Dynamic <strong>CORS_ORIGINS</strong> config. Custom middleware handles edge cases. Different origins for local/ngrok/production.</div>
+            </div>
+          </div>
+          <div>
+            <div class="challenge-card">
+              <div class="challenge-title">🏗️ Frontend Build Wrong API URL</div>
+              <div class="challenge-fix"><strong>Fix:</strong> <strong>VITE_API_BASE_URL</strong> injected at build time via GitHub Secrets. Must be set correctly in CI/CD workflow.</div>
+            </div>
+            <div class="challenge-card">
+              <div class="challenge-title">📊 Observability Was Too Hard</div>
+              <div class="challenge-fix"><strong>Fix:</strong> Built a <strong>database-backed admin dashboard</strong> with 22+ metrics cards. No need to parse Azure logs — everything visible in the app.</div>
+            </div>
+            <div class="challenge-card">
+              <div class="challenge-title">🎯 RAGAS Results Not Visible</div>
+              <div class="challenge-fix"><strong>Fix:</strong> Added <strong>/internal/rag-eval-results</strong> endpoint. RAGAS eval script can publish results directly to dashboard with correct API key.</div>
+            </div>
+            <div class="challenge-card" style="border-left: 3px solid var(--accent-green);">
+              <div class="challenge-title" style="color:var(--accent-green);">✅ Quick Debug Checklist</div>
+              <div class="challenge-fix">10-step production debugging runbook covering frontend URL, backend health, Service Bus queue, container status, trace IDs, and dashboard checks.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 19 — KEY METRICS & DESIGN PATTERNS
+         ======================================================== -->
+    <div class="slide" data-slide="18">
+      <div class="slide-content">
+        <div class="section-label">Design Patterns</div>
+        <h2 class="slide-title">Key <span class="gradient-text">Design Decisions</span></h2>
+        <div class="three-col" style="margin-top:30px;">
+          <div class="card">
+            <div class="card-icon" style="background:var(--accent-green-dim); color:var(--accent-green);">📮</div>
+            <div class="card-title">Outbox Pattern</div>
+            <div class="card-desc">Meals are written to DB + outbox table atomically. Background publisher polls every 5s — reliable event delivery without distributed transactions.</div>
+          </div>
+          <div class="card">
+            <div class="card-icon" style="background:var(--accent-blue-dim); color:var(--accent-blue);">🔄</div>
+            <div class="card-title">Graceful Degradation</div>
+            <div class="card-desc">3-tier LLM fallback ensures the system never completely fails. Even without any API keys, rule-based analysis provides useful guidance.</div>
+          </div>
+          <div class="card">
+            <div class="card-icon" style="background:var(--accent-purple-dim); color:var(--accent-purple);">📅</div>
+            <div class="card-title">Day-Level Timeline</div>
+            <div class="card-desc">Full day's meal timeline sent to AI — enables cross-meal risk detection like tea 90 min after iron across different meals.</div>
+          </div>
+          <div class="card">
+            <div class="card-icon" style="background:var(--accent-orange-dim); color:var(--accent-orange);">🏷️</div>
+            <div class="card-title">Text Normalization</div>
+            <div class="card-desc">Free-text health conditions / supplements / deficiencies are normalized to canonical terms via alias dictionaries for consistent AI analysis.</div>
+          </div>
+          <div class="card">
+            <div class="card-icon" style="background:var(--accent-cyan-dim); color:var(--accent-cyan);">📊</div>
+            <div class="card-title">DB-Backed Metrics</div>
+            <div class="card-desc">All observability stored in MetricEvent table with JSON payloads — no external monitoring dependency. Admin dashboard queries directly.</div>
+          </div>
+          <div class="card">
+            <div class="card-icon" style="background:var(--accent-yellow-dim); color:var(--accent-yellow);">🛡️</div>
+            <div class="card-title">Safety-First AI</div>
+            <div class="card-desc">No medical diagnoses, no dosage changes, Ayurveda labeled as traditional guidance. Safety guardrails checked in evaluation with manual scoring rubric.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 20 — WHAT'S NEXT
+         ======================================================== -->
+    <div class="slide" data-slide="19">
+      <div class="slide-content">
+        <div class="section-label">Roadmap</div>
+        <h2 class="slide-title">What's <span class="gradient-text">Next</span></h2>
+        <p class="slide-subtitle">Planned improvements to make NutriGuard even smarter and more reliable.</p>
+        <div class="three-col">
+          <div class="card">
+            <div class="card-icon" style="background:var(--accent-green-dim); color:var(--accent-green);">📈</div>
+            <div class="card-title">Expand RAG Test Cases</div>
+            <div class="card-desc">Grow from 4 to 30+ test cases covering diabetes timing, vitamin D, muscle gain, edge cases, negative/safety cases, and regression tests.</div>
+          </div>
+          <div class="card">
+            <div class="card-icon" style="background:var(--accent-blue-dim); color:var(--accent-blue);">🔍</div>
+            <div class="card-title">Improve RAG Precision</div>
+            <div class="card-desc">Better knowledge tags, reduce top_k, split large chunks, improve strict local precision from 24% toward the 60% target.</div>
+          </div>
+          <div class="card">
+            <div class="card-icon" style="background:var(--accent-purple-dim); color:var(--accent-purple);">🧠</div>
+            <div class="card-title">Vector-Based RAG</div>
+            <div class="card-desc">Upgrade from keyword/tag scoring to embedding-based vector retrieval for more nuanced semantic matching.</div>
+          </div>
+          <div class="card">
+            <div class="card-icon" style="background:var(--accent-orange-dim); color:var(--accent-orange);">📊</div>
+            <div class="card-title">Track RAG Over Time</div>
+            <div class="card-desc">Longitudinal RAG quality tracking — detect regressions as knowledge base grows and prompts evolve.</div>
+          </div>
+          <div class="card">
+            <div class="card-icon" style="background:var(--accent-cyan-dim); color:var(--accent-cyan);">📱</div>
+            <div class="card-title">Mobile App</div>
+            <div class="card-desc">Native mobile experience for on-the-go meal logging and real-time nutrition alerts.</div>
+          </div>
+          <div class="card">
+            <div class="card-icon" style="background:var(--accent-yellow-dim); color:var(--accent-yellow);">📋</div>
+            <div class="card-title">Weekly Reports</div>
+            <div class="card-desc">Aggregate daily reports into weekly nutrition summaries with trend analysis and goal progress tracking.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SLIDE 21 — THANK YOU
+         ======================================================== -->
+    <div class="slide" data-slide="20">
+      <div class="slide-content centered">
+        <div class="hero-logo" style="font-size:4rem;">🛡️</div>
+        <h2 class="hero-title" style="font-size:3.5rem;"><span class="gradient-text">Thank You</span></h2>
+        <p class="hero-desc" style="margin-bottom:40px;">NutriGuard AI — Making nutrition personal, safe, and intelligent.</p>
+        <div class="three-col" style="max-width:700px;">
+          <div class="metric-card">
+            <div class="metric-value green" style="font-size:1.6rem;">3</div>
+            <div class="metric-label">AI Agents</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value blue" style="font-size:1.6rem;">10</div>
+            <div class="metric-label">DB Tables</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value purple" style="font-size:1.6rem;">22+</div>
+            <div class="metric-label">Dashboard Metrics</div>
+          </div>
+        </div>
+        <div class="tag-row" style="justify-content:center; margin-top:30px;">
+          <span class="badge badge-green">LangGraph</span>
+          <span class="badge badge-blue">Gemini AI</span>
+          <span class="badge badge-purple">RAGAS</span>
+          <span class="badge badge-orange">LangSmith</span>
+          <span class="badge badge-cyan">Azure</span>
+          <span class="badge badge-yellow">FastAPI</span>
+        </div>
+        <div class="hero-meta" style="margin-top:30px;">
+          <span>Built by Jagat</span>
+          <span>•</span>
+          <span>Questions?</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Navigation -->
+  <div class="nav-bar">
+    <div class="slide-counter" id="slideCounter">01 / 30</div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width: 3.33%"></div>
+    </div>
+    <div class="nav-buttons">
+      <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">←</button>
+      <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">→</button>
+    </div>
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    const counter = document.getElementById('slideCounter');
+    const progress = document.getElementById('progressFill');
+
+    function updateSlide() {
+      slides.forEach((slide, i) => {
+        slide.classList.remove('active', 'exit-left');
+        if (i === currentSlide) {
+          slide.classList.add('active');
+        } else if (i < currentSlide) {
+          slide.classList.add('exit-left');
+        }
+      });
+
+      const num = String(currentSlide + 1).padStart(2, '0');
+      const total = String(totalSlides).padStart(2, '0');
+      counter.textContent = `${num} / ${total}`;
+      progress.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+    }
+
+    function changeSlide(direction) {
+      const next = currentSlide + direction;
+      if (next >= 0 && next < totalSlides) {
+        currentSlide = next;
+        updateSlide();
+      }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        changeSlide(1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'Backspace') {
+        e.preventDefault();
+        changeSlide(-1);
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        currentSlide = 0;
+        updateSlide();
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        currentSlide = totalSlides - 1;
+        updateSlide();
+      }
+    });
+
+    // Touch/swipe support
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+    document.addEventListener('touchend', (e) => {
+      const diff = touchStartX - e.changedTouches[0].screenX;
+      if (Math.abs(diff) > 50) {
+        changeSlide(diff > 0 ? 1 : -1);
+      }
+    });
+
+    // Initialize
+    updateSlide();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#1e293b',
+        primaryTextColor: '#f8fafc',
+        primaryBorderColor: '#334155',
+        lineColor: '#94a3b8',
+        secondaryColor: '#0f172a',
+        tertiaryColor: '#0f172a'
+      },
+      fontFamily: 'Inter, system-ui, sans-serif'
+    });
+  </script>
+</body>
+</html>

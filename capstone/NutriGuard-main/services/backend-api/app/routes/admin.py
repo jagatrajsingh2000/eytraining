@@ -243,6 +243,26 @@ def serialize_rag_eval(run: RagEvalRun | None) -> dict:
     }
 
 
+def serialize_latest_load_test(metric_events) -> dict:
+    load_test_events = [
+        event
+        for event in metric_events
+        if event.name == "load_test_result" and isinstance(event.payload, dict)
+    ]
+    if not load_test_events:
+        return {"latest": None}
+
+    latest = max(load_test_events, key=lambda event: event.created_at or datetime.min)
+    return {
+        "latest": {
+            "id": latest.id,
+            "source": latest.source,
+            "created_at": latest.created_at.isoformat() if latest.created_at else None,
+            **(latest.payload or {}),
+        }
+    }
+
+
 @internal_router.post("/rag-eval-results", response_model=dict)
 def receive_rag_eval_result(
     payload: dict,
@@ -270,6 +290,26 @@ def receive_rag_eval_result(
     db.commit()
     db.refresh(run)
     return {"status": "saved", "id": run.id}
+
+
+@internal_router.post("/load-test-results", response_model=dict)
+def receive_load_test_result(
+    payload: dict,
+    db: Session = Depends(get_db),
+    x_internal_api_key: str | None = Header(default=None),
+):
+    if INTERNAL_API_KEY and x_internal_api_key != INTERNAL_API_KEY:
+        raise HTTPException(status_code=401, detail="Invalid internal API key")
+
+    event = MetricEvent(
+        name="load_test_result",
+        source=payload.get("source") or "load_test_api",
+        payload=payload,
+    )
+    db.add(event)
+    db.commit()
+    db.refresh(event)
+    return {"status": "saved", "id": event.id}
 
 
 @router.get("/metrics", response_model=dict)
@@ -359,4 +399,5 @@ def get_admin_metrics(
         "agent_latency": agent_latency_metrics(metric_events),
         "token_cost": token_cost_metrics(metric_events),
         "rag_eval": serialize_rag_eval(latest_rag_eval),
+        "load_test": serialize_latest_load_test(metric_events),
     }
