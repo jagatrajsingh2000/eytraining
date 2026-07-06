@@ -11,11 +11,11 @@
   <style>
     /* ── Design Tokens ── */
     :root {
-      --bg-dark: #0a0f1e;
-      --bg-card: #111827;
-      --bg-card-alt: #1a2236;
-      --surface: #1e293b;
-      --surface-hover: #273549;
+      --bg-dark: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-card-alt: #f1f5f9;
+      --surface: #f1f5f9;
+      --surface-hover: #e2e8f0;
 
       --green-50: #ecfdf5;
       --green-100: #d1fae5;
@@ -41,8 +41,8 @@
       --purple-400: #a78bfa;
       --purple-500: #8b5cf6;
 
-      --text-primary: #f1f5f9;
-      --text-secondary: #94a3b8;
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
       --text-muted: #64748b;
 
       --gradient-main: linear-gradient(135deg, var(--green-500), var(--teal-500));
@@ -54,7 +54,7 @@
       --radius-sm: 10px;
       --radius-xs: 6px;
 
-      --shadow: 0 8px 32px rgba(0,0,0,0.4);
+      --shadow: 0 8px 32px rgba(0,0,0,0.08);
       --shadow-glow-green: 0 0 40px rgba(16,185,129,0.15);
       --shadow-glow-red: 0 0 40px rgba(239,68,68,0.15);
       --shadow-glow-indigo: 0 0 40px rgba(99,102,241,0.15);
@@ -73,7 +73,8 @@
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg-dark);
       color: var(--text-primary);
-      line-height: 1.6;
+      font-size: 18px;
+      line-height: 1.65;
       -webkit-font-smoothing: antialiased;
     }
 
@@ -91,10 +92,9 @@
 
     .slide-inner {
       width: 100%;
-      max-width: 1280px;
+      max-width: 1600px;
       height: 100%;
-      max-height: 720px;
-      padding: 48px 64px;
+      padding: 56px 80px;
       position: relative;
       display: flex;
       flex-direction: column;
@@ -103,9 +103,9 @@
     /* ── Slide Number Badge ── */
     .slide-badge {
       position: absolute;
-      top: 48px;
-      left: 64px;
-      font-size: 11px;
+      top: 56px;
+      left: 80px;
+      font-size: 14px;
       font-weight: 700;
       letter-spacing: 2px;
       text-transform: uppercase;
@@ -120,12 +120,12 @@
     .slide-footer {
       position: absolute;
       bottom: 28px;
-      left: 64px;
-      right: 64px;
+      left: 80px;
+      right: 80px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 11px;
+      font-size: 13px;
       color: var(--text-muted);
       letter-spacing: 0.5px;
     }
@@ -159,39 +159,39 @@
 
     /* ── Typography ── */
     h1 {
-      font-size: 56px;
+      font-size: 72px;
       font-weight: 900;
       line-height: 1.1;
       letter-spacing: -2px;
     }
     h2 {
-      font-size: 36px;
+      font-size: 48px;
       font-weight: 800;
       line-height: 1.2;
       letter-spacing: -1px;
     }
     h3 {
-      font-size: 22px;
+      font-size: 28px;
       font-weight: 700;
       line-height: 1.3;
     }
     .caption {
-      font-size: 17px;
+      font-size: 20px;
       font-style: italic;
       color: var(--text-secondary);
       line-height: 1.7;
-      max-width: 700px;
-      border-left: 3px solid var(--teal-500);
-      padding-left: 20px;
-      margin-top: 20px;
+      max-width: 850px;
+      border-left: 4px solid var(--teal-500);
+      padding-left: 24px;
+      margin-top: 24px;
     }
     .label {
-      font-size: 11px;
+      font-size: 13px;
       font-weight: 700;
       letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--teal-400);
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
     .gradient-text {
       background: var(--gradient-hero);
@@ -203,9 +203,9 @@
     /* ── Cards ── */
     .card {
       background: var(--bg-card);
-      border: 1px solid rgba(255,255,255,0.06);
+      border: 1px solid rgba(0,0,0,0.08);
       border-radius: var(--radius);
-      padding: 24px;
+      padding: 32px;
       position: relative;
       overflow: hidden;
     }
@@ -223,25 +223,25 @@
     .two-col {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 48px;
+      gap: 56px;
       align-items: center;
       flex: 1;
     }
     .three-col {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: 24px;
+      gap: 32px;
     }
 
     /* ── Icon Circles ── */
     .icon-circle {
-      width: 56px;
-      height: 56px;
+      width: 68px;
+      height: 68px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
+      font-size: 30px;
       flex-shrink: 0;
     }
     .icon-green { background: rgba(16,185,129,0.15); }
@@ -254,10 +254,10 @@
     .badge {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      padding: 4px 12px;
+      gap: 6px;
+      padding: 6px 16px;
       border-radius: 20px;
-      font-size: 11px;
+      font-size: 13px;
       font-weight: 700;
       letter-spacing: 1px;
       text-transform: uppercase;
@@ -308,7 +308,7 @@
       position: absolute;
       inset: 0;
       background-image:
-        radial-gradient(circle at 1px 1px, rgba(255,255,255,0.03) 1px, transparent 0);
+        radial-gradient(circle at 1px 1px, rgba(0,0,0,0.03) 1px, transparent 0);
       background-size: 40px 40px;
       pointer-events: none;
     }
@@ -346,20 +346,20 @@
     }
     .pipeline-node {
       flex: 1;
-      padding: 20px;
+      padding: 28px;
       background: var(--bg-card);
-      border: 1px solid rgba(255,255,255,0.06);
+      border: 1px solid rgba(0,0,0,0.08);
       border-radius: var(--radius);
       text-align: center;
       position: relative;
     }
     .pipeline-arrow {
-      width: 48px;
+      width: 56px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--text-muted);
-      font-size: 20px;
+      font-size: 24px;
       flex-shrink: 0;
     }
 
@@ -393,9 +393,9 @@
       position: relative;
       left: 19px;
     }
-    .dot-green { background: var(--green-400); box-shadow: 0 0 12px rgba(52,211,153,0.5); }
-    .dot-red { background: var(--red-400); box-shadow: 0 0 12px rgba(248,113,113,0.5); }
-    .dot-amber { background: var(--amber-400); box-shadow: 0 0 12px rgba(251,191,36,0.5); }
+    .dot-green { background: var(--green-400); box-shadow: 0 0 12px rgba(52,211,153,0.3); }
+    .dot-red { background: var(--red-400); box-shadow: 0 0 12px rgba(248,113,113,0.3); }
+    .dot-amber { background: var(--amber-400); box-shadow: 0 0 12px rgba(251,191,36,0.3); }
     .timeline-content {
       flex: 1;
       padding-left: 24px;
@@ -404,57 +404,57 @@
     /* ── Mock App UI ── */
     .mock-app {
       background: var(--bg-card);
-      border: 1px solid rgba(255,255,255,0.08);
+      border: 1px solid rgba(0,0,0,0.1);
       border-radius: var(--radius);
       overflow: hidden;
       box-shadow: var(--shadow);
-      max-width: 420px;
+      max-width: 500px;
     }
     .mock-app-bar {
       background: var(--surface);
-      padding: 12px 16px;
+      padding: 14px 20px;
       display: flex;
       align-items: center;
-      gap: 8px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+      gap: 10px;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
     }
     .mock-app-dot {
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
     }
     .mock-app-body {
-      padding: 20px;
+      padding: 24px;
     }
     .mock-field {
       margin-bottom: 14px;
     }
     .mock-field-label {
-      font-size: 11px;
+      font-size: 13px;
       font-weight: 600;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 1px;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
     .mock-field-value {
       background: var(--surface);
-      border: 1px solid rgba(255,255,255,0.06);
+      border: 1px solid rgba(0,0,0,0.08);
       border-radius: var(--radius-xs);
-      padding: 10px 14px;
-      font-size: 14px;
+      padding: 12px 16px;
+      font-size: 16px;
       color: var(--text-primary);
     }
     .mock-btn {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       border: none;
       border-radius: var(--radius-xs);
       font-weight: 700;
-      font-size: 14px;
+      font-size: 16px;
       letter-spacing: 0.5px;
       cursor: default;
-      margin-top: 8px;
+      margin-top: 10px;
     }
     .mock-btn-primary {
       background: var(--gradient-main);
@@ -466,19 +466,19 @@
       margin-bottom: 16px;
     }
     .report-title {
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 700;
       color: var(--teal-400);
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       text-transform: uppercase;
       letter-spacing: 1px;
     }
     .report-item {
       display: flex;
-      gap: 8px;
+      gap: 10px;
       align-items: flex-start;
-      padding: 6px 0;
-      font-size: 13px;
+      padding: 8px 0;
+      font-size: 15px;
       color: var(--text-secondary);
       line-height: 1.5;
     }
@@ -498,19 +498,19 @@
     }
     .confusion-item {
       background: var(--surface);
-      border: 1px solid rgba(255,255,255,0.06);
+      border: 1px solid rgba(0,0,0,0.08);
       border-radius: var(--radius-sm);
-      padding: 14px 18px;
+      padding: 16px 22px;
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-size: 14px;
+      gap: 12px;
+      font-size: 16px;
       color: var(--text-secondary);
       position: relative;
     }
     .confusion-item:nth-child(odd) { animation: float 4s ease-in-out infinite; }
     .confusion-item:nth-child(even) { animation: float 4s ease-in-out 1s infinite; }
-    .confusion-item .emoji { font-size: 22px; }
+    .confusion-item .emoji { font-size: 26px; }
     .question-mark {
       position: absolute;
       top: -8px;
@@ -531,13 +531,13 @@
     .warning-split {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 24px;
+      gap: 32px;
     }
     .warning-panel {
       background: var(--bg-card);
       border: 1px solid rgba(239,68,68,0.2);
       border-radius: var(--radius);
-      padding: 28px;
+      padding: 36px;
       text-align: center;
       position: relative;
       overflow: hidden;
@@ -556,12 +556,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      font-size: 36px;
-      margin-bottom: 16px;
+      gap: 14px;
+      font-size: 42px;
+      margin-bottom: 20px;
     }
     .warning-plus {
-      font-size: 20px;
+      font-size: 24px;
       color: var(--text-muted);
     }
 
@@ -569,26 +569,26 @@
     .takeaway-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      gap: 24px;
     }
     .takeaway-item {
       display: flex;
-      gap: 16px;
+      gap: 20px;
       align-items: flex-start;
-      padding: 20px;
+      padding: 24px;
       background: var(--bg-card);
-      border: 1px solid rgba(255,255,255,0.06);
+      border: 1px solid rgba(0,0,0,0.08);
       border-radius: var(--radius);
     }
     .takeaway-num {
-      width: 36px;
-      height: 36px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       background: var(--gradient-main);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 15px;
+      font-size: 18px;
       font-weight: 800;
       color: white;
       flex-shrink: 0;
@@ -605,12 +605,12 @@
       align-items: center;
       gap: 6px;
       color: var(--text-muted);
-      font-size: 12px;
+      font-size: 14px;
       letter-spacing: 1px;
       animation: pulse-slow 2s ease-in-out infinite;
     }
     .scroll-arrow {
-      font-size: 18px;
+      font-size: 22px;
     }
 
     /* ── Horizontal Timeline (Slide 7) ── */
@@ -638,26 +638,26 @@
       z-index: 1;
     }
     .h-timeline-dot {
-      width: 16px;
-      height: 16px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
-      margin: 0 auto 16px;
+      margin: 0 auto 18px;
       position: relative;
     }
     .h-timeline-time {
-      font-size: 13px;
+      font-size: 16px;
       font-weight: 700;
       color: var(--text-primary);
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
     .h-timeline-desc {
-      font-size: 12px;
+      font-size: 14px;
       color: var(--text-secondary);
       line-height: 1.5;
       padding: 0 8px;
     }
     .h-timeline-flag {
-      margin-top: 10px;
+      margin-top: 12px;
     }
 
     /* ── Future Path (Slide 9) ── */
@@ -670,18 +670,18 @@
     .future-step {
       flex: 1;
       text-align: center;
-      padding: 20px 12px;
+      padding: 24px 16px;
       position: relative;
     }
     .future-step-icon {
-      width: 64px;
-      height: 64px;
+      width: 76px;
+      height: 76px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
-      margin: 0 auto 14px;
+      font-size: 34px;
+      margin: 0 auto 16px;
       position: relative;
     }
     .future-step-icon::after {
@@ -689,16 +689,31 @@
       position: absolute;
       inset: -4px;
       border-radius: 50%;
-      border: 2px dashed rgba(255,255,255,0.1);
+      border: 2px dashed rgba(0,0,0,0.1);
     }
     .future-connector {
-      width: 40px;
+      width: 48px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--text-muted);
-      font-size: 18px;
+      font-size: 22px;
       flex-shrink: 0;
+    }
+
+    
+    /* ── Character Images ── */
+    .character-img {
+      max-width: 100%;
+      height: auto;
+      animation: float 4s ease-in-out infinite;
+      filter: drop-shadow(0 20px 30px rgba(0,0,0,0.1));
+    }
+    .character-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
     /* ── Responsive ── */
@@ -727,8 +742,9 @@
     <button class="nav-dot" data-slide="5" title="AI Pipeline"></button>
     <button class="nav-dot" data-slide="6" title="Risk Detection"></button>
     <button class="nav-dot" data-slide="7" title="Report"></button>
-    <button class="nav-dot" data-slide="8" title="Next Step"></button>
-    <button class="nav-dot" data-slide="9" title="Summary"></button>
+    <button class="nav-dot" data-slide="8" title="User Journey"></button>
+    <button class="nav-dot" data-slide="9" title="Next Step"></button>
+    <button class="nav-dot" data-slide="10" title="Summary"></button>
   </nav>
 
 
@@ -741,36 +757,36 @@
     <div class="bg-glow" style="background: var(--indigo-500); bottom: -200px; left: -100px;"></div>
 
     <div class="slide-inner" style="justify-content: center; align-items: center; text-align: center;">
-      <div style="margin-bottom: 24px;">
-        <span style="font-size: 48px;">🛡️</span>
+      <div style="margin-bottom: 28px;">
+        <span style="font-size: 56px;">🛡️</span>
       </div>
-      <h1 class="gradient-text" style="font-size: 64px; margin-bottom: 16px;">
+      <h1 class="gradient-text" style="font-size: 80px; margin-bottom: 20px;">
         NutriGuard AI
       </h1>
-      <p style="font-size: 22px; color: var(--text-secondary); font-weight: 300; letter-spacing: 1px; margin-bottom: 8px;">
+      <p style="font-size: 28px; color: var(--text-secondary); font-weight: 300; letter-spacing: 1px; margin-bottom: 8px;">
         Application Storyboard
       </p>
-      <p style="font-size: 15px; color: var(--text-muted); max-width: 600px; margin: 24px auto 0; line-height: 1.8;">
+      <p style="font-size: 18px; color: var(--text-muted); max-width: 700px; margin: 28px auto 0; line-height: 1.8;">
         From the moment a user opens NutriGuard to the moment they get
         personalized nutrition guidance — told in 8 panels.
       </p>
 
-      <div style="margin-top: 48px; display: flex; gap: 32px; justify-content: center;">
+      <div style="margin-top: 52px; display: flex; gap: 40px; justify-content: center;">
         <div style="text-align: center;">
-          <div style="font-size: 28px; margin-bottom: 6px;">🧠</div>
-          <div style="font-size: 11px; color: var(--text-muted); letter-spacing: 1px;">3 AI AGENTS</div>
+          <div style="font-size: 36px; margin-bottom: 8px;">🧠</div>
+          <div style="font-size: 17px; color: var(--text-muted); letter-spacing: 1px;">3 AI AGENTS</div>
         </div>
         <div style="text-align: center;">
-          <div style="font-size: 28px; margin-bottom: 6px;">⚡</div>
-          <div style="font-size: 11px; color: var(--text-muted); letter-spacing: 1px;">REAL-TIME ANALYSIS</div>
+          <div style="font-size: 36px; margin-bottom: 8px;">⚡</div>
+          <div style="font-size: 17px; color: var(--text-muted); letter-spacing: 1px;">REAL-TIME ANALYSIS</div>
         </div>
         <div style="text-align: center;">
-          <div style="font-size: 28px; margin-bottom: 6px;">🛡️</div>
-          <div style="font-size: 11px; color: var(--text-muted); letter-spacing: 1px;">RISK DETECTION</div>
+          <div style="font-size: 36px; margin-bottom: 8px;">🛡️</div>
+          <div style="font-size: 17px; color: var(--text-muted); letter-spacing: 1px;">RISK DETECTION</div>
         </div>
         <div style="text-align: center;">
-          <div style="font-size: 28px; margin-bottom: 6px;">📊</div>
-          <div style="font-size: 11px; color: var(--text-muted); letter-spacing: 1px;">DAY-LEVEL REPORTS</div>
+          <div style="font-size: 36px; margin-bottom: 8px;">📊</div>
+          <div style="font-size: 17px; color: var(--text-muted); letter-spacing: 1px;">DAY-LEVEL REPORTS</div>
         </div>
       </div>
 
@@ -784,6 +800,7 @@
       <span>NutriGuard AI — Storyboard</span>
       <span>1 / 10</span>
     </div>
+  
   </section>
 
 
@@ -795,13 +812,18 @@
     <div class="bg-glow" style="background: var(--indigo-500); top: -100px; left: -200px;"></div>
 
     <div class="slide-inner">
+      <div style="position: absolute; right: 40px; bottom: 40px; z-index: 50; display: flex; flex-direction: column; align-items: center; opacity: 0.9;">
+        <img src="/Users/jagat/.gemini/antigravity-ide/brain/3378b0d5-5f0f-4d88-8d57-979175fa1021/priya_confused_1783334108555.png" style="height: 180px; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1)); animation: float 4s ease-in-out infinite;">
+        <div style="background: var(--surface); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-top: -10px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.05);">Stage 1: Confused</div>
+      </div>
+
       <div class="slide-badge"><span>Panel 1</span> · SETUP</div>
 
       <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; margin-top: 40px;">
         <span class="badge badge-setup">SETUP</span>
       </div>
       <h2 style="margin-bottom: 8px;">Meet Priya</h2>
-      <p style="color: var(--text-secondary); font-size: 15px; margin-bottom: 24px;">
+      <p style="color: var(--text-secondary); font-size: 18px; margin-bottom: 24px;">
         The user before NutriGuard exists in her life
       </p>
 
@@ -811,27 +833,27 @@
           <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
             <div class="icon-circle icon-blue" style="font-size: 28px;">👩‍💼</div>
             <div>
-              <div style="font-weight: 700; font-size: 18px;">Priya, 28</div>
-              <div style="color: var(--text-muted); font-size: 13px;">Vegetarian · Working professional</div>
+              <div style="font-weight: 700; font-size: 22px;">Priya, 28</div>
+              <div style="color: var(--text-muted); font-size: 16px;">Vegetarian · Working professional</div>
             </div>
           </div>
 
           <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
             <div style="display: flex; gap: 10px; align-items: center;">
               <span style="color: var(--red-400);">●</span>
-              <span style="font-size: 14px; color: var(--text-secondary);">Diagnosed with <strong style="color: var(--text-primary);">iron deficiency</strong></span>
+              <span style="font-size: 17px; color: var(--text-secondary);">Diagnosed with <strong style="color: var(--text-primary);">iron deficiency</strong></span>
             </div>
             <div style="display: flex; gap: 10px; align-items: center;">
               <span style="color: var(--amber-400);">●</span>
-              <span style="font-size: 14px; color: var(--text-secondary);">Takes an <strong style="color: var(--text-primary);">iron tablet</strong> every morning</span>
+              <span style="font-size: 17px; color: var(--text-secondary);">Takes an <strong style="color: var(--text-primary);">iron tablet</strong> every morning</span>
             </div>
             <div style="display: flex; gap: 10px; align-items: center;">
               <span style="color: var(--indigo-400);">●</span>
-              <span style="font-size: 14px; color: var(--text-secondary);">Doctor said <strong style="color: var(--text-primary);">"watch your diet"</strong> — no specifics</span>
+              <span style="font-size: 17px; color: var(--text-secondary);">Doctor said <strong style="color: var(--text-primary);">"watch your diet"</strong> — no specifics</span>
             </div>
             <div style="display: flex; gap: 10px; align-items: center;">
               <span style="color: var(--text-muted);">●</span>
-              <span style="font-size: 14px; color: var(--text-secondary);">Low <strong style="color: var(--text-primary);">vitamin D</strong> on latest report</span>
+              <span style="font-size: 17px; color: var(--text-secondary);">Low <strong style="color: var(--text-primary);">vitamin D</strong> on latest report</span>
             </div>
           </div>
 
@@ -868,7 +890,7 @@
               <span class="question-mark">?</span>
             </div>
           </div>
-          <p style="text-align: center; font-size: 13px; color: var(--text-muted); margin-top: 12px;">
+          <p style="text-align: center; font-size: 16px; color: var(--text-muted); margin-top: 12px;">
             Too many sources. No personalized guidance.
           </p>
         </div>
@@ -879,6 +901,7 @@
       <span>NutriGuard AI — Storyboard</span>
       <span>2 / 10</span>
     </div>
+  
   </section>
 
 
@@ -890,13 +913,18 @@
     <div class="bg-glow" style="background: var(--red-500); top: -150px; right: -150px;"></div>
 
     <div class="slide-inner">
+      <div style="position: absolute; right: 40px; bottom: 40px; z-index: 50; display: flex; flex-direction: column; align-items: center; opacity: 0.9;">
+        <img src="/Users/jagat/.gemini/antigravity-ide/brain/3378b0d5-5f0f-4d88-8d57-979175fa1021/priya_confused_1783334108555.png" style="height: 180px; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1)); animation: float 4s ease-in-out infinite;">
+        <div style="background: var(--surface); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-top: -10px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.05);">Stage 1: Confused</div>
+      </div>
+
       <div class="slide-badge"><span>Panel 2</span> · CONFLICT</div>
 
       <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; margin-top: 40px;">
         <span class="badge badge-trigger">TRIGGER</span>
       </div>
       <h2 style="margin-bottom: 8px;">The Invisible Problem</h2>
-      <p style="color: var(--text-secondary); font-size: 15px; margin-bottom: 28px;">
+      <p style="color: var(--text-secondary); font-size: 18px; margin-bottom: 28px;">
         Everyday food combinations silently block Priya's iron absorption — and no app tells her
       </p>
 
@@ -909,13 +937,13 @@
             <span>🍵</span>
           </div>
           <h3 style="font-size: 16px; margin-bottom: 8px; color: var(--red-400);">Iron Tablet + Tea</h3>
-          <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+          <p style="font-size: 16px; color: var(--text-secondary); line-height: 1.6;">
             Tannins in tea bind to iron, reducing absorption by up to <strong style="color: var(--text-primary);">60–70%</strong>
           </p>
           <div style="margin-top: 12px;">
             <span class="badge badge-high">⚠ HIGH RISK</span>
           </div>
-          <p style="font-size: 12px; color: var(--text-muted); margin-top: 10px;">8:30 AM — same breakfast window</p>
+          <p style="font-size: 18px; color: var(--text-muted); margin-top: 10px;">8:30 AM — same breakfast window</p>
         </div>
 
         <!-- Warning 2: Dahi + Iron -->
@@ -926,13 +954,13 @@
             <span>🥛</span>
           </div>
           <h3 style="font-size: 16px; margin-bottom: 8px; color: var(--amber-400);">Iron Supplement + Dahi / Paneer</h3>
-          <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+          <p style="font-size: 16px; color: var(--text-secondary); line-height: 1.6;">
             Calcium in dairy competes with iron for absorption within a <strong style="color: var(--text-primary);">2-hour</strong> window
           </p>
           <div style="margin-top: 12px;">
             <span class="badge badge-medium">⚠ MEDIUM RISK</span>
           </div>
-          <p style="font-size: 12px; color: var(--text-muted); margin-top: 10px;">1:00 PM — dahi rice for lunch</p>
+          <p style="font-size: 18px; color: var(--text-muted); margin-top: 10px;">1:00 PM — dahi rice for lunch</p>
         </div>
       </div>
 
@@ -945,6 +973,7 @@
       <span>NutriGuard AI — Storyboard</span>
       <span>3 / 10</span>
     </div>
+  
   </section>
 
 
@@ -956,13 +985,18 @@
     <div class="bg-glow" style="background: var(--green-500); bottom: -200px; left: -100px;"></div>
 
     <div class="slide-inner">
+      <div style="position: absolute; right: 40px; bottom: 40px; z-index: 50; display: flex; flex-direction: column; align-items: center; opacity: 0.9;">
+        <img src="/Users/jagat/.gemini/antigravity-ide/brain/3378b0d5-5f0f-4d88-8d57-979175fa1021/priya_phone_1783334118431.png" style="height: 180px; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1)); animation: float 4s ease-in-out infinite;">
+        <div style="background: var(--surface); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-top: -10px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.05);">Stage 2: Frictionless</div>
+      </div>
+
       <div class="slide-badge"><span>Panel 3</span> · JOURNEY</div>
 
       <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; margin-top: 40px;">
         <span class="badge badge-journey">JOURNEY</span>
       </div>
       <h2 style="margin-bottom: 8px;">Onboarding in 60 Seconds</h2>
-      <p style="color: var(--text-secondary); font-size: 15px; margin-bottom: 24px;">
+      <p style="color: var(--text-secondary); font-size: 18px; margin-bottom: 24px;">
         Priya describes her health in her own words — NutriGuard's AI does the rest
       </p>
 
@@ -974,7 +1008,7 @@
               <div class="mock-app-dot" style="background: var(--red-400);"></div>
               <div class="mock-app-dot" style="background: var(--amber-400);"></div>
               <div class="mock-app-dot" style="background: var(--green-400);"></div>
-              <span style="font-size: 12px; color: var(--text-muted); margin-left: 8px;">NutriGuard — Health Profile</span>
+              <span style="font-size: 18px; color: var(--text-muted); margin-left: 8px;">NutriGuard — Health Profile</span>
             </div>
             <div class="mock-app-body">
               <div class="mock-field">
@@ -998,7 +1032,7 @@
               </div>
               <div class="mock-field">
                 <div class="mock-field-label">Lab Report</div>
-                <div class="mock-field-value" style="color: var(--text-muted); font-size: 12px;">📄 Upload or paste report text…</div>
+                <div class="mock-field-value" style="color: var(--text-muted); font-size: 18px;">📄 Upload or paste report text…</div>
               </div>
               <div class="mock-btn mock-btn-primary">Save Profile →</div>
             </div>
@@ -1012,33 +1046,33 @@
             <div class="card card-green" style="padding: 16px; display: flex; gap: 14px; align-items: center;">
               <span style="font-size: 20px;">🎯</span>
               <div>
-                <div style="font-size: 13px; font-weight: 600;">Goals</div>
-                <div style="font-size: 12px; color: var(--text-secondary);">reduce_deficiency, fat_loss</div>
+                <div style="font-size: 16px; font-weight: 600;">Goals</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">reduce_deficiency, fat_loss</div>
               </div>
             </div>
             <div class="card card-green" style="padding: 16px; display: flex; gap: 14px; align-items: center;">
               <span style="font-size: 20px;">🩺</span>
               <div>
-                <div style="font-size: 13px; font-weight: 600;">Conditions</div>
-                <div style="font-size: 12px; color: var(--text-secondary);">iron_deficiency</div>
+                <div style="font-size: 16px; font-weight: 600;">Conditions</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">iron_deficiency</div>
               </div>
             </div>
             <div class="card card-green" style="padding: 16px; display: flex; gap: 14px; align-items: center;">
               <span style="font-size: 20px;">💊</span>
               <div>
-                <div style="font-size: 13px; font-weight: 600;">Supplements</div>
-                <div style="font-size: 12px; color: var(--text-secondary);">iron_tablet</div>
+                <div style="font-size: 16px; font-weight: 600;">Supplements</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">iron_tablet</div>
               </div>
             </div>
             <div class="card card-green" style="padding: 16px; display: flex; gap: 14px; align-items: center;">
               <span style="font-size: 20px;">🔬</span>
               <div>
-                <div style="font-size: 13px; font-weight: 600;">Deficiencies</div>
-                <div style="font-size: 12px; color: var(--text-secondary);">iron_deficiency, vitamin_d</div>
+                <div style="font-size: 16px; font-weight: 600;">Deficiencies</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">iron_deficiency, vitamin_d</div>
               </div>
             </div>
           </div>
-          <p style="font-size: 12px; color: var(--text-muted); margin-top: 14px;">
+          <p style="font-size: 18px; color: var(--text-muted); margin-top: 14px;">
             Natural language → normalized clinical profile.<br>No medical codes needed.
           </p>
         </div>
@@ -1053,6 +1087,7 @@
       <span>NutriGuard AI — Storyboard</span>
       <span>4 / 10</span>
     </div>
+  
   </section>
 
 
@@ -1064,13 +1099,18 @@
     <div class="bg-glow" style="background: var(--green-500); top: -200px; right: -200px;"></div>
 
     <div class="slide-inner">
+      <div style="position: absolute; right: 40px; bottom: 40px; z-index: 50; display: flex; flex-direction: column; align-items: center; opacity: 0.9;">
+        <img src="/Users/jagat/.gemini/antigravity-ide/brain/3378b0d5-5f0f-4d88-8d57-979175fa1021/priya_phone_1783334118431.png" style="height: 180px; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1)); animation: float 4s ease-in-out infinite;">
+        <div style="background: var(--surface); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-top: -10px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.05);">Stage 2: Frictionless</div>
+      </div>
+
       <div class="slide-badge"><span>Panel 4</span> · JOURNEY</div>
 
       <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; margin-top: 40px;">
         <span class="badge badge-journey">JOURNEY</span>
       </div>
       <h2 style="margin-bottom: 8px;">Log a Meal in 10 Seconds</h2>
-      <p style="color: var(--text-secondary); font-size: 15px; margin-bottom: 24px;">
+      <p style="color: var(--text-secondary); font-size: 18px; margin-bottom: 24px;">
         Plain text, no barcode scanning — just type what you ate
       </p>
 
@@ -1082,7 +1122,7 @@
               <div class="mock-app-dot" style="background: var(--red-400);"></div>
               <div class="mock-app-dot" style="background: var(--amber-400);"></div>
               <div class="mock-app-dot" style="background: var(--green-400);"></div>
-              <span style="font-size: 12px; color: var(--text-muted); margin-left: 8px;">NutriGuard — Log Meal</span>
+              <span style="font-size: 18px; color: var(--text-muted); margin-left: 8px;">NutriGuard — Log Meal</span>
             </div>
             <div class="mock-app-body">
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
@@ -1122,38 +1162,38 @@
 
           <div style="display: flex; flex-direction: column; gap: 16px;">
             <div style="display: flex; gap: 14px; align-items: flex-start;">
-              <div style="background: rgba(16,185,129,0.15); color: var(--green-400); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0;">1</div>
+              <div style="background: rgba(16,185,129,0.15); color: var(--green-400); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; flex-shrink: 0;">1</div>
               <div>
-                <div style="font-size: 14px; font-weight: 600;">Meal saved</div>
-                <div style="font-size: 12px; color: var(--text-secondary);">Status: RECEIVED → stored in meal_logs</div>
+                <div style="font-size: 17px; font-weight: 600;">Meal saved</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">Status: RECEIVED → stored in meal_logs</div>
               </div>
             </div>
             <div style="display: flex; gap: 14px; align-items: flex-start;">
-              <div style="background: rgba(16,185,129,0.15); color: var(--green-400); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0;">2</div>
+              <div style="background: rgba(16,185,129,0.15); color: var(--green-400); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; flex-shrink: 0;">2</div>
               <div>
-                <div style="font-size: 14px; font-weight: 600;">Event queued</div>
-                <div style="font-size: 12px; color: var(--text-secondary);">MealLogged event → outbox_events table</div>
+                <div style="font-size: 17px; font-weight: 600;">Event queued</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">MealLogged event → outbox_events table</div>
               </div>
             </div>
             <div style="display: flex; gap: 14px; align-items: flex-start;">
-              <div style="background: rgba(16,185,129,0.15); color: var(--green-400); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0;">3</div>
+              <div style="background: rgba(16,185,129,0.15); color: var(--green-400); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; flex-shrink: 0;">3</div>
               <div>
-                <div style="font-size: 14px; font-weight: 600;">Background publisher picks it up</div>
-                <div style="font-size: 12px; color: var(--text-secondary);">Reads profile + full day timeline</div>
+                <div style="font-size: 17px; font-weight: 600;">Background publisher picks it up</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">Reads profile + full day timeline</div>
               </div>
             </div>
             <div style="display: flex; gap: 14px; align-items: flex-start;">
-              <div style="background: rgba(99,102,241,0.15); color: var(--indigo-400); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0;">4</div>
+              <div style="background: rgba(99,102,241,0.15); color: var(--indigo-400); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; flex-shrink: 0;">4</div>
               <div>
-                <div style="font-size: 14px; font-weight: 600;">Sent to AI Orchestrator</div>
-                <div style="font-size: 12px; color: var(--text-secondary);">POST /process-meal with full context →</div>
+                <div style="font-size: 17px; font-weight: 600;">Sent to AI Orchestrator</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">POST /process-meal with full context →</div>
               </div>
             </div>
           </div>
 
-          <div style="margin-top: 24px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-sm); padding: 14px; display: flex; align-items: center; gap: 10px;">
+          <div style="margin-top: 24px; background: var(--bg-card); border: 1px solid rgba(0,0,0,0.08); border-radius: var(--radius-sm); padding: 14px; display: flex; align-items: center; gap: 10px;">
             <span style="font-size: 18px;">⏱️</span>
-            <span style="font-size: 13px; color: var(--text-secondary);">Total user effort: <strong style="color: var(--text-primary);">~10 seconds</strong></span>
+            <span style="font-size: 16px; color: var(--text-secondary);">Total user effort: <strong style="color: var(--text-primary);">~10 seconds</strong></span>
           </div>
         </div>
       </div>
@@ -1167,6 +1207,7 @@
       <span>NutriGuard AI — Storyboard</span>
       <span>5 / 10</span>
     </div>
+  
   </section>
 
 
@@ -1178,13 +1219,18 @@
     <div class="bg-glow" style="background: var(--indigo-500); top: -100px; left: 50%; transform: translateX(-50%);"></div>
 
     <div class="slide-inner">
+      <div style="position: absolute; right: 40px; bottom: 40px; z-index: 50; display: flex; flex-direction: column; align-items: center; opacity: 0.9;">
+        <img src="/Users/jagat/.gemini/antigravity-ide/brain/3378b0d5-5f0f-4d88-8d57-979175fa1021/priya_relieved_1783334127966.png" style="height: 180px; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1)); animation: float 4s ease-in-out infinite;">
+        <div style="background: var(--surface); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-top: -10px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.05);">Stage 3: Clarity</div>
+      </div>
+
       <div class="slide-badge"><span>Panel 5</span> · JOURNEY</div>
 
       <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; margin-top: 40px;">
         <span class="badge badge-journey">JOURNEY</span>
       </div>
       <h2 style="margin-bottom: 8px;">Three AI Agents Go to Work</h2>
-      <p style="color: var(--text-secondary); font-size: 15px; margin-bottom: 32px;">
+      <p style="color: var(--text-secondary); font-size: 18px; margin-bottom: 32px;">
         Behind the scenes — LangGraph orchestrates a multi-agent pipeline powered by Gemini
       </p>
 
@@ -1193,8 +1239,8 @@
         <!-- Agent 1: Meal Analyzer -->
         <div class="pipeline-node" style="box-shadow: var(--shadow-glow-green);">
           <div style="font-size: 32px; margin-bottom: 10px;">🍽️</div>
-          <h3 style="font-size: 15px; color: var(--green-400); margin-bottom: 6px;">Meal Analyzer</h3>
-          <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.5;">
+          <h3 style="font-size: 18px; color: var(--green-400); margin-bottom: 6px;">Meal Analyzer</h3>
+          <p style="font-size: 18px; color: var(--text-secondary); line-height: 1.5;">
             Parses "poha, tea, iron tablet" into structured data: foods, beverages, carb sources, protein sources
           </p>
           <div style="margin-top: 10px; font-size: 10px; color: var(--text-muted);">
@@ -1211,8 +1257,8 @@
         <!-- Agent 2: Health Risk -->
         <div class="pipeline-node" style="box-shadow: var(--shadow-glow-red);">
           <div style="font-size: 32px; margin-bottom: 10px;">🛡️</div>
-          <h3 style="font-size: 15px; color: var(--red-400); margin-bottom: 6px;">Health Risk Agent</h3>
-          <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.5;">
+          <h3 style="font-size: 18px; color: var(--red-400); margin-bottom: 6px;">Health Risk Agent</h3>
+          <p style="font-size: 18px; color: var(--text-secondary); line-height: 1.5;">
             Cross-references meal against profile, RAG knowledge base, and full day timeline
           </p>
           <div style="margin-top: 10px; font-size: 10px; color: var(--text-muted);">
@@ -1229,8 +1275,8 @@
         <!-- Agent 3: Report -->
         <div class="pipeline-node" style="box-shadow: var(--shadow-glow-indigo);">
           <div style="font-size: 32px; margin-bottom: 10px;">📝</div>
-          <h3 style="font-size: 15px; color: var(--indigo-400); margin-bottom: 6px;">Report Agent</h3>
-          <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.5;">
+          <h3 style="font-size: 18px; color: var(--indigo-400); margin-bottom: 6px;">Report Agent</h3>
+          <p style="font-size: 18px; color: var(--text-secondary); line-height: 1.5;">
             Generates a clear, non-alarming nutrition report with actionable suggestions
           </p>
           <div style="margin-top: 10px; font-size: 10px; color: var(--text-muted);">
@@ -1243,22 +1289,22 @@
       <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
         <div class="card" style="padding: 12px 20px; display: flex; align-items: center; gap: 8px;">
           <span style="font-size: 16px;">🔗</span>
-          <span style="font-size: 13px; font-weight: 600;">LangGraph</span>
+          <span style="font-size: 16px; font-weight: 600;">LangGraph</span>
           <span style="font-size: 11px; color: var(--text-muted);">Orchestration</span>
         </div>
         <div class="card" style="padding: 12px 20px; display: flex; align-items: center; gap: 8px;">
           <span style="font-size: 16px;">✨</span>
-          <span style="font-size: 13px; font-weight: 600;">Gemini</span>
+          <span style="font-size: 16px; font-weight: 600;">Gemini</span>
           <span style="font-size: 11px; color: var(--text-muted);">LLM Provider</span>
         </div>
         <div class="card" style="padding: 12px 20px; display: flex; align-items: center; gap: 8px;">
           <span style="font-size: 16px;">📚</span>
-          <span style="font-size: 13px; font-weight: 600;">RAG</span>
+          <span style="font-size: 16px; font-weight: 600;">RAG</span>
           <span style="font-size: 11px; color: var(--text-muted);">Nutrition Context</span>
         </div>
         <div class="card" style="padding: 12px 20px; display: flex; align-items: center; gap: 8px;">
           <span style="font-size: 16px;">⚡</span>
-          <span style="font-size: 13px; font-weight: 600;">FastAPI</span>
+          <span style="font-size: 16px; font-weight: 600;">FastAPI</span>
           <span style="font-size: 11px; color: var(--text-muted);">Backend</span>
         </div>
       </div>
@@ -1272,6 +1318,7 @@
       <span>NutriGuard AI — Storyboard</span>
       <span>6 / 10</span>
     </div>
+  
   </section>
 
 
@@ -1283,21 +1330,26 @@
     <div class="bg-glow" style="background: var(--amber-500); top: -100px; right: -200px;"></div>
 
     <div class="slide-inner">
+      <div style="position: absolute; right: 40px; bottom: 40px; z-index: 50; display: flex; flex-direction: column; align-items: center; opacity: 0.9;">
+        <img src="/Users/jagat/.gemini/antigravity-ide/brain/3378b0d5-5f0f-4d88-8d57-979175fa1021/priya_relieved_1783334127966.png" style="height: 180px; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1)); animation: float 4s ease-in-out infinite;">
+        <div style="background: var(--surface); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-top: -10px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.05);">Stage 3: Clarity</div>
+      </div>
+
       <div class="slide-badge"><span>Panel 6</span> · JOURNEY</div>
 
       <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; margin-top: 40px;">
         <span class="badge badge-journey">JOURNEY</span>
       </div>
       <h2 style="margin-bottom: 8px;">Day-Level Risk Detection</h2>
-      <p style="color: var(--text-secondary); font-size: 15px; margin-bottom: 24px;">
+      <p style="color: var(--text-secondary); font-size: 18px; margin-bottom: 24px;">
         Not just this meal — the Health Risk Agent scans Priya's entire day timeline for dangerous combinations
       </p>
 
       <!-- Horizontal Day Timeline -->
-      <div style="background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 32px; margin-bottom: 20px;">
+      <div style="background: var(--bg-card); border: 1px solid rgba(0,0,0,0.08); border-radius: var(--radius); padding: 32px; margin-bottom: 20px;">
         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 24px;">
           <span style="font-size: 16px;">📅</span>
-          <span style="font-size: 14px; font-weight: 700;">Priya's Day — July 6, 2026</span>
+          <span style="font-size: 17px; font-weight: 700;">Priya's Day — July 6, 2026</span>
         </div>
 
         <div class="h-timeline">
@@ -1356,15 +1408,15 @@
         <div class="card card-red" style="flex: 1; padding: 16px; display: flex; gap: 12px; align-items: center;">
           <span style="font-size: 24px;">🔍</span>
           <div>
-            <div style="font-size: 13px; font-weight: 700; color: var(--red-400);">Cross-meal detection</div>
-            <div style="font-size: 12px; color: var(--text-secondary);">Tea at 8:30 within 90 min of iron at 8:00 → flag raised</div>
+            <div style="font-size: 16px; font-weight: 700; color: var(--red-400);">Cross-meal detection</div>
+            <div style="font-size: 18px; color: var(--text-secondary);">Tea at 8:30 within 90 min of iron at 8:00 → flag raised</div>
           </div>
         </div>
         <div class="card card-red" style="flex: 1; padding: 16px; display: flex; gap: 12px; align-items: center;">
           <span style="font-size: 24px;">⏱️</span>
           <div>
-            <div style="font-size: 13px; font-weight: 700; color: var(--amber-400);">Timing-aware</div>
-            <div style="font-size: 12px; color: var(--text-secondary);">Dahi at 1 PM within 2-hour iron window → calcium flag</div>
+            <div style="font-size: 16px; font-weight: 700; color: var(--amber-400);">Timing-aware</div>
+            <div style="font-size: 18px; color: var(--text-secondary);">Dahi at 1 PM within 2-hour iron window → calcium flag</div>
           </div>
         </div>
       </div>
@@ -1378,6 +1430,7 @@
       <span>NutriGuard AI — Storyboard</span>
       <span>7 / 10</span>
     </div>
+  
   </section>
 
 
@@ -1389,13 +1442,18 @@
     <div class="bg-glow" style="background: var(--green-500); bottom: -200px; right: -100px;"></div>
 
     <div class="slide-inner">
+      <div style="position: absolute; right: 40px; bottom: 40px; z-index: 50; display: flex; flex-direction: column; align-items: center; opacity: 0.9;">
+        <img src="/Users/jagat/.gemini/antigravity-ide/brain/3378b0d5-5f0f-4d88-8d57-979175fa1021/priya_relieved_1783334127966.png" style="height: 180px; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1)); animation: float 4s ease-in-out infinite;">
+        <div style="background: var(--surface); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-top: -10px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.05);">Stage 3: Clarity</div>
+      </div>
+
       <div class="slide-badge"><span>Panel 7</span> · PAYOFF</div>
 
       <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; margin-top: 40px;">
         <span class="badge badge-payoff">PAYOFF</span>
       </div>
       <h2 style="margin-bottom: 8px;">The Report That Changes Behavior</h2>
-      <p style="color: var(--text-secondary); font-size: 15px; margin-bottom: 24px;">
+      <p style="color: var(--text-secondary); font-size: 18px; margin-bottom: 24px;">
         No jargon, no panic — just clear actions Priya can take today
       </p>
 
@@ -1407,7 +1465,7 @@
               <div class="mock-app-dot" style="background: var(--red-400);"></div>
               <div class="mock-app-dot" style="background: var(--amber-400);"></div>
               <div class="mock-app-dot" style="background: var(--green-400);"></div>
-              <span style="font-size: 12px; color: var(--text-muted); margin-left: 8px;">NutriGuard — Daily Report</span>
+              <span style="font-size: 18px; color: var(--text-muted); margin-left: 8px;">NutriGuard — Daily Report</span>
             </div>
             <div class="mock-app-body" style="padding: 20px;">
               <div style="font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--green-400);">
@@ -1465,36 +1523,36 @@
             <div style="display: flex; gap: 14px; align-items: flex-start;">
               <div class="icon-circle icon-green" style="width: 42px; height: 42px; font-size: 18px;">🎯</div>
               <div>
-                <div style="font-size: 14px; font-weight: 700;">Actionable</div>
-                <div style="font-size: 12px; color: var(--text-secondary);">"Move tea to 10 AM" — not "consider modifying intake patterns"</div>
+                <div style="font-size: 17px; font-weight: 700;">Actionable</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">"Move tea to 10 AM" — not "consider modifying intake patterns"</div>
               </div>
             </div>
             <div style="display: flex; gap: 14px; align-items: flex-start;">
               <div class="icon-circle icon-green" style="width: 42px; height: 42px; font-size: 18px;">🤝</div>
               <div>
-                <div style="font-size: 14px; font-weight: 700;">Non-alarming</div>
-                <div style="font-size: 12px; color: var(--text-secondary);">Practical nutrition guidance, never diagnoses or prescriptions</div>
+                <div style="font-size: 17px; font-weight: 700;">Non-alarming</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">Practical nutrition guidance, never diagnoses or prescriptions</div>
               </div>
             </div>
             <div style="display: flex; gap: 14px; align-items: flex-start;">
               <div class="icon-circle icon-green" style="width: 42px; height: 42px; font-size: 18px;">🛡️</div>
               <div>
-                <div style="font-size: 14px; font-weight: 700;">Safety-first</div>
-                <div style="font-size: 12px; color: var(--text-secondary);">Always defers to clinician; includes safety note when relevant</div>
+                <div style="font-size: 17px; font-weight: 700;">Safety-first</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">Always defers to clinician; includes safety note when relevant</div>
               </div>
             </div>
             <div style="display: flex; gap: 14px; align-items: flex-start;">
               <div class="icon-circle icon-blue" style="width: 42px; height: 42px; font-size: 18px;">📅</div>
               <div>
-                <div style="font-size: 14px; font-weight: 700;">Day-level view</div>
-                <div style="font-size: 12px; color: var(--text-secondary);">Analyzes meals in context of the full day, not in isolation</div>
+                <div style="font-size: 17px; font-weight: 700;">Day-level view</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">Analyzes meals in context of the full day, not in isolation</div>
               </div>
             </div>
             <div style="display: flex; gap: 14px; align-items: flex-start;">
               <div class="icon-circle icon-purple" style="width: 42px; height: 42px; font-size: 18px;">👍</div>
               <div>
-                <div style="font-size: 14px; font-weight: 700;">Feedback loop</div>
-                <div style="font-size: 12px; color: var(--text-secondary);">Users rate report quality — thumbs up/down per section improves AI over time</div>
+                <div style="font-size: 17px; font-weight: 700;">Feedback loop</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">Users rate report quality — thumbs up/down per section improves AI over time</div>
               </div>
             </div>
           </div>
@@ -1510,8 +1568,76 @@
       <span>NutriGuard AI — Storyboard</span>
       <span>8 / 10</span>
     </div>
+  
   </section>
 
+
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       SLIDE JOURNEY — TRANSFORMATION
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="slide" id="slide-journey">
+    <div class="bg-grid"></div>
+    
+    <div class="slide-inner">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+        <span class="badge badge-payoff">TRANSFORMATION</span>
+      </div>
+      <h2 style="margin-bottom: 8px;">The User Journey</h2>
+      <p style="color: var(--text-secondary); font-size: 18px; margin-bottom: 48px;">
+        Moving users from confusion to clarity without behavioral friction
+      </p>
+
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; flex: 1; padding: 0 40px;">
+        
+        <!-- State 1 -->
+        <div style="text-align: center; flex: 1;">
+          <div style="height: 320px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 24px;">
+            <img src="/Users/jagat/.gemini/antigravity-ide/brain/3378b0d5-5f0f-4d88-8d57-979175fa1021/priya_confused_1783334108555.png" class="character-img" style="max-height: 300px;">
+          </div>
+          <h3 style="font-size: 20px; color: var(--text-primary); margin-bottom: 8px;">1. Confused</h3>
+          <p style="font-size: 15px; color: var(--text-secondary);">Overwhelmed by generic advice</p>
+        </div>
+
+        <!-- Arrow -->
+        <div style="color: var(--teal-400); font-size: 32px; padding-bottom: 80px;">➔</div>
+
+        <!-- State 2 -->
+        <div style="text-align: center; flex: 1;">
+          <div style="height: 320px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 24px;">
+            <img src="/Users/jagat/.gemini/antigravity-ide/brain/3378b0d5-5f0f-4d88-8d57-979175fa1021/priya_phone_1783334118431.png" class="character-img" style="max-height: 270px; animation-delay: 0.5s;">
+          </div>
+          <h3 style="font-size: 20px; color: var(--text-primary); margin-bottom: 8px;">2. Frictionless</h3>
+          <p style="font-size: 15px; color: var(--text-secondary);">Simple text-based logging</p>
+        </div>
+
+        <!-- Arrow -->
+        <div style="color: var(--teal-400); font-size: 32px; padding-bottom: 80px;">➔</div>
+
+        <!-- State 3 -->
+        <div style="text-align: center; flex: 1;">
+          <div style="height: 320px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 24px;">
+            <img src="/Users/jagat/.gemini/antigravity-ide/brain/3378b0d5-5f0f-4d88-8d57-979175fa1021/priya_relieved_1783334127966.png" class="character-img" style="max-height: 300px; animation-delay: 1s;">
+          </div>
+          <h3 style="font-size: 20px; color: var(--text-primary); margin-bottom: 8px;">3. Clarity</h3>
+          <p style="font-size: 15px; color: var(--text-secondary);">Actionable, precise feedback</p>
+        </div>
+
+        <!-- Arrow -->
+        <div style="color: var(--teal-400); font-size: 32px; padding-bottom: 80px;">➔</div>
+
+        <!-- State 4 -->
+        <div style="text-align: center; flex: 1;">
+          <div style="height: 320px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 24px;">
+            <img src="/Users/jagat/.gemini/antigravity-ide/brain/3378b0d5-5f0f-4d88-8d57-979175fa1021/priya_healthy_1783334136960.png" class="character-img" style="max-height: 320px; animation-delay: 1.5s;">
+          </div>
+          <h3 style="font-size: 20px; color: var(--text-primary); margin-bottom: 8px;">4. Empowered</h3>
+          <p style="font-size: 15px; color: var(--text-secondary);">Healthy and confident</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
 
   <!-- ══════════════════════════════════════════════════════════════════
        SLIDE 9 — NEXT STEP: The Bigger Picture
@@ -1528,7 +1654,7 @@
         <span class="badge badge-next">NEXT STEP</span>
       </div>
       <h2 style="margin-bottom: 8px;">The Bigger Picture</h2>
-      <p style="color: var(--text-secondary); font-size: 15px; margin-bottom: 32px;">
+      <p style="color: var(--text-secondary); font-size: 18px; margin-bottom: 32px;">
         Every meal builds a nutrition history — patterns emerge over days and weeks, not just single meals
       </p>
 
@@ -1536,26 +1662,26 @@
       <div class="future-path" style="margin-bottom: 32px;">
         <div class="future-step">
           <div class="future-step-icon icon-green float">📊</div>
-          <h3 style="font-size: 14px; margin-bottom: 6px;">Daily Reports</h3>
-          <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.5;">Progressive day-level reports that combine all meals into one timeline view</p>
+          <h3 style="font-size: 17px; margin-bottom: 6px;">Daily Reports</h3>
+          <p style="font-size: 18px; color: var(--text-secondary); line-height: 1.5;">Progressive day-level reports that combine all meals into one timeline view</p>
         </div>
         <div class="future-connector">→</div>
         <div class="future-step">
           <div class="future-step-icon icon-amber float" style="animation-delay: 0.5s;">🔔</div>
-          <h3 style="font-size: 14px; margin-bottom: 6px;">Smart Notifications</h3>
-          <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.5;">Proactive alerts when patterns repeat — "3rd day this week with tea near iron"</p>
+          <h3 style="font-size: 17px; margin-bottom: 6px;">Smart Notifications</h3>
+          <p style="font-size: 18px; color: var(--text-secondary); line-height: 1.5;">Proactive alerts when patterns repeat — "3rd day this week with tea near iron"</p>
         </div>
         <div class="future-connector">→</div>
         <div class="future-step">
           <div class="future-step-icon icon-blue float" style="animation-delay: 1s;">📈</div>
-          <h3 style="font-size: 14px; margin-bottom: 6px;">Trend Analysis</h3>
-          <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.5;">Weekly and monthly patterns — track how nutrition habits improve over time</p>
+          <h3 style="font-size: 17px; margin-bottom: 6px;">Trend Analysis</h3>
+          <p style="font-size: 18px; color: var(--text-secondary); line-height: 1.5;">Weekly and monthly patterns — track how nutrition habits improve over time</p>
         </div>
         <div class="future-connector">→</div>
         <div class="future-step">
           <div class="future-step-icon icon-purple float" style="animation-delay: 1.5s;">🩺</div>
-          <h3 style="font-size: 14px; margin-bottom: 6px;">Doctor Bridge</h3>
-          <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.5;">Nutrition timeline your doctor never had — bridging lab visits with daily data</p>
+          <h3 style="font-size: 17px; margin-bottom: 6px;">Doctor Bridge</h3>
+          <p style="font-size: 18px; color: var(--text-secondary); line-height: 1.5;">Nutrition timeline your doctor never had — bridging lab visits with daily data</p>
         </div>
       </div>
 
@@ -1564,7 +1690,7 @@
         <p style="font-size: 20px; font-weight: 300; color: var(--text-secondary); line-height: 1.6;">
           From <strong style="color: var(--red-400);">reactive lab tests</strong> to <strong style="color: var(--green-400);">proactive daily guidance</strong>
         </p>
-        <p style="font-size: 14px; color: var(--text-muted); margin-top: 8px;">
+        <p style="font-size: 17px; color: var(--text-muted); margin-top: 8px;">
           NutriGuard tracks what your doctor can't see between visits.
         </p>
       </div>
@@ -1578,6 +1704,7 @@
       <span>NutriGuard AI — Storyboard</span>
       <span>9 / 10</span>
     </div>
+  
   </section>
 
 
@@ -1595,7 +1722,7 @@
         <h2 style="margin-bottom: 12px;">
           <span class="gradient-text">Key Takeaways</span>
         </h2>
-        <p style="font-size: 15px; color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+        <p style="font-size: 18px; color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
           NutriGuard AI turns every meal into a personalized nutrition checkpoint
         </p>
       </div>
@@ -1604,8 +1731,8 @@
         <div class="takeaway-item">
           <div class="takeaway-num">1</div>
           <div>
-            <div style="font-size: 14px; font-weight: 700; margin-bottom: 4px;">Real Problem, Real People</div>
-            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.6;">
+            <div style="font-size: 17px; font-weight: 700; margin-bottom: 4px;">Real Problem, Real People</div>
+            <div style="font-size: 18px; color: var(--text-secondary); line-height: 1.6;">
               Millions take supplements without knowing their daily meals silently reduce absorption
             </div>
           </div>
@@ -1613,8 +1740,8 @@
         <div class="takeaway-item">
           <div class="takeaway-num">2</div>
           <div>
-            <div style="font-size: 14px; font-weight: 700; margin-bottom: 4px;">Zero-Friction Input</div>
-            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.6;">
+            <div style="font-size: 17px; font-weight: 700; margin-bottom: 4px;">Zero-Friction Input</div>
+            <div style="font-size: 18px; color: var(--text-secondary); line-height: 1.6;">
               Natural language profiles and 10-second meal logging — no barcodes, no calorie counting
             </div>
           </div>
@@ -1622,8 +1749,8 @@
         <div class="takeaway-item">
           <div class="takeaway-num">3</div>
           <div>
-            <div style="font-size: 14px; font-weight: 700; margin-bottom: 4px;">Multi-Agent AI Pipeline</div>
-            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.6;">
+            <div style="font-size: 17px; font-weight: 700; margin-bottom: 4px;">Multi-Agent AI Pipeline</div>
+            <div style="font-size: 18px; color: var(--text-secondary); line-height: 1.6;">
               Three specialized agents (Meal Analyzer → Health Risk → Report) with RAG context and LangGraph orchestration
             </div>
           </div>
@@ -1631,8 +1758,8 @@
         <div class="takeaway-item">
           <div class="takeaway-num">4</div>
           <div>
-            <div style="font-size: 14px; font-weight: 700; margin-bottom: 4px;">Day-Level Intelligence</div>
-            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.6;">
+            <div style="font-size: 17px; font-weight: 700; margin-bottom: 4px;">Day-Level Intelligence</div>
+            <div style="font-size: 18px; color: var(--text-secondary); line-height: 1.6;">
               Cross-meal risk detection that catches tea-iron, calcium-iron, and timing interactions across the entire day
             </div>
           </div>
@@ -1640,8 +1767,8 @@
         <div class="takeaway-item">
           <div class="takeaway-num">5</div>
           <div>
-            <div style="font-size: 14px; font-weight: 700; margin-bottom: 4px;">Actionable, Not Alarming</div>
-            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.6;">
+            <div style="font-size: 17px; font-weight: 700; margin-bottom: 4px;">Actionable, Not Alarming</div>
+            <div style="font-size: 18px; color: var(--text-secondary); line-height: 1.6;">
               Reports give specific, practical suggestions — always deferring to the user's doctor for medical decisions
             </div>
           </div>
@@ -1649,8 +1776,8 @@
         <div class="takeaway-item">
           <div class="takeaway-num">6</div>
           <div>
-            <div style="font-size: 14px; font-weight: 700; margin-bottom: 4px;">Built for the Long Term</div>
-            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.6;">
+            <div style="font-size: 17px; font-weight: 700; margin-bottom: 4px;">Built for the Long Term</div>
+            <div style="font-size: 18px; color: var(--text-secondary); line-height: 1.6;">
               Every meal builds a nutrition timeline — bridging the gap between lab visits with daily proactive guidance
             </div>
           </div>
@@ -1667,7 +1794,7 @@
 
       <div style="text-align: center; margin-top: 24px;">
         <p style="font-size: 36px; margin-bottom: 6px;">🛡️</p>
-        <p style="font-size: 13px; color: var(--text-muted);">
+        <p style="font-size: 16px; color: var(--text-muted);">
           Thank you — now go tell your app's story.
         </p>
       </div>
@@ -1677,6 +1804,7 @@
       <span>NutriGuard AI — Storyboard</span>
       <span>10 / 10</span>
     </div>
+  
   </section>
 
 
