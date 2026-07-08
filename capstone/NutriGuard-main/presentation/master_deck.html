@@ -1077,18 +1077,19 @@
     <button class="nav-dot" data-slide="8" title="Problem"></button>
     <button class="nav-dot" data-slide="9" title="Specs"></button>
     <button class="nav-dot" data-slide="10" title="Design"></button>
-    <button class="nav-dot" data-slide="11" title="Kiro"></button>
-    <button class="nav-dot" data-slide="12" title="Architecture"></button>
-    <button class="nav-dot" data-slide="13" title="Pipeline"></button>
-    <button class="nav-dot" data-slide="14" title="Live Walkthrough"></button>
-    <button class="nav-dot" data-slide="15" title="CI/CD"></button>
-    <button class="nav-dot" data-slide="16" title="Testing"></button>
-    <button class="nav-dot" data-slide="17" title="Observability"></button>
-    <button class="nav-dot" data-slide="18" title="Performance"></button>
-    <button class="nav-dot" data-slide="19" title="Dashboard"></button>
-    <button class="nav-dot" data-slide="20" title="Challenges"></button>
-    <button class="nav-dot" data-slide="21" title="Stats"></button>
-    <button class="nav-dot" data-slide="22" title="Q&amp;A"></button>
+    <button class="nav-dot" data-slide="11" title="Choices"></button>
+    <button class="nav-dot" data-slide="12" title="Kiro"></button>
+    <button class="nav-dot" data-slide="13" title="Architecture"></button>
+    <button class="nav-dot" data-slide="14" title="Pipeline"></button>
+    <button class="nav-dot" data-slide="15" title="Live Walkthrough"></button>
+    <button class="nav-dot" data-slide="16" title="CI/CD"></button>
+    <button class="nav-dot" data-slide="17" title="Testing"></button>
+    <button class="nav-dot" data-slide="18" title="Observability"></button>
+    <button class="nav-dot" data-slide="19" title="Performance"></button>
+    <button class="nav-dot" data-slide="20" title="Dashboard"></button>
+    <button class="nav-dot" data-slide="21" title="Challenges"></button>
+    <button class="nav-dot" data-slide="22" title="Stats"></button>
+    <button class="nav-dot" data-slide="23" title="Q&amp;A"></button>
   </nav>
 
 <section class="slide" id="slide-0">
@@ -1108,7 +1109,7 @@
       </p>
       <p style="font-size: 18px; color: var(--text-muted); max-width: 700px; margin: 28px auto 0; line-height: 1.8;">
         From the moment a user opens NutriGuard to the moment they get
-        personalized nutrition guidance — told in 8 panels.
+        personalized nutrition guidance.
       </p>
 
       <div style="margin-top: 52px; display: flex; gap: 40px; justify-content: center;">
@@ -1931,8 +1932,56 @@
     </div>
   </section>
 
-  <!-- SLIDE: KIRO RATE LIMITER DESIGN -->
+  <!-- SLIDE: DESIGN CHOICES WE MADE -->
   <section class="slide" id="slide-11">
+    <div class="bg-grid"></div>
+    <div class="bg-glow" style="background: var(--green-500); top: -220px; right: -180px;"></div>
+    <div class="slide-inner">
+      <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+        <span class="story-stage" style="background: var(--green-100); color: var(--green-700);">DESIGN CHOICES</span>
+      </div>
+      <h2 style="margin-bottom: 18px; text-align: center;">Design Choices <span style="color: var(--green-500);">We Made</span></h2>
+      <p style="font-size: 18px; color: var(--text-secondary); text-align: center; max-width: 860px; margin: 0 auto 34px;">
+        Each stack choice was made for reliability, demo speed, and production readiness.
+      </p>
+      <div class="grid-3" style="max-width: 1260px; width: 100%; margin: 0 auto; gap: 20px;">
+        <div class="tech-card" style="border-top-color: var(--green-500); padding: 22px;">
+          <div style="font-size: 30px; margin-bottom: 10px;">🧠</div>
+          <h3 style="font-size: 19px; margin-bottom: 7px;">LangGraph</h3>
+          <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.45;">Clear agent flow, retries, and state between meal analysis, risk checks, and report generation.</p>
+        </div>
+        <div class="tech-card" style="border-top-color: var(--teal-500); padding: 22px;">
+          <div style="font-size: 30px; margin-bottom: 10px;">⚛️</div>
+          <h3 style="font-size: 19px; margin-bottom: 7px;">React over Streamlit</h3>
+          <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.45;">Production UI, auth flows, routing, responsive design, and cleaner mobile experience.</p>
+        </div>
+        <div class="tech-card" style="border-top-color: var(--indigo-500); padding: 22px;">
+          <div style="font-size: 30px; margin-bottom: 10px;">✨</div>
+          <h3 style="font-size: 19px; margin-bottom: 7px;">Gemini + OpenAI</h3>
+          <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.45;">Gemini for cost-effective primary calls, OpenAI fallback for resilience and evaluation.</p>
+        </div>
+        <div class="tech-card" style="border-top-color: #0078d4; padding: 22px;">
+          <div style="font-size: 30px; margin-bottom: 10px;">☁️</div>
+          <h3 style="font-size: 19px; margin-bottom: 7px;">Azure Hosting</h3>
+          <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.45;">Static Web Apps + Container Apps gave managed HTTPS, CI/CD, and simple deployment.</p>
+        </div>
+        <div class="tech-card" style="border-top-color: var(--purple-500); padding: 22px;">
+          <div style="font-size: 30px; margin-bottom: 10px;">📦</div>
+          <h3 style="font-size: 19px; margin-bottom: 7px;">Serverless Containers</h3>
+          <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.45;">Scale to zero/scale out for demo traffic without managing servers.</p>
+        </div>
+        <div class="tech-card" style="border-top-color: var(--amber-500); padding: 22px;">
+          <div style="font-size: 30px; margin-bottom: 10px;">📨</div>
+          <h3 style="font-size: 19px; margin-bottom: 7px;">Azure Service Bus</h3>
+          <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.45;">Queues decouple fast API requests from slower AI jobs with retries and lock renewal.</p>
+        </div>
+      </div>
+      <div class="slide-footer"><span>NutriGuard AI — Technical Deep-Dive</span><span>13 / 23</span></div>
+    </div>
+  </section>
+
+  <!-- SLIDE: KIRO RATE LIMITER DESIGN -->
+  <section class="slide" id="slide-12">
     <div class="bg-grid"></div>
     <div class="bg-glow" style="background: var(--purple-500); top: -200px; right: -200px;"></div>
     <div class="slide-inner">
@@ -1969,7 +2018,7 @@
   </section>
 
   <!-- SLIDE: SYSTEM ARCHITECTURE -->
-  <section class="slide" id="slide-12">
+  <section class="slide" id="slide-13">
     <div class="bg-grid"></div>
     <div class="slide-inner" style="justify-content: center; align-items: center;">
       <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
@@ -1998,7 +2047,7 @@
   </section>
 
   <!-- SLIDE: LANGGRAPH AGENT PIPELINE -->
-  <section class="slide" id="slide-13">
+  <section class="slide" id="slide-14">
     <div class="bg-grid"></div>
     <div class="slide-inner" style="justify-content: center; align-items: center;">
       <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 12px;">
@@ -2047,7 +2096,7 @@
   </section>
 
   <!-- SLIDE: LIVE SYSTEM DEMONSTRATION -->
-  <section class="slide" id="slide-14">
+  <section class="slide" id="slide-15">
     <div class="bg-grid"></div>
     <div class="bg-glow" style="background: var(--teal-500); top: -180px; right: -160px;"></div>
     <div class="bg-glow" style="background: var(--indigo-400); bottom: -220px; left: -180px;"></div>
@@ -2103,7 +2152,7 @@
   </section>
 
   <!-- SLIDE: CI/CD & AZURE DEPLOYMENT -->
-  <section class="slide" id="slide-15">
+  <section class="slide" id="slide-16">
     <div class="bg-grid"></div>
     <div class="bg-glow" style="background: var(--indigo-500); bottom: -100px; right: -100px;"></div>
     <div class="slide-inner">
@@ -2129,7 +2178,7 @@
   </section>
 
   <!-- SLIDE: TESTING STRATEGY -->
-  <section class="slide" id="slide-16">
+  <section class="slide" id="slide-17">
     <div class="bg-grid"></div>
     <div class="slide-inner">
       <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
@@ -2174,7 +2223,7 @@
   </section>
 
   <!-- SLIDE: LOAD TESTING & OBSERVABILITY -->
-  <section class="slide" id="slide-17">
+  <section class="slide" id="slide-18">
     <div class="bg-grid"></div>
     <div class="slide-inner">
       <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
@@ -2203,7 +2252,7 @@
   </section>
 
   <!-- SLIDE: PERFORMANCE DASHBOARD -->
-  <section class="slide" id="slide-18">
+  <section class="slide" id="slide-19">
     <div class="bg-grid"></div>
     <div class="bg-glow" style="background: var(--amber-500); top: -200px; right: -200px;"></div>
     <div class="slide-inner">
@@ -2276,7 +2325,7 @@
   </section>
 
   <!-- SLIDE: CONSOLIDATED DASHBOARD & ANALYTICS -->
-  <section class="slide" id="slide-19">
+  <section class="slide" id="slide-20">
     <div class="bg-grid"></div>
     <div class="bg-glow" style="background: var(--indigo-500); bottom: -150px; left: -100px; opacity: 0.15;"></div>
     <div class="bg-glow" style="background: var(--teal-500); top: -200px; right: -200px; opacity: 0.15;"></div>
@@ -2409,7 +2458,7 @@
   </section>
 
   <!-- SLIDE: PRODUCTION CHALLENGES -->
-  <section class="slide" id="slide-20">
+  <section class="slide" id="slide-21">
     <div class="bg-grid"></div>
     <div class="bg-glow" style="background: var(--red-500); top: -200px; right: -200px;"></div>
     <div class="slide-inner">
@@ -2444,7 +2493,7 @@
   </section>
 
   <!-- SLIDE: STATS & STACK -->
-  <section class="slide" id="slide-21">
+  <section class="slide" id="slide-22">
     <div class="bg-grid"></div>
     <div class="bg-glow" style="background: var(--teal-500); bottom: -200px; left: -200px;"></div>
     <div class="slide-inner">
@@ -2472,7 +2521,7 @@
   </section>
 
   <!-- SLIDE: Q&A -->
-  <section class="slide" id="slide-22">
+  <section class="slide" id="slide-23">
     <div class="bg-grid"></div>
     <div class="bg-glow" style="background: var(--green-500); top: -180px; right: -180px;"></div>
     <div class="bg-glow" style="background: var(--indigo-500); bottom: -220px; left: -180px;"></div>
