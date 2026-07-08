@@ -1,0 +1,2064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NutriGuard AI — Application Storyboard</title>
+  <meta name="description" content="NutriGuard AI application storyboard — from concept to clarity, telling the story of personalized nutrition guidance.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ── Design Tokens ── */
+    :root {
+      --bg-dark: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-card-alt: #f1f5f9;
+      --surface: #f1f5f9;
+      --surface-hover: #e2e8f0;
+
+      --green-50: #ecfdf5;
+      --green-100: #d1fae5;
+      --green-400: #34d399;
+      --green-500: #10b981;
+      --green-600: #059669;
+      --green-700: #047857;
+
+      --teal-400: #2dd4bf;
+      --teal-500: #14b8a6;
+      --teal-600: #0d9488;
+
+      --amber-400: #fbbf24;
+      --amber-500: #f59e0b;
+
+      --red-400: #f87171;
+      --red-500: #ef4444;
+
+      --indigo-400: #818cf8;
+      --indigo-500: #6366f1;
+      --indigo-600: #4f46e5;
+
+      --purple-400: #a78bfa;
+      --purple-500: #8b5cf6;
+
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+
+      --gradient-main: linear-gradient(135deg, var(--green-500), var(--teal-500));
+      --gradient-hero: linear-gradient(135deg, #0d9488 0%, #6366f1 50%, #8b5cf6 100%);
+      --gradient-warm: linear-gradient(135deg, #f59e0b, #ef4444);
+      --gradient-cool: linear-gradient(135deg, #6366f1, #06b6d4);
+
+      --radius: 16px;
+      --radius-sm: 10px;
+      --radius-xs: 6px;
+
+      --shadow: 0 8px 32px rgba(0,0,0,0.08);
+      --shadow-glow-green: 0 0 40px rgba(16,185,129,0.15);
+      --shadow-glow-red: 0 0 40px rgba(239,68,68,0.15);
+      --shadow-glow-indigo: 0 0 40px rgba(99,102,241,0.15);
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+      overflow-y: scroll;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      font-size: 18px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Slide Container ── */
+    .slide {
+      scroll-snap-align: start;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide-inner {
+      width: 100%;
+      max-width: 1600px;
+      height: 100%;
+      padding: 56px 80px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Slide Number Badge ── */
+    .slide-badge {
+      position: absolute;
+      top: 56px;
+      left: 80px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      z-index: 2;
+    }
+    .slide-badge span {
+      color: var(--teal-400);
+    }
+
+    /* ── Footer ── */
+    .slide-footer {
+      position: absolute;
+      bottom: 28px;
+      left: 80px;
+      right: 80px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+    .slide-footer span:nth-child(2) {
+      display: none;
+    }
+
+    /* ── Navigation Dots ── */
+    .nav-dots {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 100;
+    }
+    .nav-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      opacity: 0.3;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .nav-dot:hover, .nav-dot.active {
+      opacity: 1;
+      background: var(--teal-400);
+      transform: scale(1.3);
+    }
+
+    /* ── Typography ── */
+    h1 {
+      font-size: 72px;
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -2px;
+    }
+    h2 {
+      font-size: 48px;
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -1px;
+    }
+    h3 {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    .caption {
+      font-size: 20px;
+      font-style: italic;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 850px;
+      border-left: 4px solid var(--teal-500);
+      padding-left: 24px;
+      margin-top: 24px;
+    }
+    .label {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--teal-400);
+      margin-bottom: 14px;
+    }
+    .gradient-text {
+      background: var(--gradient-hero);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: var(--radius);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+    .card-green::before { background: var(--gradient-main); }
+    .card-red::before { background: var(--gradient-warm); }
+    .card-blue::before { background: var(--gradient-cool); }
+
+    /* ── Grid Helpers ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 56px;
+      align-items: center;
+      flex: 1;
+    }
+    .three-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 32px;
+    }
+
+    /* ── Icon Circles ── */
+    .icon-circle {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      flex-shrink: 0;
+    }
+    .icon-green { background: rgba(16,185,129,0.15); }
+    .icon-red { background: rgba(239,68,68,0.15); }
+    .icon-blue { background: rgba(99,102,241,0.15); }
+    .icon-amber { background: rgba(245,158,11,0.15); }
+    .icon-purple { background: rgba(139,92,246,0.15); }
+
+    /* ── Severity Badges ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .badge-high {
+      background: rgba(239,68,68,0.15);
+      color: var(--red-400);
+      border: 1px solid rgba(239,68,68,0.3);
+    }
+    .badge-medium {
+      background: rgba(245,158,11,0.15);
+      color: var(--amber-400);
+      border: 1px solid rgba(245,158,11,0.3);
+    }
+    .badge-low {
+      background: rgba(16,185,129,0.15);
+      color: var(--green-400);
+      border: 1px solid rgba(16,185,129,0.3);
+    }
+    .badge-setup {
+      background: rgba(99,102,241,0.15);
+      color: var(--indigo-400);
+      border: 1px solid rgba(99,102,241,0.3);
+    }
+    .badge-trigger {
+      background: rgba(239,68,68,0.15);
+      color: var(--red-400);
+      border: 1px solid rgba(239,68,68,0.3);
+    }
+    .badge-journey {
+      background: rgba(16,185,129,0.15);
+      color: var(--green-400);
+      border: 1px solid rgba(16,185,129,0.3);
+    }
+    .badge-payoff {
+      background: rgba(245,158,11,0.15);
+      color: var(--amber-400);
+      border: 1px solid rgba(245,158,11,0.3);
+    }
+    .badge-next {
+      background: rgba(139,92,246,0.15);
+      color: var(--purple-400);
+      border: 1px solid rgba(139,92,246,0.3);
+    }
+
+    /* ── Background Decorations ── */
+    .bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 1px 1px, rgba(0,0,0,0.03) 1px, transparent 0);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+    .bg-glow {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.15;
+      pointer-events: none;
+    }
+
+    /* ── Animations ── */
+    @keyframes pulse-slow {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes slide-up {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .pulse { animation: pulse-slow 3s ease-in-out infinite; }
+    .float { animation: float 4s ease-in-out infinite; }
+
+    /* ── Pipeline Arrow ── */
+    .pipeline {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+    .pipeline-node {
+      flex: 1;
+      padding: 28px;
+      background: var(--bg-card);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: var(--radius);
+      text-align: center;
+      position: relative;
+    }
+    .pipeline-arrow {
+      width: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    /* ── Timeline ── */
+    .timeline {
+      position: relative;
+      padding: 0;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 24px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--teal-500), var(--red-500), var(--amber-500));
+    }
+    .timeline-item {
+      display: flex;
+      gap: 20px;
+      padding: 12px 0;
+      position: relative;
+    }
+    .timeline-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-top: 6px;
+      flex-shrink: 0;
+      z-index: 1;
+      position: relative;
+      left: 19px;
+    }
+    .dot-green { background: var(--green-400); box-shadow: 0 0 12px rgba(52,211,153,0.3); }
+    .dot-red { background: var(--red-400); box-shadow: 0 0 12px rgba(248,113,113,0.3); }
+    .dot-amber { background: var(--amber-400); box-shadow: 0 0 12px rgba(251,191,36,0.3); }
+    .timeline-content {
+      flex: 1;
+      padding-left: 24px;
+    }
+
+    /* ── Mock App UI ── */
+    .mock-app {
+      background: var(--bg-card);
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      max-width: 500px;
+    }
+    .mock-app-bar {
+      background: var(--surface);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+    .mock-app-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .mock-app-body {
+      padding: 24px;
+    }
+    .mock-field {
+      margin-bottom: 14px;
+    }
+    .mock-field-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .mock-field-value {
+      background: var(--surface);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: var(--radius-xs);
+      padding: 12px 16px;
+      font-size: 16px;
+      color: var(--text-primary);
+    }
+    .mock-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: var(--radius-xs);
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+      cursor: default;
+      margin-top: 10px;
+    }
+    .mock-btn-primary {
+      background: var(--gradient-main);
+      color: white;
+    }
+
+    /* ── Report Mock ── */
+    .report-section {
+      margin-bottom: 16px;
+    }
+    .report-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--teal-400);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .report-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 8px 0;
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .report-item .bullet {
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* ── Confusion Cloud (Slide 2) ── */
+    .confusion-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+    }
+    .confusion-item {
+      background: var(--surface);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: var(--radius-sm);
+      padding: 16px 22px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 16px;
+      color: var(--text-secondary);
+      position: relative;
+    }
+    .confusion-item:nth-child(odd) { animation: float 4s ease-in-out infinite; }
+    .confusion-item:nth-child(even) { animation: float 4s ease-in-out 1s infinite; }
+    .confusion-item .emoji { font-size: 26px; }
+    .question-mark {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: var(--red-500);
+      color: white;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Split Warning (Slide 3) ── */
+    .warning-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+    .warning-panel {
+      background: var(--bg-card);
+      border: 1px solid rgba(239,68,68,0.2);
+      border-radius: var(--radius);
+      padding: 36px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .warning-panel::after {
+      content: '✕';
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--red-400);
+      opacity: 0.7;
+    }
+    .warning-icon-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      font-size: 42px;
+      margin-bottom: 20px;
+    }
+    .warning-plus {
+      font-size: 24px;
+      color: var(--text-muted);
+    }
+
+    /* ── Takeaway Grid (Slide 10) ── */
+    .takeaway-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .takeaway-item {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      padding: 24px;
+      background: var(--bg-card);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: var(--radius);
+    }
+    .takeaway-num {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--gradient-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 800;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    /* ── Scroll Hint ── */
+    .scroll-hint {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      font-size: 14px;
+      letter-spacing: 1px;
+      animation: pulse-slow 2s ease-in-out infinite;
+    }
+    .scroll-arrow {
+      font-size: 22px;
+    }
+
+    /* ── Horizontal Timeline (Slide 7) ── */
+    .h-timeline {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      position: relative;
+      padding: 40px 0;
+    }
+    .h-timeline::before {
+      content: '';
+      position: absolute;
+      top: 56px;
+      left: 40px;
+      right: 40px;
+      height: 3px;
+      background: linear-gradient(to right, var(--green-500), var(--amber-500), var(--red-500));
+      border-radius: 2px;
+    }
+    .h-timeline-event {
+      flex: 1;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .h-timeline-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      margin: 0 auto 18px;
+      position: relative;
+    }
+    .h-timeline-time {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .h-timeline-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      padding: 0 8px;
+    }
+    .h-timeline-flag {
+      margin-top: 12px;
+    }
+
+    /* ── Future Path (Slide 9) ── */
+    .future-path {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      padding: 20px 0;
+    }
+    .future-step {
+      flex: 1;
+      text-align: center;
+      padding: 24px 16px;
+      position: relative;
+    }
+    .future-step-icon {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      margin: 0 auto 16px;
+      position: relative;
+    }
+    .future-step-icon::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 2px dashed rgba(0,0,0,0.1);
+    }
+    .future-connector {
+      width: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .picture-roadmap {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr 1fr 0.92fr;
+      gap: 22px;
+      align-items: stretch;
+      margin: 34px 0 28px;
+    }
+    .picture-card {
+      min-height: 360px;
+      background: rgba(255,255,255,0.78);
+      border: 1px solid rgba(15,23,42,0.08);
+      border-radius: 28px;
+      box-shadow: 0 18px 55px rgba(15,23,42,0.08);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .picture-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 10%, rgba(45,212,191,0.14), transparent 36%),
+                  radial-gradient(circle at 85% 18%, rgba(167,139,250,0.12), transparent 34%);
+      pointer-events: none;
+    }
+    .picture-media {
+      min-height: 232px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 22px 8px;
+      position: relative;
+      z-index: 1;
+    }
+    .picture-card img {
+      width: 100%;
+      max-height: 230px;
+      object-fit: cover;
+      object-position: top;
+      border-radius: 18px;
+      box-shadow: 0 16px 35px rgba(15,23,42,0.14);
+      border: 1px solid rgba(15,23,42,0.08);
+    }
+    .picture-emoji {
+      width: 132px;
+      height: 132px;
+      border-radius: 34px;
+      display: grid;
+      place-items: center;
+      font-size: 64px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5), 0 18px 45px rgba(15,23,42,0.13);
+      position: relative;
+    }
+    .picture-emoji.green { background: linear-gradient(135deg, #d1fae5, #99f6e4); }
+    .picture-emoji.amber { background: linear-gradient(135deg, #fef3c7, #fde68a); }
+    .picture-emoji.blue { background: linear-gradient(135deg, #dbeafe, #c7d2fe); }
+    .picture-emoji.purple { background: linear-gradient(135deg, #ede9fe, #f3e8ff); }
+    .picture-label {
+      padding: 18px 22px 22px;
+      position: relative;
+      z-index: 1;
+    }
+    .picture-label h3 {
+      font-size: 22px;
+      margin-bottom: 4px;
+      color: var(--text-primary);
+    }
+    .picture-label p {
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--text-muted);
+    }
+    .picture-arrow {
+      position: absolute;
+      right: -18px;
+      top: 48%;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1px solid rgba(15,23,42,0.08);
+      box-shadow: var(--shadow);
+      display: grid;
+      place-items: center;
+      color: var(--teal-500);
+      font-weight: 800;
+      z-index: 5;
+    }
+    .mini-timeline {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      height: 190px;
+      padding: 24px;
+    }
+    .mini-bar {
+      width: 42px;
+      border-radius: 18px 18px 8px 8px;
+      background: var(--gradient-main);
+      box-shadow: 0 14px 24px rgba(16,185,129,0.18);
+    }
+    .mini-bar:nth-child(2) { height: 92px; background: linear-gradient(135deg, #fbbf24, #34d399); }
+    .mini-bar:nth-child(3) { height: 136px; background: linear-gradient(135deg, #6366f1, #2dd4bf); }
+    .mini-bar:nth-child(4) { height: 112px; background: linear-gradient(135deg, #a78bfa, #34d399); }
+    .mini-bar:nth-child(5) { height: 154px; background: linear-gradient(135deg, #10b981, #14b8a6); }
+    .vision-ribbon {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 24px;
+      background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(99,102,241,0.12));
+      border: 1px solid rgba(16,185,129,0.22);
+      border-radius: 28px;
+      padding: 24px 32px;
+      margin-top: 8px;
+      margin-right: 120px;
+    }
+    .vision-ribbon strong {
+      display: block;
+      font-size: 24px;
+      line-height: 1.2;
+    }
+    .vision-ribbon span {
+      display: block;
+      font-size: 13px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.6px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .vision-ribbon .vision-arrow {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--bg-card);
+      color: var(--teal-500);
+      font-size: 26px;
+      box-shadow: var(--shadow);
+    }
+
+    
+    /* ── Character Images ── */
+    .character-img {
+      max-width: 100%;
+      height: auto;
+      animation: float 4s ease-in-out infinite;
+      filter: drop-shadow(0 20px 30px rgba(0,0,0,0.1));
+    }
+    .character-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .slide-inner { padding: 32px; }
+      h1 { font-size: 36px; }
+      h2 { font-size: 26px; }
+      .two-col { grid-template-columns: 1fr; gap: 24px; }
+      .three-col { grid-template-columns: 1fr; }
+      .warning-split { grid-template-columns: 1fr; }
+      .takeaway-grid { grid-template-columns: 1fr; }
+      .slide-badge { top: 32px; left: 32px; }
+      .slide-footer { left: 32px; right: 32px; bottom: 16px; }
+    }
+
+    /* ── Advanced Story & Animation UI ── */
+    .story-container {
+      position: absolute;
+      right: 40px;
+      top: 40px;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .story-box {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 16px 20px;
+      border-radius: 20px;
+      border: 1px solid rgba(0,0,0,0.05);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+      max-width: 280px;
+      text-align: right;
+      position: relative;
+    }
+    .story-box::after {
+      content: '';
+      position: absolute;
+      right: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-left: 8px solid rgba(255, 255, 255, 0.95);
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+    }
+    .story-stage {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--teal-600);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+      background: var(--teal-50);
+      padding: 4px 8px;
+      border-radius: 12px;
+    }
+    .story-text {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+      margin: 0;
+    }
+    .avatar-wrapper {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .avatar-wrapper img {
+      height: 180px;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15));
+      position: relative;
+      z-index: 2;
+    }
+    
+    @keyframes pulse-ring {
+      0% { transform: scale(0.8); opacity: 0.5; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
+    .anim-ai-processing::before {
+      content: '';
+      position: absolute;
+      inset: -20px;
+      border-radius: 50%;
+      border: 2px solid var(--indigo-400);
+      animation: pulse-ring 2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+      z-index: 1;
+    }
+    .anim-ai-processing::after {
+      content: '';
+      position: absolute;
+      inset: -10px;
+      border-radius: 50%;
+      border: 2px solid var(--teal-400);
+      animation: pulse-ring 2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+      animation-delay: 1s;
+      z-index: 1;
+    }
+    
+    @keyframes float-confused {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      50% { transform: translateY(-8px) rotate(2deg); }
+    }
+    .anim-confused img {
+      animation: float-confused 3s ease-in-out infinite;
+    }
+    
+    @keyframes typing-dot {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-4px); }
+    }
+    .anim-typing::after {
+      content: '...';
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      background: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      color: var(--teal-500);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      z-index: 5;
+      letter-spacing: 2px;
+      animation: typing-dot 1.5s infinite;
+    }
+    
+    @keyframes success-bounce {
+      0%, 100% { transform: translateY(0); }
+      20% { transform: translateY(-15px); }
+      40% { transform: translateY(0); }
+      60% { transform: translateY(-8px); }
+      80% { transform: translateY(0); }
+    }
+    .anim-success {
+      position: relative;
+    }
+    .anim-success img {
+      animation: success-bounce 2s ease;
+    }
+    .anim-success::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(16,185,129,0.2) 0%, transparent 70%);
+      z-index: 1;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ═══ Navigation Dots ═══ -->
+  <nav class="nav-dots" id="navDots">
+    <button class="nav-dot active" data-slide="0" title="Title"></button>
+    <button class="nav-dot" data-slide="1" title="Setup"></button>
+    <button class="nav-dot" data-slide="2" title="Trigger"></button>
+    <button class="nav-dot" data-slide="3" title="Onboarding"></button>
+    <button class="nav-dot" data-slide="4" title="Meal Logging"></button>
+    <button class="nav-dot" data-slide="5" title="AI Pipeline"></button>
+    <button class="nav-dot" data-slide="6" title="Risk Detection"></button>
+    <button class="nav-dot" data-slide="7" title="Report"></button>
+    <button class="nav-dot" data-slide="8" title="User Journey"></button>
+    <button class="nav-dot" data-slide="9" title="Next Step"></button>
+    <button class="nav-dot" data-slide="10" title="Summary"></button>
+  </nav>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       SLIDE 1 — TITLE
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="slide" id="slide-0">
+    <div class="bg-grid"></div>
+    <div class="bg-glow" style="background: var(--teal-500); top: -200px; right: -200px;"></div>
+    <div class="bg-glow" style="background: var(--indigo-500); bottom: -200px; left: -100px;"></div>
+
+    <div class="slide-inner" style="justify-content: center; align-items: center; text-align: center;">
+      <div style="margin-bottom: 28px;">
+        <span style="font-size: 56px;">🛡️</span>
+      </div>
+      <h1 class="gradient-text" style="font-size: 80px; margin-bottom: 20px;">
+        NutriGuard AI
+      </h1>
+      <p style="font-size: 28px; color: var(--text-secondary); font-weight: 300; letter-spacing: 1px; margin-bottom: 8px;">
+        Application Storyboard
+      </p>
+      <p style="font-size: 18px; color: var(--text-muted); max-width: 700px; margin: 28px auto 0; line-height: 1.8;">
+        From the moment a user opens NutriGuard to the moment they get
+        personalized nutrition guidance — told in 8 panels.
+      </p>
+
+      <div style="margin-top: 52px; display: flex; gap: 40px; justify-content: center;">
+        <div style="text-align: center;">
+          <div style="font-size: 36px; margin-bottom: 8px;">🧠</div>
+          <div style="font-size: 17px; color: var(--text-muted); letter-spacing: 1px;">3 AI AGENTS</div>
+        </div>
+        <div style="text-align: center;">
+          <div style="font-size: 36px; margin-bottom: 8px;">⚡</div>
+          <div style="font-size: 17px; color: var(--text-muted); letter-spacing: 1px;">REAL-TIME ANALYSIS</div>
+        </div>
+        <div style="text-align: center;">
+          <div style="font-size: 36px; margin-bottom: 8px;">🛡️</div>
+          <div style="font-size: 17px; color: var(--text-muted); letter-spacing: 1px;">RISK DETECTION</div>
+        </div>
+        <div style="text-align: center;">
+          <div style="font-size: 36px; margin-bottom: 8px;">📊</div>
+          <div style="font-size: 17px; color: var(--text-muted); letter-spacing: 1px;">DAY-LEVEL REPORTS</div>
+        </div>
+      </div>
+
+      <div class="scroll-hint">
+        <span>SCROLL TO BEGIN</span>
+        <span class="scroll-arrow">↓</span>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>NutriGuard AI — Storyboard</span>
+      <span>1 / 10</span>
+    </div>
+  
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       SLIDE 2 — SETUP: Meet Priya
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="slide" id="slide-1">
+    <div class="bg-grid"></div>
+    <div class="bg-glow" style="background: var(--indigo-500); top: -100px; left: -200px;"></div>
+
+    <div class="slide-inner">
+      <div class="story-container">
+        <div class="story-box">
+          <span class="story-stage">Stage 1: Confused</span>
+          <p class="story-text">Priya is overwhelmed. Her doctor said "watch your diet", but generic advice leaves her guessing.</p>
+        </div>
+        <div class="avatar-wrapper anim-confused">
+          <img src="assets/characters/priya_confused.png">
+        </div>
+      </div>
+
+      <div class="slide-badge"><span>Panel 1</span> · SETUP</div>
+
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; margin-top: 40px;">
+        <span class="badge badge-setup">SETUP</span>
+      </div>
+      <h2 style="margin-bottom: 8px;">Meet Priya</h2>
+      <p style="color: var(--text-secondary); font-size: 18px; margin-bottom: 24px;">
+        The user before NutriGuard exists in her life
+      </p>
+
+      <div class="two-col" style="flex: 1;">
+        <!-- Left: Story -->
+        <div>
+          <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+            <div class="icon-circle icon-blue" style="font-size: 28px;">👩‍💼</div>
+            <div>
+              <div style="font-weight: 700; font-size: 22px;">Priya, 28</div>
+              <div style="color: var(--text-muted); font-size: 16px;">Vegetarian · Working professional</div>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <span style="color: var(--red-400);">●</span>
+              <span style="font-size: 17px; color: var(--text-secondary);">Diagnosed with <strong style="color: var(--text-primary);">iron deficiency</strong></span>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <span style="color: var(--amber-400);">●</span>
+              <span style="font-size: 17px; color: var(--text-secondary);">Takes an <strong style="color: var(--text-primary);">iron tablet</strong> every morning</span>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <span style="color: var(--indigo-400);">●</span>
+              <span style="font-size: 17px; color: var(--text-secondary);">Doctor said <strong style="color: var(--text-primary);">"watch your diet"</strong> — no specifics</span>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <span style="color: var(--text-muted);">●</span>
+              <span style="font-size: 17px; color: var(--text-secondary);">Low <strong style="color: var(--text-primary);">vitamin D</strong> on latest report</span>
+            </div>
+          </div>
+
+          <div class="caption">
+            "Priya has iron deficiency. Her doctor says 'watch your diet' — but she has no idea what that means meal by meal."
+          </div>
+        </div>
+
+        <!-- Right: Confusion Cloud -->
+        <div>
+          <div class="confusion-cloud">
+            <div class="confusion-item">
+              <span class="emoji">💊</span> Iron tablets
+              <span class="question-mark">?</span>
+            </div>
+            <div class="confusion-item">
+              <span class="emoji">📋</span> Lab reports
+              <span class="question-mark">?</span>
+            </div>
+            <div class="confusion-item">
+              <span class="emoji">📱</span> Calorie apps
+              <span class="question-mark">?</span>
+            </div>
+            <div class="confusion-item">
+              <span class="emoji">🥗</span> Diet charts
+              <span class="question-mark">?</span>
+            </div>
+            <div class="confusion-item">
+              <span class="emoji">🍵</span> Food myths
+              <span class="question-mark">?</span>
+            </div>
+            <div class="confusion-item">
+              <span class="emoji">🩺</span> Doctor visits
+              <span class="question-mark">?</span>
+            </div>
+          </div>
+          <p style="text-align: center; font-size: 16px; color: var(--text-muted); margin-top: 12px;">
+            Too many sources. No personalized guidance.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>NutriGuard AI — Storyboard</span>
+      <span>2 / 10</span>
+    </div>
+  
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       SLIDE 3 — CONFLICT / TRIGGER: The Invisible Problem
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="slide" id="slide-2">
+    <div class="bg-grid"></div>
+    <div class="bg-glow" style="background: var(--red-500); top: -150px; right: -150px;"></div>
+
+    <div class="slide-inner">
+      <div class="story-container" style="top: 20px;">
+        <div class="story-box">
+          <span class="story-stage">Stage 2: The Mistake</span>
+          <p class="story-text">Trying her best, she takes her iron pill with tea. She has no idea the tannins are blocking absorption.</p>
+        </div>
+        <div class="avatar-wrapper anim-confused">
+          <img src="assets/characters/priya_confused.png">
+        </div>
+      </div>
+
+      <div class="slide-badge"><span>Panel 2</span> · CONFLICT</div>
+
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; margin-top: 40px;">
+        <span class="badge badge-trigger">TRIGGER</span>
+      </div>
+      <h2 style="margin-bottom: 8px;">The Invisible Problem</h2>
+      <p style="color: var(--text-secondary); font-size: 18px; margin-bottom: 28px;">
+        Everyday food combinations silently block Priya's iron absorption — and no app tells her
+      </p>
+
+      <div class="warning-split" style="margin-bottom: 24px;">
+        <!-- Warning 1: Tea + Iron -->
+        <div class="warning-panel" style="box-shadow: var(--shadow-glow-red);">
+          <div class="warning-icon-row">
+            <span>💊</span>
+            <span class="warning-plus">+</span>
+            <span>🍵</span>
+          </div>
+          <h3 style="font-size: 16px; margin-bottom: 8px; color: var(--red-400);">Iron Tablet + Tea</h3>
+          <p style="font-size: 16px; color: var(--text-secondary); line-height: 1.6;">
+            Tannins in tea bind to iron, reducing absorption by up to <strong style="color: var(--text-primary);">60–70%</strong>
+          </p>
+          <div style="margin-top: 12px;">
+            <span class="badge badge-high">⚠ HIGH RISK</span>
+          </div>
+          <p style="font-size: 18px; color: var(--text-muted); margin-top: 10px;">8:30 AM — same breakfast window</p>
+        </div>
+
+        <!-- Warning 2: Dahi + Iron -->
+        <div class="warning-panel" style="box-shadow: var(--shadow-glow-red);">
+          <div class="warning-icon-row">
+            <span>💊</span>
+            <span class="warning-plus">+</span>
+            <span>🥛</span>
+          </div>
+          <h3 style="font-size: 16px; margin-bottom: 8px; color: var(--amber-400);">Iron Supplement + Dahi / Paneer</h3>
+          <p style="font-size: 16px; color: var(--text-secondary); line-height: 1.6;">
+            Calcium in dairy competes with iron for absorption within a <strong style="color: var(--text-primary);">2-hour</strong> window
+          </p>
+          <div style="margin-top: 12px;">
+            <span class="badge badge-medium">⚠ MEDIUM RISK</span>
+          </div>
+          <p style="font-size: 18px; color: var(--text-muted); margin-top: 10px;">1:00 PM — dahi rice for lunch</p>
+        </div>
+      </div>
+
+      <div class="caption" style="border-left-color: var(--red-400);">
+        "She takes her iron tablet with morning tea. At lunch, dahi within two hours. Both silently block absorption — and no app tells her."
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>NutriGuard AI — Storyboard</span>
+      <span>3 / 10</span>
+    </div>
+  
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       SLIDE 4 — JOURNEY: Onboarding
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="slide" id="slide-3">
+    <div class="bg-grid"></div>
+    <div class="bg-glow" style="background: var(--green-500); bottom: -200px; left: -100px;"></div>
+
+    <div class="slide-inner">
+      <div class="story-container">
+        <div class="story-box">
+          <span class="story-stage">Stage 3: Frictionless</span>
+          <p class="story-text">She signs up for NutriGuard and describes her health in her own words.</p>
+        </div>
+        <div class="avatar-wrapper anim-typing">
+          <img src="assets/characters/priya_phone.png">
+        </div>
+      </div>
+
+      <div class="slide-badge"><span>Panel 3</span> · JOURNEY</div>
+
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; margin-top: 40px;">
+        <span class="badge badge-journey">JOURNEY</span>
+      </div>
+      <h2 style="margin-bottom: 8px;">Onboarding in 60 Seconds</h2>
+      <p style="color: var(--text-secondary); font-size: 18px; margin-bottom: 24px;">
+        Priya describes her health in her own words — NutriGuard's AI does the rest
+      </p>
+
+      <div class="two-col" style="flex: 1;">
+        <!-- Left: Mock App -->
+        <div style="display: flex; justify-content: center;">
+          <div class="mock-app" style="width: 380px; box-shadow: var(--shadow-glow-green);">
+            <div class="mock-app-bar">
+              <div class="mock-app-dot" style="background: var(--red-400);"></div>
+              <div class="mock-app-dot" style="background: var(--amber-400);"></div>
+              <div class="mock-app-dot" style="background: var(--green-400);"></div>
+              <span style="font-size: 18px; color: var(--text-muted); margin-left: 8px;">NutriGuard — Health Profile</span>
+            </div>
+            <div class="mock-app-body">
+              <div class="mock-field">
+                <div class="mock-field-label">Goals</div>
+                <div class="mock-field-value" style="display: flex; gap: 6px; flex-wrap: wrap;">
+                  <span class="badge badge-low" style="font-size: 10px;">Reduce Deficiency</span>
+                  <span class="badge badge-low" style="font-size: 10px;">Fat Loss</span>
+                </div>
+              </div>
+              <div class="mock-field">
+                <div class="mock-field-label">Diet Type</div>
+                <div class="mock-field-value">🥬 Vegetarian</div>
+              </div>
+              <div class="mock-field">
+                <div class="mock-field-label">Health Conditions (plain text)</div>
+                <div class="mock-field-value" style="font-style: italic; color: var(--text-secondary);">I have iron deficiency</div>
+              </div>
+              <div class="mock-field">
+                <div class="mock-field-label">Supplements (plain text)</div>
+                <div class="mock-field-value" style="font-style: italic; color: var(--text-secondary);">I take an iron tablet in the morning</div>
+              </div>
+              <div class="mock-field">
+                <div class="mock-field-label">Lab Report</div>
+                <div class="mock-field-value" style="color: var(--text-muted); font-size: 18px;">📄 Upload or paste report text…</div>
+              </div>
+              <div class="mock-btn mock-btn-primary">Save Profile →</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: What happens -->
+        <div>
+          <h3 style="margin-bottom: 20px; color: var(--green-400);">What the AI extracts</h3>
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div class="card card-green" style="padding: 16px; display: flex; gap: 14px; align-items: center;">
+              <span style="font-size: 20px;">🎯</span>
+              <div>
+                <div style="font-size: 16px; font-weight: 600;">Goals</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">reduce_deficiency, fat_loss</div>
+              </div>
+            </div>
+            <div class="card card-green" style="padding: 16px; display: flex; gap: 14px; align-items: center;">
+              <span style="font-size: 20px;">🩺</span>
+              <div>
+                <div style="font-size: 16px; font-weight: 600;">Conditions</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">iron_deficiency</div>
+              </div>
+            </div>
+            <div class="card card-green" style="padding: 16px; display: flex; gap: 14px; align-items: center;">
+              <span style="font-size: 20px;">💊</span>
+              <div>
+                <div style="font-size: 16px; font-weight: 600;">Supplements</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">iron_tablet</div>
+              </div>
+            </div>
+            <div class="card card-green" style="padding: 16px; display: flex; gap: 14px; align-items: center;">
+              <span style="font-size: 20px;">🔬</span>
+              <div>
+                <div style="font-size: 16px; font-weight: 600;">Deficiencies</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">iron_deficiency, vitamin_d</div>
+              </div>
+            </div>
+          </div>
+          <p style="font-size: 18px; color: var(--text-muted); margin-top: 14px;">
+            Natural language → normalized clinical profile.<br>No medical codes needed.
+          </p>
+        </div>
+      </div>
+
+      <div class="caption" style="margin-top: 12px;">
+        "She signs up and describes her health in her own words. NutriGuard's AI normalizes it into a clinical profile — no medical codes needed."
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>NutriGuard AI — Storyboard</span>
+      <span>4 / 10</span>
+    </div>
+  
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       SLIDE 5 — JOURNEY: Meal Logging
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="slide" id="slide-4">
+    <div class="bg-grid"></div>
+    <div class="bg-glow" style="background: var(--green-500); top: -200px; right: -200px;"></div>
+
+    <div class="slide-inner">
+      <div class="story-container">
+        <div class="story-box">
+          <span class="story-stage">Stage 3: Frictionless</span>
+          <p class="story-text">Priya simply texts what she ate. No complex forms, no calorie counting.</p>
+        </div>
+        <div class="avatar-wrapper anim-typing">
+          <img src="assets/characters/priya_phone.png">
+        </div>
+      </div>
+
+      <div class="slide-badge"><span>Panel 4</span> · JOURNEY</div>
+
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; margin-top: 40px;">
+        <span class="badge badge-journey">JOURNEY</span>
+      </div>
+      <h2 style="margin-bottom: 8px;">Log a Meal in 10 Seconds</h2>
+      <p style="color: var(--text-secondary); font-size: 18px; margin-bottom: 24px;">
+        Plain text, no barcode scanning — just type what you ate
+      </p>
+
+      <div class="two-col" style="flex: 1;">
+        <!-- Left: Mock Meal Form -->
+        <div style="display: flex; justify-content: center;">
+          <div class="mock-app" style="width: 380px; box-shadow: var(--shadow-glow-green);">
+            <div class="mock-app-bar">
+              <div class="mock-app-dot" style="background: var(--red-400);"></div>
+              <div class="mock-app-dot" style="background: var(--amber-400);"></div>
+              <div class="mock-app-dot" style="background: var(--green-400);"></div>
+              <span style="font-size: 18px; color: var(--text-muted); margin-left: 8px;">NutriGuard — Log Meal</span>
+            </div>
+            <div class="mock-app-body">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div class="mock-field">
+                  <div class="mock-field-label">Meal Type</div>
+                  <div class="mock-field-value">🌅 Breakfast</div>
+                </div>
+                <div class="mock-field">
+                  <div class="mock-field-label">Time</div>
+                  <div class="mock-field-value">⏰ 8:30 AM</div>
+                </div>
+              </div>
+              <div class="mock-field">
+                <div class="mock-field-label">Foods</div>
+                <div class="mock-field-value">poha</div>
+              </div>
+              <div class="mock-field">
+                <div class="mock-field-label">Drinks</div>
+                <div class="mock-field-value">tea</div>
+              </div>
+              <div class="mock-field">
+                <div class="mock-field-label">Supplements</div>
+                <div class="mock-field-value">iron tablet</div>
+              </div>
+              <div class="mock-field">
+                <div class="mock-field-label">Notes</div>
+                <div class="mock-field-value" style="color: var(--text-muted);">small portion</div>
+              </div>
+              <div class="mock-btn mock-btn-primary">Submit Meal →</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: What happens next -->
+        <div>
+          <h3 style="margin-bottom: 24px; color: var(--green-400);">What happens next</h3>
+
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: flex; gap: 14px; align-items: flex-start;">
+              <div style="background: rgba(16,185,129,0.15); color: var(--green-400); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; flex-shrink: 0;">1</div>
+              <div>
+                <div style="font-size: 17px; font-weight: 600;">Meal saved</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">Status: RECEIVED → stored in meal_logs</div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 14px; align-items: flex-start;">
+              <div style="background: rgba(16,185,129,0.15); color: var(--green-400); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; flex-shrink: 0;">2</div>
+              <div>
+                <div style="font-size: 17px; font-weight: 600;">Event queued</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">MealLogged event → outbox_events table</div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 14px; align-items: flex-start;">
+              <div style="background: rgba(16,185,129,0.15); color: var(--green-400); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; flex-shrink: 0;">3</div>
+              <div>
+                <div style="font-size: 17px; font-weight: 600;">Background publisher picks it up</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">Reads profile + full day timeline</div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 14px; align-items: flex-start;">
+              <div style="background: rgba(99,102,241,0.15); color: var(--indigo-400); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; flex-shrink: 0;">4</div>
+              <div>
+                <div style="font-size: 17px; font-weight: 600;">Sent to AI Orchestrator</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">POST /process-meal with full context →</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 24px; background: var(--bg-card); border: 1px solid rgba(0,0,0,0.08); border-radius: var(--radius-sm); padding: 14px; display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 18px;">⏱️</span>
+            <span style="font-size: 16px; color: var(--text-secondary);">Total user effort: <strong style="color: var(--text-primary);">~10 seconds</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="caption" style="margin-top: 12px;">
+        "Breakfast: poha, tea, iron tablet. She logs it in 10 seconds — plain text, no barcode scanning."
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>NutriGuard AI — Storyboard</span>
+      <span>5 / 10</span>
+    </div>
+  
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       SLIDE 6 — JOURNEY: AI Pipeline
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="slide" id="slide-5">
+    <div class="bg-grid"></div>
+    <div class="bg-glow" style="background: var(--indigo-500); top: -100px; left: 50%; transform: translateX(-50%);"></div>
+
+    <div class="slide-inner">
+      <div class="story-container" style="top: 20px;">
+        <div class="story-box">
+          <span class="story-stage">Stage 4: AI at Work</span>
+          <p class="story-text">While Priya goes about her day, three AI agents analyze her meal in milliseconds.</p>
+        </div>
+        <div class="avatar-wrapper anim-ai-processing">
+          <img src="assets/characters/priya_relieved.png">
+        </div>
+      </div>
+
+      <div class="slide-badge"><span>Panel 5</span> · JOURNEY</div>
+
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; margin-top: 40px;">
+        <span class="badge badge-journey">JOURNEY</span>
+      </div>
+      <h2 style="margin-bottom: 8px;">Three AI Agents Go to Work</h2>
+      <p style="color: var(--text-secondary); font-size: 18px; margin-bottom: 32px;">
+        Behind the scenes — LangGraph orchestrates a multi-agent pipeline powered by Gemini
+      </p>
+
+      <!-- Pipeline Diagram -->
+      <div class="pipeline" style="margin-bottom: 32px;">
+        <!-- Agent 1: Meal Analyzer -->
+        <div class="pipeline-node" style="box-shadow: var(--shadow-glow-green); text-align: left; padding: 20px;">
+          <div style="font-size: 32px; margin-bottom: 10px; text-align: center;">🍽️</div>
+          <h3 style="font-size: 18px; color: var(--green-400); margin-bottom: 16px; text-align: center;">Meal Analyzer</h3>
+          <div style="font-size: 15px; color: var(--text-secondary); line-height: 1.4;">
+            <div style="margin-bottom: 12px;"><strong style="color: var(--text-primary); font-size: 13px; text-transform: uppercase;">📥 Input:</strong><br>"poha, tea, iron pill"</div>
+            <div style="margin-bottom: 12px;"><strong style="color: var(--text-primary); font-size: 13px; text-transform: uppercase;">⚙️ Action:</strong><br>Extracts food components</div>
+            <div><strong style="color: var(--text-primary); font-size: 13px; text-transform: uppercase;">📤 Output:</strong><br><span style="color: var(--green-400); font-family: monospace; font-size: 12px;">{ food: ["poha"], drinks: ["tea"] }</span></div>
+          </div>
+        </div>
+
+        <div class="pipeline-arrow">
+          <svg width="32" height="16" viewBox="0 0 32 16" fill="none">
+            <path d="M0 8H28M28 8L22 2M28 8L22 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <!-- Agent 2: Health Risk -->
+        <div class="pipeline-node" style="box-shadow: var(--shadow-glow-red); text-align: left; padding: 20px;">
+          <div style="font-size: 32px; margin-bottom: 10px; text-align: center;">🛡️</div>
+          <h3 style="font-size: 18px; color: var(--red-400); margin-bottom: 16px; text-align: center;">Health Risk Agent</h3>
+          <div style="font-size: 15px; color: var(--text-secondary); line-height: 1.4;">
+            <div style="margin-bottom: 12px;"><strong style="color: var(--text-primary); font-size: 13px; text-transform: uppercase;">📥 Input:</strong><br>JSON + Profile (Iron Def.)</div>
+            <div style="margin-bottom: 12px;"><strong style="color: var(--text-primary); font-size: 13px; text-transform: uppercase;">⚙️ Action:</strong><br>Cross-references RAG base</div>
+            <div><strong style="color: var(--text-primary); font-size: 13px; text-transform: uppercase;">📤 Output:</strong><br><span style="color: var(--red-400); font-family: monospace; font-size: 12px;">FLAG: TANNINS_BLOCK_IRON</span></div>
+          </div>
+        </div>
+
+        <div class="pipeline-arrow">
+          <svg width="32" height="16" viewBox="0 0 32 16" fill="none">
+            <path d="M0 8H28M28 8L22 2M28 8L22 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <!-- Agent 3: Report -->
+        <div class="pipeline-node" style="box-shadow: var(--shadow-glow-indigo); text-align: left; padding: 20px;">
+          <div style="font-size: 32px; margin-bottom: 10px; text-align: center;">📝</div>
+          <h3 style="font-size: 18px; color: var(--indigo-400); margin-bottom: 16px; text-align: center;">Report Agent</h3>
+          <div style="font-size: 15px; color: var(--text-secondary); line-height: 1.4;">
+            <div style="margin-bottom: 12px;"><strong style="color: var(--text-primary); font-size: 13px; text-transform: uppercase;">📥 Input:</strong><br><span style="font-family: monospace; font-size: 12px;">FLAG: TANNINS_BLOCK_IRON</span></div>
+            <div style="margin-bottom: 12px;"><strong style="color: var(--text-primary); font-size: 13px; text-transform: uppercase;">⚙️ Action:</strong><br>Drafts empathetic advice</div>
+            <div><strong style="color: var(--text-primary); font-size: 13px; text-transform: uppercase;">📤 Output:</strong><br><span style="color: var(--indigo-400);">"Wait 1 hour before tea ☕"</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tech Stack Row -->
+      <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
+        <div class="card" style="padding: 12px 20px; display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 16px;">🔗</span>
+          <span style="font-size: 16px; font-weight: 600;">LangGraph</span>
+          <span style="font-size: 11px; color: var(--text-muted);">Orchestration</span>
+        </div>
+        <div class="card" style="padding: 12px 20px; display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 16px;">✨</span>
+          <span style="font-size: 16px; font-weight: 600;">Gemini</span>
+          <span style="font-size: 11px; color: var(--text-muted);">LLM Provider</span>
+        </div>
+        <div class="card" style="padding: 12px 20px; display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 16px;">📚</span>
+          <span style="font-size: 16px; font-weight: 600;">RAG</span>
+          <span style="font-size: 11px; color: var(--text-muted);">Nutrition Context</span>
+        </div>
+        <div class="card" style="padding: 12px 20px; display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 16px;">⚡</span>
+          <span style="font-size: 16px; font-weight: 600;">FastAPI</span>
+          <span style="font-size: 11px; color: var(--text-muted);">Backend</span>
+        </div>
+      </div>
+
+      <div class="caption">
+        "Behind the scenes, three AI agents go to work: parsing her food, checking risks against her profile, and writing a personalized report."
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>NutriGuard AI — Storyboard</span>
+      <span>6 / 10</span>
+    </div>
+  
+  </section>
+
+
+
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       SLIDE 8 — PAYOFF: The Actionable Report
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="slide" id="slide-7">
+    <div class="bg-grid"></div>
+    <div class="bg-glow" style="background: var(--green-500); bottom: -200px; right: -100px;"></div>
+
+    <div class="slide-inner">
+      <div class="story-container">
+        <div class="story-box">
+          <span class="story-stage">Stage 5: Clarity</span>
+          <p class="story-text">Finally, clear guidance. Priya knows exactly what to change without feeling restricted.</p>
+        </div>
+        <div class="avatar-wrapper anim-success">
+          <img src="assets/characters/priya_healthy.png">
+        </div>
+      </div>
+
+      <div class="slide-badge"><span>Panel 7</span> · PAYOFF</div>
+
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; margin-top: 40px;">
+        <span class="badge badge-payoff">PAYOFF</span>
+      </div>
+      <h2 style="margin-bottom: 8px;">The Report That Changes Behavior</h2>
+      <p style="color: var(--text-secondary); font-size: 18px; margin-bottom: 24px;">
+        No jargon, no panic — just clear actions Priya can take today
+      </p>
+
+      <div class="two-col" style="flex: 1;">
+        <!-- Left: Mock Report -->
+        <div style="display: flex; justify-content: center;">
+          <div class="mock-app" style="width: 400px; box-shadow: var(--shadow-glow-green);">
+            <div class="mock-app-bar">
+              <div class="mock-app-dot" style="background: var(--red-400);"></div>
+              <div class="mock-app-dot" style="background: var(--amber-400);"></div>
+              <div class="mock-app-dot" style="background: var(--green-400);"></div>
+              <span style="font-size: 18px; color: var(--text-muted); margin-left: 8px;">NutriGuard — Daily Report</span>
+            </div>
+            <div class="mock-app-body" style="padding: 20px;">
+              <div style="font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--green-400);">
+                📊 Today's Nutrition Summary
+              </div>
+
+              <div class="report-section">
+                <div class="report-title" style="color: var(--red-400);">⚠ Needs Attention</div>
+                <div class="report-item">
+                  <span class="bullet" style="color: var(--red-400);">•</span>
+                  Tea at 8:30 AM was within 90 min of your iron tablet — tannins can reduce absorption by 60–70%
+                </div>
+                <div class="report-item">
+                  <span class="bullet" style="color: var(--amber-400);">•</span>
+                  Dahi at lunch provides calcium that competes with iron absorption
+                </div>
+                <div class="report-item">
+                  <span class="bullet" style="color: var(--amber-400);">•</span>
+                  Breakfast was low in protein
+                </div>
+              </div>
+
+              <div class="report-section">
+                <div class="report-title" style="color: var(--green-400);">💡 Suggestions</div>
+                <div class="report-item">
+                  <span class="bullet" style="color: var(--green-400);">•</span>
+                  Move tea to 10 AM — keep 2 hours from iron
+                </div>
+                <div class="report-item">
+                  <span class="bullet" style="color: var(--green-400);">•</span>
+                  Add sprouts, paneer, or tofu for morning protein
+                </div>
+                <div class="report-item">
+                  <span class="bullet" style="color: var(--green-400);">•</span>
+                  Consider having dahi at dinner instead
+                </div>
+              </div>
+
+              <div class="report-section">
+                <div class="report-title" style="color: var(--indigo-400);">🛡️ Safety</div>
+                <div class="report-item">
+                  <span class="bullet" style="color: var(--indigo-400);">•</span>
+                  Follow your doctor's guidance on iron supplement timing and dosage
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Design Principles -->
+        <div>
+          <h3 style="margin-bottom: 24px; color: var(--green-400);">Report Design Principles</h3>
+
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: flex; gap: 14px; align-items: flex-start;">
+              <div class="icon-circle icon-green" style="width: 42px; height: 42px; font-size: 18px;">🎯</div>
+              <div>
+                <div style="font-size: 17px; font-weight: 700;">Actionable</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">"Move tea to 10 AM" — not "consider modifying intake patterns"</div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 14px; align-items: flex-start;">
+              <div class="icon-circle icon-green" style="width: 42px; height: 42px; font-size: 18px;">🤝</div>
+              <div>
+                <div style="font-size: 17px; font-weight: 700;">Non-alarming</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">Practical nutrition guidance, never diagnoses or prescriptions</div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 14px; align-items: flex-start;">
+              <div class="icon-circle icon-green" style="width: 42px; height: 42px; font-size: 18px;">🛡️</div>
+              <div>
+                <div style="font-size: 17px; font-weight: 700;">Safety-first</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">Always defers to clinician; includes safety note when relevant</div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 14px; align-items: flex-start;">
+              <div class="icon-circle icon-blue" style="width: 42px; height: 42px; font-size: 18px;">📅</div>
+              <div>
+                <div style="font-size: 17px; font-weight: 700;">Day-level view</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">Analyzes meals in context of the full day, not in isolation</div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 14px; align-items: flex-start;">
+              <div class="icon-circle icon-purple" style="width: 42px; height: 42px; font-size: 18px;">👍</div>
+              <div>
+                <div style="font-size: 17px; font-weight: 700;">Feedback loop</div>
+                <div style="font-size: 18px; color: var(--text-secondary);">Users rate report quality — thumbs up/down per section improves AI over time</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="caption" style="margin-top: 12px;">
+        "No jargon, no panic. Just: 'Move your tea to 10 AM. Add sprouts for protein. Follow your doctor's advice on iron timing.'"
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>NutriGuard AI — Storyboard</span>
+      <span>8 / 10</span>
+    </div>
+  
+  </section>
+
+
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       SLIDE JOURNEY — TRANSFORMATION
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="slide" id="slide-journey">
+    <div class="bg-grid"></div>
+    
+    <div class="slide-inner">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+        <span class="badge badge-payoff">TRANSFORMATION</span>
+      </div>
+      <h2 style="margin-bottom: 8px;">The User Journey</h2>
+      <p style="color: var(--text-secondary); font-size: 18px; margin-bottom: 48px;">
+        Moving users from confusion to clarity without behavioral friction
+      </p>
+
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex: 1; padding: 0 20px;">
+        
+        <!-- State 1 -->
+        <div style="text-align: center; flex: 1;">
+          <div style="height: 250px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 20px;">
+            <div class="anim-confused" style="position: relative; display: inline-block;">
+              <img src="assets/characters/priya_confused.png" class="character-img" style="max-height: 180px;">
+            </div>
+          </div>
+          <h3 style="font-size: 18px; color: var(--text-primary); margin-bottom: 8px;">1. Confused</h3>
+          <p style="font-size: 14px; color: var(--text-secondary);">Generic advice</p>
+        </div>
+
+        <!-- Arrow -->
+        <div style="color: var(--teal-400); font-size: 24px; padding-bottom: 70px;">➔</div>
+
+        <!-- State 2 -->
+        <div style="text-align: center; flex: 1;">
+          <div style="height: 250px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 20px;">
+            <div class="anim-confused" style="position: relative; display: inline-block;">
+              <img src="assets/characters/priya_confused.png" class="character-img" style="max-height: 180px;">
+            </div>
+          </div>
+          <h3 style="font-size: 18px; color: var(--text-primary); margin-bottom: 8px;">2. The Mistake</h3>
+          <p style="font-size: 14px; color: var(--text-secondary);">Blocking nutrients</p>
+        </div>
+
+        <!-- Arrow -->
+        <div style="color: var(--teal-400); font-size: 24px; padding-bottom: 70px;">➔</div>
+
+        <!-- State 3 -->
+        <div style="text-align: center; flex: 1;">
+          <div style="height: 250px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 20px;">
+            <div class="anim-typing" style="position: relative; display: inline-block;">
+              <img src="assets/characters/priya_phone.png" class="character-img" style="max-height: 190px; animation-delay: 0.5s;">
+            </div>
+          </div>
+          <h3 style="font-size: 18px; color: var(--text-primary); margin-bottom: 8px;">3. Frictionless</h3>
+          <p style="font-size: 14px; color: var(--text-secondary);">Text logging</p>
+        </div>
+
+        <!-- Arrow -->
+        <div style="color: var(--teal-400); font-size: 24px; padding-bottom: 70px;">➔</div>
+
+        <!-- State 4 -->
+        <div style="text-align: center; flex: 1;">
+          <div style="height: 250px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 20px;">
+            <div class="anim-ai-processing" style="position: relative; display: inline-block;">
+              <img src="assets/characters/priya_relieved.png" class="character-img" style="max-height: 180px; animation-delay: 1s;">
+            </div>
+          </div>
+          <h3 style="font-size: 18px; color: var(--text-primary); margin-bottom: 8px;">4. AI at Work</h3>
+          <p style="font-size: 14px; color: var(--text-secondary);">Data processing</p>
+        </div>
+
+        <!-- Arrow -->
+        <div style="color: var(--teal-400); font-size: 24px; padding-bottom: 70px;">➔</div>
+
+        <!-- State 5 -->
+        <div style="text-align: center; flex: 1;">
+          <div style="height: 250px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 20px;">
+            <div class="anim-success" style="position: relative; display: inline-block;">
+              <img src="assets/characters/priya_healthy.png" class="character-img" style="max-height: 230px; animation-delay: 1.5s;">
+            </div>
+          </div>
+          <h3 style="font-size: 18px; color: var(--text-primary); margin-bottom: 8px;">5. Clarity</h3>
+          <p style="font-size: 14px; color: var(--text-secondary);">Clear guidance</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       SLIDE 9 — NEXT STEP: The Bigger Picture
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="slide" id="slide-8">
+    <div class="bg-grid"></div>
+    <div class="bg-glow" style="background: var(--purple-500); bottom: -150px; left: -100px;"></div>
+    <div class="bg-glow" style="background: var(--teal-500); top: -200px; right: -200px; opacity: 0.1;"></div>
+
+    <div class="slide-inner">
+      <div class="slide-badge"><span>Panel 8</span> · NEXT STEP</div>
+
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; margin-top: 40px;">
+        <span class="badge badge-next">NEXT STEP</span>
+      </div>
+      <h2 style="margin-bottom: 8px;">The Bigger Picture</h2>
+      <p style="color: var(--text-secondary); font-size: 18px; margin-bottom: 18px;">
+        One meal becomes a day. Days become patterns. Patterns become better care.
+      </p>
+
+      <!-- Picture-led Future Path -->
+      <div class="picture-roadmap">
+        <div class="picture-card">
+          <div class="picture-media">
+            <img src="assets/report_1.png" alt="Daily report screenshot">
+          </div>
+          <div class="picture-label">
+            <h3>Daily Report</h3>
+            <p>All meals in one timeline.</p>
+          </div>
+          <div class="picture-arrow">→</div>
+        </div>
+
+        <div class="picture-card">
+          <div class="picture-media">
+            <div class="picture-emoji amber float">🔔</div>
+          </div>
+          <div class="picture-label">
+            <h3>Smart Alert</h3>
+            <p>Tea near iron, repeated.</p>
+          </div>
+          <div class="picture-arrow">→</div>
+        </div>
+
+        <div class="picture-card">
+          <div class="picture-media">
+            <div class="mini-timeline">
+              <div class="mini-bar" style="height: 62px;"></div>
+              <div class="mini-bar"></div>
+              <div class="mini-bar"></div>
+              <div class="mini-bar"></div>
+              <div class="mini-bar"></div>
+            </div>
+          </div>
+          <div class="picture-label">
+            <h3>Trends</h3>
+            <p>Weeks reveal habits.</p>
+          </div>
+          <div class="picture-arrow">→</div>
+        </div>
+
+        <div class="picture-card">
+          <div class="picture-media">
+            <div class="picture-emoji purple float" style="animation-delay: 0.8s;">🩺</div>
+          </div>
+          <div class="picture-label">
+            <h3>Doctor View</h3>
+            <p>Daily data between visits.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Impact Statement -->
+      <div class="vision-ribbon">
+        <div style="text-align: right;">
+          <span>Before</span>
+          <strong style="color: var(--red-400);">Reactive lab tests</strong>
+        </div>
+        <div class="vision-arrow">→</div>
+        <div>
+          <span>After</span>
+          <strong style="color: var(--green-500);">Proactive daily guidance</strong>
+        </div>
+      </div>
+
+      <div class="caption" style="border-left-color: var(--purple-400); font-size: 18px; margin-top: 22px;">
+        "NutriGuard builds the nutrition timeline your doctor never had."
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>NutriGuard AI — Storyboard</span>
+      <span>9 / 10</span>
+    </div>
+  
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       SLIDE 10 — SUMMARY & TAKEAWAYS
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="slide" id="slide-9">
+    <div class="bg-grid"></div>
+    <div class="bg-glow" style="background: var(--teal-500); bottom: -200px; left: 50%; transform: translateX(-50%);"></div>
+
+    <div class="slide-inner" style="justify-content: center;">
+      <div class="slide-badge"><span>Summary</span></div>
+
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; flex: 1; margin-top: 40px;">
+        
+        <!-- Large Graphics -->
+        <div style="display: flex; gap: 40px; margin-bottom: 60px;">
+           <div style="text-align: center; background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 220px;">
+             <div style="font-size: 80px; margin-bottom: 20px; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));">🛡️</div>
+             <h3 style="color: var(--teal-500); font-size: 24px;">Proactive</h3>
+           </div>
+           <div style="color: var(--text-muted); font-size: 60px; display: flex; align-items: center; font-weight: 200;">+</div>
+           <div style="text-align: center; background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 220px;">
+             <div style="font-size: 80px; margin-bottom: 20px; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));">🎯</div>
+             <h3 style="color: var(--indigo-500); font-size: 24px;">Personalized</h3>
+           </div>
+           <div style="color: var(--text-muted); font-size: 60px; display: flex; align-items: center; font-weight: 200;">+</div>
+           <div style="text-align: center; background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 220px;">
+             <div style="font-size: 80px; margin-bottom: 20px; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));">⚡</div>
+             <h3 style="color: var(--green-500); font-size: 24px;">Effortless</h3>
+           </div>
+        </div>
+
+        <!-- Core Message -->
+        <div style="text-align: center; padding: 40px 60px; background: linear-gradient(135deg, rgba(16,185,129,0.05), rgba(99,102,241,0.05)); border: 1px solid rgba(16,185,129,0.15); border-radius: 24px; box-shadow: 0 20px 40px rgba(20,184,166,0.1); max-width: 900px;">
+          <p style="font-size: 14px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--teal-600); margin-bottom: 16px;">THE CORE MESSAGE</p>
+          <p style="font-size: 32px; font-weight: 600; color: var(--text-primary); line-height: 1.4; margin: 0;">
+            NutriGuard AI turns every meal into a personalized nutrition checkpoint — catching harmful food interactions before they become health problems.
+          </p>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 24px;">
+        <p style="font-size: 36px; margin-bottom: 6px;">🛡️</p>
+        <p style="font-size: 16px; color: var(--text-muted);">
+          Thank you — now go tell your app's story.
+        </p>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>NutriGuard AI — Storyboard</span>
+      <span>10 / 10</span>
+    </div>
+  
+  </section>
+
+
+  <!-- ═══ JavaScript ═══ -->
+  <script>
+    // Navigation dots
+    const dots = document.querySelectorAll('.nav-dot');
+    const slides = document.querySelectorAll('.slide');
+
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        const idx = parseInt(dot.dataset.slide);
+        slides[idx].scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    // Update active dot on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const idx = Array.from(slides).indexOf(entry.target);
+          dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+        }
+      });
+    }, { threshold: 0.5 });
+
+    slides.forEach(slide => observer.observe(slide));
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      const currentIdx = Array.from(dots).findIndex(d => d.classList.contains('active'));
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        const next = Math.min(currentIdx + 1, slides.length - 1);
+        slides[next].scrollIntoView({ behavior: 'smooth' });
+      } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        const prev = Math.max(currentIdx - 1, 0);
+        slides[prev].scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  </script>
+
+</body>
+</html>

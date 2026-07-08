@@ -5,12 +5,13 @@ from typing import Optional
 from uuid import uuid4
 from zoneinfo import ZoneInfo
 
-from fastapi import APIRouter, Depends, Header, HTTPException
+from fastapi import APIRouter, Depends, Header, HTTPException, Request
 from sqlalchemy.orm import Session
 from app.auth import get_current_user, require_user_id
 from app.database import SessionLocal
 from app.events.meal_context import build_processing_payload
 from app.models import DailyReport, MealLog, MetricEvent, NutritionFlag, OutboxEvent, ReportFeedback, User, UserProfile
+from app.rate_limiter import limiter, LIMIT_MEAL_WRITE, LIMIT_FEEDBACK_WRITE, LIMIT_READ
 from app.schemas import MealCreate, MealResponse, ReportFeedbackCreate, ReportResponse
 
 router = APIRouter(tags=["meals"])
@@ -176,8 +177,10 @@ def save_meal_result(db: Session, meal_log_id: int, result: dict) -> None:
 
 
 @router.post("/meals", response_model=MealResponse)
+@limiter.limit(LIMIT_MEAL_WRITE)
 def create_meal(
     payload: MealCreate,
+    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -227,8 +230,10 @@ def create_meal(
 
 
 @router.get("/meals/{meal_log_id}", response_model=dict)
+@limiter.limit(LIMIT_READ)
 def get_meal(
     meal_log_id: int,
+    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):

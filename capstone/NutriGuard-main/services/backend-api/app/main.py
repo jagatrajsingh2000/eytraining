@@ -9,9 +9,12 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
 from sqlalchemy import text
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 from app.database import Base, SessionLocal, engine
 from app.events.outbox_publisher import run_publisher_loop
 from app.models import MetricEvent, User
+from app.rate_limiter import limiter
 from app.routes import admin, users, meals, notifications
 
 load_dotenv()
@@ -93,6 +96,11 @@ def seed_admin_user():
 seed_admin_user()
 
 app = FastAPI(title="NutriGuard Backend API")
+
+# Attach the rate limiter to app state and register the 429 handler.
+# slowapi reads `app.state.limiter` to find the active limiter instance.
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 publisher_stop_event = Event()
 publisher_thread = None
 

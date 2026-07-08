@@ -2,11 +2,12 @@ import hashlib
 import hmac
 import secrets
 
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile
 from sqlalchemy.orm import Session
 from app.auth import create_access_token, get_current_user, require_user_id
 from app.database import SessionLocal
 from app.models import User, UserProfile
+from app.rate_limiter import limiter, LIMIT_AUTH, LIMIT_PROFILE_WRITE, LIMIT_READ
 from app.schemas import UserCreate, UserLogin, UserProfileCreate
 
 router = APIRouter(prefix="/users", tags=["users"])
@@ -126,7 +127,8 @@ def verify_password(password: str, stored_hash: str | None) -> bool:
 
 
 @router.post("", response_model=dict)
-def create_user(payload: UserCreate, db: Session = Depends(get_db)):
+@limiter.limit(LIMIT_AUTH)
+def create_user(payload: UserCreate, request: Request, db: Session = Depends(get_db)):
     existing = db.query(User).filter(User.email == str(payload.email)).first()
     if existing:
         raise HTTPException(status_code=409, detail="Email already exists. Please login.")
@@ -143,12 +145,14 @@ def create_user(payload: UserCreate, db: Session = Depends(get_db)):
 
 
 @router.post("/signup", response_model=dict)
-def signup(payload: UserCreate, db: Session = Depends(get_db)):
-    return create_user(payload, db)
+@limiter.limit(LIMIT_AUTH)
+def signup(payload: UserCreate, request: Request, db: Session = Depends(get_db)):
+    return create_user(payload, request, db)
 
 
 @router.post("/login", response_model=dict)
-def login(payload: UserLogin, db: Session = Depends(get_db)):
+@limiter.limit(LIMIT_AUTH)
+def login(payload: UserLogin, request: Request, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == str(payload.email).strip().lower()).first()
     if not user:
         raise HTTPException(
@@ -162,9 +166,11 @@ def login(payload: UserLogin, db: Session = Depends(get_db)):
 
 
 @router.post("/{user_id}/profile", response_model=dict)
+@limiter.limit(LIMIT_PROFILE_WRITE)
 def create_profile(
     user_id: int,
     payload: UserProfileCreate,
+    request: Request,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
